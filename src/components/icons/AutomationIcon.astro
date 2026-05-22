@@ -1,0 +1,103 @@
+---
+// AutomationIcon.astro — Composant icone SVG sobre pour la page Automatisations.
+//
+// 5 variantes :
+//   - chatbot       : bulle de dialogue + 3 points
+//   - form          : document/formulaire + checkmark
+//   - notifications : cloche + point d'alerte
+//   - automations   : 2 cercles relies par fleche
+//   - voicebot      : combine telephone + ondes sonores
+//
+// Style : line-art minimaliste, stroke 1.5px, currentColor (herite du parent).
+// Accessibilite : aria-hidden="true" car decoratif (le titre porte le sens).
+// Cohérence : strictement aligne sur Lucide (set principal du site).
+
+export interface Props {
+  // Identifiant de l'icone
+  name: 'chatbot' | 'form' | 'notifications' | 'automations' | 'voicebot';
+  // Taille en px (defaut 24, mais on passera 32 ou 40 depuis AutomationCard)
+  size?: number;
+  // Classes Tailwind additionnelles (ex: text-ink, text-ivoire)
+  class?: string;
+}
+
+const { name, size = 24, class: className = '' } = Astro.props;
+---
+
+{/* SVG racine : viewBox 24x24 fixe, dimensions reelles via width/height */}
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class={className}
+  aria-hidden="true"
+>
+  {/* ICONE 1 — Chatbot : bulle de dialogue + 3 points */}
+  {name === 'chatbot' && (
+    <>
+      {/* Bulle arrondie avec petite queue en bas-gauche */}
+      <path d="M21 12c0 4.418-4.03 8-9 8-1.255 0-2.45-.23-3.54-.643L3 21l1.643-3.54C3.23 14.45 3 13.255 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+      {/* 3 micro-points horizontaux centres (remplis pour la lisibilite a 24px) */}
+      <circle cx="8.5" cy="12" r="0.5" fill="currentColor" />
+      <circle cx="12" cy="12" r="0.5" fill="currentColor" />
+      <circle cx="15.5" cy="12" r="0.5" fill="currentColor" />
+    </>
+  )}
+
+  {/* ICONE 2 — Form : document + 3 lignes + checkmark coin */}
+  {name === 'form' && (
+    <>
+      {/* Document/formulaire (rectangle vertical arrondi) */}
+      <rect x="4" y="3" width="14" height="18" rx="1.5" />
+      {/* 3 lignes representant les champs */}
+      <line x1="7" y1="8" x2="14" y2="8" />
+      <line x1="7" y1="12" x2="14" y2="12" />
+      <line x1="7" y1="16" x2="11" y2="16" />
+      {/* Checkmark dans un cercle, en bas-droite, debordant */}
+      <circle cx="18" cy="18" r="3.5" />
+      <polyline points="16.5 18 17.5 19 19.5 17" />
+    </>
+  )}
+
+  {/* ICONE 3 — Notifications : cloche + point d'alerte */}
+  {name === 'notifications' && (
+    <>
+      {/* Cloche classique */}
+      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+      {/* Battant (sous la cloche) */}
+      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+      {/* Point d'alerte (cercle plein en haut-droite) */}
+      <circle cx="18" cy="6" r="2" fill="currentColor" stroke="none" />
+    </>
+  )}
+
+  {/* ICONE 4 — Automations : 2 cercles + fleche reliante */}
+  {name === 'automations' && (
+    <>
+      {/* Cercle gauche */}
+      <circle cx="5" cy="12" r="3" />
+      {/* Cercle droit */}
+      <circle cx="19" cy="12" r="3" />
+      {/* Trait + pointe de fleche au centre */}
+      <line x1="8" y1="12" x2="16" y2="12" />
+      <polyline points="13.5 9.5 16 12 13.5 14.5" />
+    </>
+  )}
+
+  {/* ICONE 5 — Voicebot : combine telephone + 2 ondes sonores */}
+  {name === 'voicebot' && (
+    <>
+      {/* Combine classique (handset stylise) */}
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+      {/* Onde proche (1er arc) */}
+      <path d="M15 4.5c.83 0 1.5.67 1.5 1.5" />
+      {/* Onde eloignee (2eme arc) */}
+      <path d="M15 1.5c2.49 0 4.5 2.01 4.5 4.5" />
+    </>
+  )}
+</svg>

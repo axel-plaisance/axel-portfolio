@@ -1,0 +1,28 @@
+---
+// SectionMarker.astro — Etiquette verticale en marge gauche (magazine print).
+// Affiche uniquement >= 1024px (besoin de marge horizontale).
+// Le label tourne de -90deg autour de son point gauche-milieu : lecture
+// de bas en haut, convention magazine standard.
+// Cf. iteration-v1.md §3.F.
+
+export interface Props {
+  // Texte du marker (ex: "MÉTHODE — 03")
+  label: string;
+}
+
+const { label } = Astro.props;
+---
+
+<!--
+  Position absolute : la section parente DOIT etre en "relative".
+  z-5 = au-dessus du numero geant (z-0), sous le contenu (z-10).
+  white-space-nowrap evite que le label tourne se coupe.
+  aria-hidden : purement decoratif, le lecteur d ecran l ignore.
+-->
+<span
+  class="hidden lg:block absolute left-6 top-1/2 z-[5] font-mono text-eyebrow tracking-eyebrow uppercase text-mono pointer-events-none select-none whitespace-nowrap"
+  style="transform: translateY(-50%) rotate(-90deg); transform-origin: left center;"
+  aria-hidden="true"
+>
+  {label}
+</span>

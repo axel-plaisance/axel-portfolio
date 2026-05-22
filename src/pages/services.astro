@@ -1,0 +1,547 @@
+---
+// Page Services — v1.3
+// Repositionnement v1.3 (2026-05-12) : abandon total des 3 niveaux v1.2
+// (L'indispensable / Le standard pro / L'outil complet). Bascule sur 2 axes
+// Creation / Refonte. Aucun chiffre tarifaire.
+// Cf. specs : 02-design/iteration-v1.3-design.md
+// Textes : 03-copywriting/textes-simplification-v1-3.md
+//
+// 8 sections :
+//   1. Hero (eyebrow SERVICES sans numero)
+//   2. Creation vs Refonte (NOUVELLE — cœur de page, 2 ApproachCard large)
+//   3. Inclus dans chaque projet (NOUVELLE — 8 NumberedItem en grille 2 cols)
+//   4. Methode (conservee v1.2, 5 MethodStep)
+//   5. Combien ca coute ? (NOUVELLE — editoriale centrale + encart OFFERTS)
+//   6. Mes engagements (conservee v1.2, 6 NumberedItem)
+//   7. FAQ (reduite a 4 questions)
+//   8. CTABand final
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import CTABand from '../components/CTABand.astro';
+import ApproachCard from '../components/ApproachCard.astro';
+import MethodStep from '../components/MethodStep.astro';
+import NumberedItem from '../components/NumberedItem.astro';
+import SectionMarker from '../components/SectionMarker.astro';
+
+// Meta optimisees v1.3 — aucun chiffre tarifaire, aucune mention de "niveau".
+// Title : 57 car. — focus "Creation et refonte" + marque.
+// Description : 158 car. — sur-mesure, devis + audit offerts, sans engagement.
+const title = 'Création et refonte de site web pour PME · Axel Plaisance';
+const description = 'Création et refonte de sites web pour PME à Lorient et dans le Morbihan. Sur-mesure, sans formule toute faite. Devis et audit offerts sous 48h, sans engagement.';
+
+// JSON-LD FAQPage — synchronise EXACTEMENT avec le contenu HTML de la FAQ.
+// v1.3 : reduit a 4 questions (vs 7 en v1.2). Aucune mention de niveau/formule.
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  '@id': 'https://axelplaisance.fr/services#faq',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: "Pourquoi vous n'affichez pas vos prix sur le site ?",
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: "Parce que chaque projet est différent et que je préfère vous proposer un tarif juste, plutôt qu'un prix standard. Le tarif final dépend du nombre de pages, des fonctionnalités, de votre situation actuelle (création ou refonte) et de vos délais. Devis chiffré sous 48h après notre échange, sans engagement.",
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Comment se passe le premier échange ?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: "On prend 15 minutes au téléphone ou en visio pour que je comprenne votre projet : votre activité, ce que doit faire le site, vos délais. Pas de questionnaire à remplir, juste une conversation. Vous recevez le devis sous 48h après notre échange.",
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Combien de temps pour mon site ?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: "De 2 à 4 semaines en moyenne, selon la complexité du projet et la rapidité avec laquelle vous me transmettez vos contenus (textes, photos). Je vous donne un planning précis dans le devis, et je m'y tiens.",
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Et après la livraison, je dois payer un abonnement ?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: "Pas à moi. Le site vous appartient, vous ne me devez rien chaque mois. Les seuls frais récurrents sont ceux des fournisseurs, payés directement avec votre carte : le domaine coûte environ 12 à 15 € par an, l'hébergement Netlify est gratuit la plupart du temps pour un site PME (environ 20 €/mois seulement si vous avez un très gros trafic), et les emails pro tournent autour de 5 €/mois par boîte si vous en voulez. Je n'avance rien, je ne prends pas de commission. Si vous voulez aussi de la maintenance par moi, c'est en option, sur devis selon le périmètre — au forfait mensuel ou à l'intervention, au choix.",
+      },
+    },
+  ],
+};
+---
+
+<BaseLayout title={title} description={description}>
+  {/* JSON-LD FAQPage injecte dans le <head> via le slot dedie */}
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+
+  {/* =============================================== */}
+  {/* SECTION 1 — Hero (fond ivoire)                  */}
+  {/* =============================================== */}
+  {/* Eyebrow SANS numero ("SERVICES" seul). Compact py-20/24. */}
+  <section class="container-editorial py-20 md:py-24">
+    <Eyebrow label="SERVICES" />
+    <h1 class="font-serif text-h1 tracking-tighter text-ink mt-4 max-w-[24ch]">
+      Un site web pensé pour vous, conçu sur-mesure.
+    </h1>
+    <p class="text-lede text-ink-soft mt-6 max-w-prose">
+      Pas de formules toutes faites. Pas de cases à cocher. Juste un site web qui correspond exactement à votre activité, votre budget et vos objectifs.
+    </p>
+
+    {/* 2 CTAs : primaire vers /contact + ghost vers ancre #methode */}
+    <div class="mt-10 flex flex-col sm:flex-row gap-4">
+      <a
+        href="/contact"
+        class="inline-flex items-center justify-center px-6 py-3.5 bg-ink text-ivoire text-body font-medium rounded hover:bg-[#1F1B17] transition-all duration-200 hover:-translate-y-0.5"
+      >
+        Demander un devis
+      </a>
+      <a
+        href="#methode"
+        class="inline-flex items-center justify-center px-6 py-3.5 border border-border text-ink text-body font-medium rounded hover:border-ink transition-all duration-200"
+      >
+        Voir comment ça marche
+      </a>
+    </div>
+
+    {/* Microcopy sous CTAs */}
+    <p class="text-micro font-mono text-mono mt-6">
+      Réponse sous 48h · Lorient, pays de Lorient et tout le Morbihan
+    </p>
+  </section>
+
+  {/* =============================================== */}
+  {/* SECTION 2 — Création vs Refonte (NOUVELLE)      */}
+  {/* =============================================== */}
+  {/* Fond surface, cœur de page : 2 ApproachCard variant large cote a cote.
+       id="approche" + SectionMarker + numero geant 01.
+       Cf. specs : 02-design/iteration-v1.3-design.md §2.2 */}
+  <section id="approche" class="bg-surface relative overflow-x-clip scroll-mt-24">
+    <SectionMarker label="CRÉATION / REFONTE — 01" />
+
+    {/* Numero geant "01" : couleur ivoire (inverse du fond surface) */}
+    <span
+      class="hidden md:block absolute top-6 -right-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-ivoire z-0 pointer-events-none select-none"
+      aria-hidden="true"
+    >01</span>
+
+    <div class="container-editorial py-16 md:py-20 lg:py-24 relative z-10">
+      <div class="fade-in max-w-3xl">
+        <Eyebrow number="01" label="VOTRE BESOIN" />
+        <h2 class="font-serif text-h2 tracking-tighter text-ink mt-4">
+          Création ou refonte ?
+        </h2>
+        <p class="text-lede text-ink-soft mt-6 max-w-2xl">
+          Deux situations, une seule méthode : comprendre votre projet avant de proposer un chiffre. Voici comment je travaille selon votre point de départ.
+        </p>
+      </div>
+
+      {/* Grille 2 ApproachCard variant large.
+           items-stretch + h-full sur les cartes = CTAs alignes horizontalement. */}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch mt-16">
+        <div class="fade-in h-full" data-delay="0">
+          <ApproachCard
+            size="large"
+            anchor="creation"
+            eyebrow="CRÉATION"
+            title="Vous n'avez pas encore de site"
+            description="Je conçois votre site de A à Z, en partant de votre activité, votre clientèle et vos objectifs. Du choix de l'identité visuelle au texte de chaque page, tout est pensé pour votre métier. Vous récupérez un outil qui vous ressemble, prêt à travailler dès le premier jour."
+            features={[
+              'Identité visuelle adaptée à votre activité',
+              'Conception et rédaction des textes ensemble',
+              'Design responsive (mobile, tablette, ordinateur)',
+              'SEO local Google pour votre zone',
+              'Mise en ligne et formation 1h offerte',
+            ]}
+            idealFor="Idéal pour : artisans qui démarrent en ligne, nouveaux commerces, indépendants qui n'ont jamais eu de présence web."
+            linkLabel="Demander un devis pour une création →"
+            linkHref="/contact?besoin=creation"
+          />
+        </div>
+        <div class="fade-in h-full" data-delay="100">
+          <ApproachCard
+            size="large"
+            anchor="refonte"
+            eyebrow="REFONTE"
+            title="Vous avez un site qui mérite mieux"
+            description="J'audite votre site existant, on identifie ensemble ce qui fonctionne et ce qui freine vos clients. Je reconstruis une version moderne, performante et alignée sur vos vrais objectifs. Vous gardez ce qui marche, on remplace le reste."
+            features={[
+              'Audit complet de votre site actuel',
+              'Migration de vos contenus existants',
+              'Refonte design et technique complète',
+              'SEO local optimisé sans perdre vos acquis',
+              'Mise en ligne sans rupture de service',
+            ]}
+            idealFor="Idéal pour : entreprises avec un site daté, qui ne convertit plus, qui n'est pas adapté au mobile, ou dont la maintenance est devenue trop coûteuse."
+            linkLabel="Demander un devis pour une refonte →"
+            linkHref="/contact?besoin=refonte"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* =============================================== */}
+  {/* SECTION 3 — Inclus dans chaque projet (NOUVELLE)*/}
+  {/* =============================================== */}
+  {/* Fond ivoire, 8 NumberedItem en grille 2 cols desktop / 1 col mobile.
+       Numero geant "02" couleur surface. Pas de SectionMarker (section appoint).
+       Cf. specs : 02-design/iteration-v1.3-design.md §2.3 */}
+  <section class="bg-ivoire relative overflow-x-clip">
+    {/* Numero geant "02" : couleur surface (inverse du fond ivoire) */}
+    <span
+      class="hidden md:block absolute top-6 -right-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-surface z-0 pointer-events-none select-none"
+      aria-hidden="true"
+    >02</span>
+
+    <div class="container-editorial py-16 md:py-20 lg:py-24 relative z-10">
+      <div class="fade-in max-w-3xl">
+        <Eyebrow number="02" label="STANDARDS QUALITÉ" />
+        <h2 class="font-serif text-h2 tracking-tighter text-ink mt-4">
+          Inclus dans chaque projet.
+        </h2>
+        <p class="text-lede text-ink-soft mt-6 max-w-2xl">
+          Quelle que soit la nature du projet, certaines choses sont non négociables. Voici ce qui est compris dans chaque devis, sans avoir à le demander.
+        </p>
+      </div>
+
+      {/* Grille 8 standards qualite en 2 cols desktop / 1 col mobile.
+           <ol> : semantique liste ordonnee (accessibilite + SEO). */}
+      <ol class="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-12">
+        <NumberedItem
+          num="01"
+          title="Design sur-mesure"
+          description="Pas de template recyclé. Une identité visuelle qui vous appartient."
+        />
+        <NumberedItem
+          num="02"
+          title="Responsive complet"
+          description="Testé sur mobile, tablette et ordinateur, avant chaque livraison."
+        />
+        <NumberedItem
+          num="03"
+          title="SEO local Google"
+          description="Optimisation pour Lorient, le pays de Lorient et tout le Morbihan."
+        />
+        <NumberedItem
+          num="04"
+          title="Formation 1h offerte"
+          description="Pour gérer le site vous-même après la livraison, en autonomie."
+        />
+        <NumberedItem
+          num="05"
+          title="Hébergement et domaine"
+          description="Mise en place complète à votre nom (frais fournisseurs à votre charge)."
+        />
+        <NumberedItem
+          num="06"
+          title="Suivi 1 mois inclus"
+          description="Un mois de support technique pour les ajustements après la mise en ligne."
+        />
+        <NumberedItem
+          num="07"
+          title="Code propre"
+          description="Sites rapides, accessibles, conformes RGPD, sans dépendance lourde."
+        />
+        <NumberedItem
+          num="08"
+          title="Sécurité HTTPS"
+          description="Certificat SSL automatique pour rassurer vos visiteurs et plaire à Google."
+        />
+      </ol>
+    </div>
+  </section>
+
+  {/* =============================================== */}
+  {/* SECTION 4 — Méthode (conservee v1.2)            */}
+  {/* =============================================== */}
+  {/* Fond surface. id="methode" + scroll-mt-24 = cible CTA ghost du hero.
+       Renumerotee 03 (etait 06 en v1.2). SectionMarker + numero geant ajoutes.
+       Cf. specs : 02-design/iteration-v1.3-design.md §2.4 */}
+  <section id="methode" class="bg-surface relative overflow-x-clip scroll-mt-24">
+    <SectionMarker label="MÉTHODE — 03" />
+
+    {/* Numero geant "03" : couleur ivoire (inverse du fond surface) */}
+    <span
+      class="hidden md:block absolute top-6 -right-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-ivoire z-0 pointer-events-none select-none"
+      aria-hidden="true"
+    >03</span>
+
+    <div class="container-editorial py-16 md:py-20 lg:py-24 relative z-10">
+      <div class="fade-in">
+        <Eyebrow number="03" label="MA MÉTHODE" />
+        <h2 class="font-serif text-h2 tracking-tighter text-ink mt-4">
+          Comment se passe un projet, du premier mail à la mise en ligne.
+        </h2>
+        <p class="text-lede text-ink-soft mt-6 max-w-prose">
+          Cinq étapes. Aucune zone d'ombre. Je vous dis à l'avance ce qui va se passer.
+        </p>
+      </div>
+
+      <div class="mt-16 space-y-8">
+        <div class="fade-in">
+          <MethodStep number="01" title="Échange" description="15 min visio ou téléphone. Vous me dites où vous en êtes." />
+        </div>
+        <div class="fade-in border-t border-border-light pt-8">
+          <MethodStep number="02" title="Conception" description="Maquettes envoyées sous 5 jours. Aller-retours libres." />
+        </div>
+        <div class="fade-in border-t border-border-light pt-8">
+          <MethodStep number="03" title="Développement" description="Code propre, site rapide, validation au fur et à mesure." />
+        </div>
+        <div class="fade-in border-t border-border-light pt-8">
+          <MethodStep number="04" title="Mise en ligne" description="Domaine, hébergement, emails : je gère la config technique, vous gardez votre carte pour les frais fournisseurs (≈ 15 €/an au total)." />
+        </div>
+        <div class="fade-in border-t border-border-light pt-8">
+          <MethodStep number="05" title="Suivi" description="Formation 1h offerte. Le numéro que vous avez est le mien." />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* =============================================== */}
+  {/* SECTION 5 — Combien ca coute ? (NOUVELLE)       */}
+  {/* =============================================== */}
+  {/* Fond ivoire, layout centre max-w-3xl. Pas de SectionMarker, pas de numero
+       geant (section editoriale centree, page de magazine).
+       Encart "Devis + audit OFFERTS" : bg-surface + border-t/b border-light.
+       Cf. specs : 02-design/iteration-v1.3-design.md §2.5 */}
+  <section class="bg-ivoire">
+    <div class="container-editorial py-20 md:py-24 lg:py-28">
+      <div class="max-w-3xl mx-auto">
+        <div class="fade-in">
+          <Eyebrow number="04" label="INVESTISSEMENT" />
+          {/* H2 un cran au-dessus du standard : 40px mobile / 44px desktop */}
+          <h2 class="font-serif text-h2 lg:text-[2.75rem] tracking-tighter text-ink mt-4">
+            Chaque projet est unique. Le prix aussi.
+          </h2>
+
+          {/* Paragraphe intro — le mot "mentir" est VOLONTAIRE (cf. @copywriting §5).
+               Ne pas attenuer. */}
+          <p class="text-body text-ink-soft leading-relaxed mt-6">
+            Je ne donne pas de prix fixe ici, parce que ce serait mentir. Le tarif d'un site dépend du nombre de pages, des fonctionnalités, de vos contenus existants, de vos délais. Tout ça, on en parle ensemble.
+          </p>
+
+          {/* Sous-titre liste */}
+          <h3 class="font-serif text-h4 tracking-tighter text-ink mt-10">
+            Comment on procède :
+          </h3>
+
+          {/* Liste 4 items, puces "•" mono — pattern identique aux puces ApproachCard */}
+          <ul class="flex flex-col gap-3 mt-6">
+            <li class="flex items-start gap-3 text-body text-ink">
+              <span class="text-mono font-mono mt-1" aria-hidden="true">•</span>
+              <span>On échange 15 minutes au téléphone ou en visio pour comprendre votre besoin.</span>
+            </li>
+            <li class="flex items-start gap-3 text-body text-ink">
+              <span class="text-mono font-mono mt-1" aria-hidden="true">•</span>
+              <span>Je vous envoie un devis détaillé sous 48h.</span>
+            </li>
+            <li class="flex items-start gap-3 text-body text-ink">
+              <span class="text-mono font-mono mt-1" aria-hidden="true">•</span>
+              <span>Vous regardez tranquillement chez vous, sans pression ni relance.</span>
+            </li>
+            <li class="flex items-start gap-3 text-body text-ink">
+              <span class="text-mono font-mono mt-1" aria-hidden="true">•</span>
+              <span>On ajuste si besoin, jusqu'à ce que le devis vous corresponde.</span>
+            </li>
+          </ul>
+        </div>
+
+        {/* ===== ENCART "Devis + audit OFFERTS" ===== */}
+        {/* bg-surface + border-t/b border-border-light (1px en haut et en bas).
+             Pas de bordure laterale, pas de rounded. Effet "bandeau editorial". */}
+        <div
+          class="fade-in mt-12 bg-surface border-t border-b border-border-light px-8 py-10 md:px-12 md:py-12 text-center"
+          data-delay="100"
+        >
+          <p class="font-serif text-h4 lg:text-h3 tracking-tighter text-ink">
+            Devis et audit du site existant : offerts.
+          </p>
+          <p class="font-serif italic text-small lg:text-body text-ink-soft mt-3">
+            Sans engagement, sans relance commerciale.
+          </p>
+        </div>
+
+        {/* ===== CTA centre sous l'encart ===== */}
+        <div class="fade-in mt-10 text-center" data-delay="200">
+          <a
+            href="/contact"
+            class="inline-flex items-center justify-center px-6 py-3.5 bg-ink text-ivoire text-body font-medium rounded hover:bg-[#1F1B17] transition-all duration-200 hover:-translate-y-0.5"
+          >
+            Demander un devis →
+          </a>
+          <p class="font-mono text-micro text-mono mt-6">
+            Réponse sous 48h ouvrées. Le mail est rédigé à la main, pas par une IA.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* =============================================== */}
+  {/* SECTION 6 — Mes engagements (conservee v1.2)    */}
+  {/* =============================================== */}
+  {/* Fond surface, 6 NumberedItem. Numero geant "05" en haut-GAUCHE (alterne).
+       Cf. specs : 02-design/iteration-v1.3-design.md §2.6 */}
+  <section class="bg-surface relative overflow-x-clip">
+    <SectionMarker label="ENGAGEMENTS — 05" />
+
+    {/* Numero geant "05" : couleur ivoire (inverse du fond surface), position GAUCHE alternee */}
+    <span
+      class="hidden md:block absolute top-6 -left-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-ivoire z-0 pointer-events-none select-none"
+      aria-hidden="true"
+    >05</span>
+
+    <div class="container-editorial py-16 md:py-20 lg:py-24 relative z-10">
+      <div class="fade-in max-w-3xl">
+        <Eyebrow number="05" label="ENGAGEMENTS" />
+        <h2 class="font-serif text-h2 tracking-tighter text-ink mt-4">
+          Pas de mauvaise surprise.
+        </h2>
+        <p class="text-lede text-ink-soft mt-6 max-w-2xl">
+          Le sur-mesure ne veut pas dire flou. Voici ce que je garantis à chaque client, par écrit, dès le devis.
+        </p>
+      </div>
+
+      {/* Grille 6 engagements en 2 colonnes desktop / 1 col mobile */}
+      <ol class="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-12">
+        <NumberedItem
+          num="01"
+          title="Devis sous 48h"
+          description="Après notre premier échange, vous recevez un devis chiffré et détaillé sous 48 heures."
+        />
+        <NumberedItem
+          num="02"
+          title="Prix fixe une fois validé"
+          description={`Le tarif du devis est ferme. Pas de frais cachés, pas de « petits suppléments » en cours de route.`}
+        />
+        <NumberedItem
+          num="03"
+          title="Paiement en deux fois"
+          description="30 % à la commande pour lancer le projet, 70 % à la livraison une fois le site validé."
+        />
+        <NumberedItem
+          num="04"
+          title="Audit et devis offerts"
+          description="Le premier échange et l'analyse de votre situation actuelle sont gratuits, sans engagement."
+        />
+        <NumberedItem
+          num="05"
+          title="Le site vous appartient"
+          description="Code, contenu, domaine, hébergement : tout est à votre nom. Pas d'abonnement obligatoire, pas de location."
+        />
+        <NumberedItem
+          num="06"
+          title="Un seul interlocuteur"
+          description="Moi, du premier mail jusqu'à un mois après la livraison. Pas de standard, pas de chaîne de support."
+        />
+      </ol>
+    </div>
+  </section>
+
+  {/* =============================================== */}
+  {/* SECTION 7 — FAQ (fond ivoire — reduite a 4 Q)   */}
+  {/* =============================================== */}
+  {/* 4 questions selon @copywriting §7. Eyebrow "06 — QUESTIONS FRÉQUENTES".
+       Cf. specs : 02-design/iteration-v1.3-design.md §2.7 */}
+  <section class="bg-ivoire">
+    <div class="container-editorial py-16 md:py-20 lg:py-24">
+      <div class="fade-in max-w-3xl mx-auto">
+        <Eyebrow number="06" label="QUESTIONS FRÉQUENTES" />
+        <h2 class="font-serif text-h2 tracking-tighter text-ink mt-4">
+          Les questions que vous m'avez déjà posées.
+        </h2>
+      </div>
+
+      <div class="mt-12 max-w-3xl mx-auto">
+        {/* Question 1 — Pourquoi pas de prix affiches */}
+        <details class="border-t border-border-light">
+          <summary class="flex items-start justify-between gap-4 py-6">
+            <span class="text-h5 font-sans font-medium text-ink">Pourquoi vous n'affichez pas vos prix sur le site ?</span>
+            <svg class="faq-icon flex-shrink-0 mt-1" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </summary>
+          <p class="text-body text-ink-soft pb-6 max-w-prose">
+            Parce que chaque projet est différent et que je préfère vous proposer un tarif juste, plutôt qu'un prix standard. Le tarif final dépend du nombre de pages, des fonctionnalités, de votre situation actuelle (création ou refonte) et de vos délais. Devis chiffré sous 48h après notre échange, sans engagement.
+          </p>
+        </details>
+
+        {/* Question 2 — Premier echange */}
+        <details class="border-t border-border-light">
+          <summary class="flex items-start justify-between gap-4 py-6">
+            <span class="text-h5 font-sans font-medium text-ink">Comment se passe le premier échange ?</span>
+            <svg class="faq-icon flex-shrink-0 mt-1" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </summary>
+          <p class="text-body text-ink-soft pb-6 max-w-prose">
+            On prend 15 minutes au téléphone ou en visio pour que je comprenne votre projet : votre activité, ce que doit faire le site, vos délais. Pas de questionnaire à remplir, juste une conversation. Vous recevez le devis sous 48h après notre échange.
+          </p>
+        </details>
+
+        {/* Question 3 — Delai */}
+        <details class="border-t border-border-light">
+          <summary class="flex items-start justify-between gap-4 py-6">
+            <span class="text-h5 font-sans font-medium text-ink">Combien de temps pour mon site ?</span>
+            <svg class="faq-icon flex-shrink-0 mt-1" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </summary>
+          <p class="text-body text-ink-soft pb-6 max-w-prose">
+            De 2 à 4 semaines en moyenne, selon la complexité du projet et la rapidité avec laquelle vous me transmettez vos contenus (textes, photos). Je vous donne un planning précis dans le devis, et je m'y tiens.
+          </p>
+        </details>
+
+        {/* Question 4 — Frais recurrents apres livraison */}
+        <details class="border-t border-b border-border-light">
+          <summary class="flex items-start justify-between gap-4 py-6">
+            <span class="text-h5 font-sans font-medium text-ink">Et après la livraison, je dois payer un abonnement ?</span>
+            <svg class="faq-icon flex-shrink-0 mt-1" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </summary>
+          <p class="text-body text-ink-soft pb-6 max-w-prose">
+            Pas à moi. Le site vous appartient, vous ne me devez rien chaque mois. Les seuls frais récurrents sont ceux des fournisseurs, payés directement avec votre carte : le domaine coûte environ 12 à 15 € par an, l'hébergement Netlify est gratuit la plupart du temps pour un site PME (environ 20 €/mois seulement si vous avez un très gros trafic), et les emails pro tournent autour de 5 €/mois par boîte si vous en voulez. Je n'avance rien, je ne prends pas de commission. Si vous voulez aussi de la maintenance par moi, c'est en option, sur devis selon le périmètre — au forfait mensuel ou à l'intervention, au choix.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  {/* Lien sortant interne vers /automatisations (conserve v1).
+       Maillage interne descriptif : ancre contient le mot-cle cible
+       "automatisations intelligentes". Bloc discret avant le CTABand. */}
+  <section class="container-editorial pb-8">
+    <div class="max-w-prose fade-in">
+      <p class="text-eyebrow font-mono tracking-eyebrow uppercase text-mono">
+        Voir aussi
+      </p>
+      <p class="text-body text-ink-soft mt-3">
+        Besoin d'aller plus loin que le site ?
+        <a
+          href="/automatisations"
+          class="text-ink underline underline-offset-4 decoration-border hover:decoration-ink transition-colors duration-200"
+        >
+          Découvrez les automatisations intelligentes pour PME
+        </a>
+        : chatbot, formulaire de devis intelligent, notifications WhatsApp et voicebot, intégrés à votre site existant.
+      </p>
+    </div>
+  </section>
+
+  {/* =============================================== */}
+  {/* SECTION 8 — CTABand final (fond dark)           */}
+  {/* =============================================== */}
+  {/* Texte mis a jour v1.3 (cf. @copywriting §8).
+       ctaText harmonise "Demander un devis →" (signature v1.3 avec fleche). */}
+  <CTABand
+    title="Prêt à donner un nouveau souffle à votre présence en ligne ?"
+    description="15 minutes au téléphone ou en visio. Je vous écoute, je comprends votre besoin, je vous envoie un devis chiffré sous 48h. Sans engagement, sans relance."
+    ctaText="Demander un devis →"
+    ctaHref="/contact"
+    secondaryText="Me contacter directement"
+    secondaryHref="/contact"
+  />
+</BaseLayout>

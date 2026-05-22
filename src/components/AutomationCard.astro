@@ -1,0 +1,160 @@
+---
+// AutomationCard.astro — Carte service automatisation (page /automatisations).
+//
+// Deux variants : primary (Tier 1 phares) et secondary (Tier 2 complements).
+// Cf. specs : 02-design/page-automatisations-design.md §3.1.
+//
+// Iteration v1.4 (2026-05-12) — Regle universelle d'alignement vertical :
+// chaque zone interne possede un min-h-[Xpx] calibre sur le pire cas constate
+// + 1 ligne de marge. Distinction mobile/desktop quand le wrap differe.
+// Les variants primary et secondary ne se cotoient JAMAIS dans la meme grille
+// (Tier 1 = Section 3, Tier 2 = Section 5) : alignement applique au sein de
+// chaque tier, pas entre tiers. Cf. specs : 02-design/iteration-v1.4-design.md
+// §3.5/§3.6 + §6.
+//
+// Mecanique cle : meme structure que PricingCard.
+//   - h-full + flex-col + items-stretch sur la grille parente : meme hauteur
+//   - mt-auto sur le footer (CTA) : colle en bas, peu importe le contenu.
+
+import AutomationIcon from './icons/AutomationIcon.astro';
+
+export interface Props {
+  // Variant carte : primary (plus grande, fond surface) ou secondary (compacte, fond ivoire)
+  tier: 'primary' | 'secondary';
+  // Identifiant de l'icone (cf. AutomationIcon)
+  icon: 'chatbot' | 'form' | 'notifications' | 'automations' | 'voicebot';
+  // Titre de la carte (ex: "Chatbot pour votre site")
+  title: string;
+  // Lede court sous le titre (1-2 phrases)
+  lede: string;
+  // 3 benefices a lister (puces "•")
+  benefits: string[];
+  // Phrase exemple concret (prefixe par "Exemple — ")
+  example: string;
+  // URL du CTA (ex: "/contact?service=chatbot")
+  ctaHref: string;
+}
+
+const { tier, icon, title, lede, benefits, example, ctaHref } = Astro.props;
+
+// Taille icone selon variant : 40px (primary) / 32px (secondary)
+const iconSize = tier === 'primary' ? 40 : 32;
+---
+
+{/* Carte : h-full + flex-col pour egaliser les hauteurs dans la grille parente.
+    Hover : translateY(-4px) en primary, -2px en secondary, bordure densifiee. */}
+<article
+  class:list={[
+    'h-full flex flex-col rounded-lg border transition-all duration-300 ease-editorial',
+    tier === 'primary'
+      // PRIMARY : fond surface, padding 32 mobile / 40 desktop, lift -4px
+      ? 'bg-surface border-border-light hover:border-border hover:-translate-y-1 p-8 lg:p-10'
+      // SECONDARY : fond ivoire (meme que section), padding 24 mobile / 32 desktop, lift -2px
+      : 'bg-ivoire border-border-light hover:border-border hover:-translate-y-0.5 p-6 lg:p-8',
+  ]}
+>
+  {/* ICONE (top, couleur ink heritee via currentColor)
+      v1.4 : hauteur fixe h-10 (40px primary) / h-8 (32px secondary). */}
+  <div
+    class:list={[
+      'text-ink',
+      tier === 'primary' ? 'h-10' : 'h-8',
+    ]}
+  >
+    <AutomationIcon name={icon} size={iconSize} />
+  </div>
+
+  {/* TITRE serif (h3 32px en primary / h4 24px en secondary)
+      v1.4 : min-h calibre selon nb lignes max (cf. spec @design §3.5/§3.6). */}
+  <h3
+    class:list={[
+      'font-serif tracking-tighter text-ink mt-4',
+      tier === 'primary'
+        ? 'text-h3 min-h-[112px] lg:min-h-[80px]'
+        : 'text-h4 min-h-[64px] lg:min-h-[40px]',
+    ]}
+  >
+    {title}
+  </h3>
+
+  {/* LEDE sous le titre
+      v1.4 : min-h calibre sur le pire cas (Chatbot 167 car / Notifications 175 car). */}
+  <p
+    class:list={[
+      'text-body text-ink-soft',
+      tier === 'primary'
+        ? 'mt-4 min-h-[144px] lg:min-h-[120px]'
+        : 'mt-3 min-h-[120px] lg:min-h-[96px]',
+    ]}
+  >
+    {lede}
+  </p>
+
+  {/* Hairline de separation lede / benefices (h-px structurel) */}
+  <hr
+    class:list={[
+      'border-t border-border-light h-px',
+      tier === 'primary' ? 'my-6' : 'my-5',
+    ]}
+  />
+
+  {/* LISTE BENEFICES (3 items, puces mono "•")
+      v1.4 : min-h calibre (3 items × hauteur item + 2 × gap-3). */}
+  <ul
+    class:list={[
+      'flex flex-col gap-3',
+      tier === 'primary'
+        ? 'min-h-[144px] lg:min-h-[120px]'
+        : 'min-h-[120px] lg:min-h-[108px]',
+    ]}
+  >
+    {benefits.map((b) => (
+      <li
+        class:list={[
+          'flex items-start gap-3 text-ink',
+          // Secondary : densification typo (14px au lieu de 16px)
+          tier === 'primary' ? 'text-body' : 'text-small',
+        ]}
+      >
+        <span class="text-mono font-mono mt-1" aria-hidden="true">•</span>
+        <span>{b}</span>
+      </li>
+    ))}
+  </ul>
+
+  {/* ENCART "EXEMPLE CONCRET" — fond inverse (ivoire si carte surface, surface si carte ivoire)
+      v1.4 : min-h calibre sur le pire cas (label + 3-4 lignes texte + padding). */}
+  <div
+    class:list={[
+      'rounded p-4',
+      // Primary (carte surface) : encart en ivoire (l'inverse)
+      // Secondary (carte ivoire) : encart en surface
+      tier === 'primary'
+        ? 'bg-ivoire mt-6 min-h-[140px] lg:min-h-[124px]'
+        : 'bg-surface mt-5 min-h-[140px] lg:min-h-[124px]',
+    ]}
+  >
+    <p class="font-mono text-eyebrow tracking-eyebrow uppercase text-mono mb-2">
+      EXEMPLE CONCRET
+    </p>
+    <p class="text-small italic text-ink-soft">{example}</p>
+  </div>
+
+  {/* MENTION SUR DEVIS (mono 12px) — h-4 (1 ligne fixe) v1.4 */}
+  <p class="mt-6 text-micro font-mono text-mono h-4">
+    Tarification sur devis selon votre besoin
+  </p>
+
+  {/* CTA GHOST INK — mt-auto pour coller en bas si la grille parente egalise les hauteurs */}
+  <a
+    href={ctaHref}
+    class:list={[
+      'mt-auto pt-8 inline-flex items-center gap-2 font-medium text-ink underline underline-offset-4 decoration-border hover:decoration-ink transition-all duration-200 group',
+      tier === 'primary' ? 'text-body' : 'text-small',
+    ]}
+  >
+    <span>Demander un devis</span>
+    {/* Fleche decalee de 2px a droite au hover du lien parent */}
+    <span class="inline-block transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true">→</span>
+  </a>
+</article>

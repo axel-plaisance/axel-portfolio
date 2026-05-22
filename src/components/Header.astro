@@ -1,0 +1,143 @@
+---
+// Header.astro — Navigation principale sticky.
+// Fond ivoire translucide + blur, burger mobile, lien actif souligne.
+
+// On recupere le chemin de la page courante pour souligner le bon lien
+const currentPath = Astro.url.pathname;
+
+// On normalise le chemin (sans slash final, sauf pour "/")
+const normalizedPath = currentPath === '/' ? '/' : currentPath.replace(/\/$/, '');
+
+// Liens de navigation
+// v2 (Phase 4) : ajout du lien Automatisations entre Services et Realisations.
+const navLinks = [
+  { href: '/', label: 'Accueil' },
+  { href: '/services', label: 'Services' },
+  { href: '/automatisations', label: 'Automatisations' },
+  { href: '/realisations', label: 'Réalisations' },
+  { href: '/contact', label: 'Contact' },
+];
+
+// Helper : un lien est actif si le chemin courant correspond
+const isActive = (href: string): boolean => {
+  if (href === '/') return normalizedPath === '/';
+  return normalizedPath === href || normalizedPath.startsWith(href + '/');
+};
+---
+
+<header
+  class="sticky top-0 z-50 w-full bg-ivoire/85 backdrop-blur-md border-b border-border-light"
+>
+  <div class="container-editorial flex items-center justify-between h-16 lg:h-18">
+    <!-- Logo / wordmark -->
+    <a
+      href="/"
+      class="font-serif text-h5 text-ink hover:text-ink-soft transition-colors duration-200"
+      aria-label="Axel Plaisance — Retour à l'accueil"
+    >
+      Axel Plaisance<span class="text-mono">.</span>
+    </a>
+
+    <!-- Navigation desktop (cachee sur mobile).
+         v2 (Phase 4) : gap-8 -> gap-6 sur lg, gap-8 sur xl, pour absorber le 5e lien
+         (Automatisations) sans wrap entre 1024 et 1280px. -->
+    <nav class="hidden lg:flex items-center gap-6 xl:gap-8" aria-label="Navigation principale">
+      {
+        navLinks.map((link) => (
+          <a
+            href={link.href}
+            class:list={[
+              'text-body text-ink hover:text-mono transition-colors duration-200',
+              isActive(link.href) && 'underline underline-offset-8 decoration-1 decoration-ink',
+            ]}
+            aria-current={isActive(link.href) ? 'page' : undefined}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <!-- CTA desktop -->
+    <a
+      href="/contact"
+      class="hidden lg:inline-flex items-center px-5 py-2.5 bg-ink text-ivoire text-small font-medium rounded hover:bg-[#1F1B17] transition-all duration-200 hover:-translate-y-0.5"
+    >
+      Discutons
+    </a>
+
+    <!-- Burger mobile (visible <1024px) -->
+    <button
+      class="burger lg:hidden flex flex-col gap-1.5 p-2 -mr-2"
+      aria-label="Ouvrir le menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      type="button"
+    >
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+    </button>
+  </div>
+
+  <!-- Menu mobile (overlay plein ecran) -->
+  <div
+    id="mobile-menu"
+    class="lg:hidden fixed inset-0 top-16 bg-ivoire z-40 hidden flex-col p-6"
+    aria-hidden="true"
+  >
+    <nav class="flex flex-col gap-6 mt-8" aria-label="Navigation mobile">
+      {
+        navLinks.map((link) => (
+          <a
+            href={link.href}
+            class:list={[
+              'text-h3 font-serif text-ink',
+              isActive(link.href) && 'underline underline-offset-8 decoration-1',
+            ]}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+    <a
+      href="/contact"
+      class="mt-auto inline-flex justify-center items-center w-full px-5 py-4 bg-ink text-ivoire text-body font-medium rounded"
+    >
+      Discutons
+    </a>
+  </div>
+</header>
+
+<script is:inline>
+  // Toggle du menu mobile
+  (function () {
+    const burger = document.querySelector('.burger');
+    const menu = document.getElementById('mobile-menu');
+    if (!burger || !menu) return;
+
+    burger.addEventListener('click', () => {
+      const isOpen = burger.getAttribute('aria-expanded') === 'true';
+      burger.setAttribute('aria-expanded', String(!isOpen));
+      burger.setAttribute('aria-label', !isOpen ? 'Fermer le menu' : 'Ouvrir le menu');
+      menu.setAttribute('aria-hidden', String(isOpen));
+      menu.classList.toggle('hidden');
+      menu.classList.toggle('flex');
+      // Bloque le scroll quand le menu est ouvert
+      document.body.style.overflow = !isOpen ? 'hidden' : '';
+    });
+
+    // Ferme le menu en cliquant sur un lien
+    menu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        burger.setAttribute('aria-expanded', 'false');
+        burger.setAttribute('aria-label', 'Ouvrir le menu');
+        menu.setAttribute('aria-hidden', 'true');
+        menu.classList.add('hidden');
+        menu.classList.remove('flex');
+        document.body.style.overflow = '';
+      });
+    });
+  })();
+</script>

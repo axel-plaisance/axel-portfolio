@@ -1,0 +1,341 @@
+---
+// Page Contact — avec formulaire Netlify Forms
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+
+// Title : 56 car. — focus "Devis site web Lorient" + marque.
+// Description : 158 car. — promesse delai reponse + canaux + perimetre geo.
+const title = 'Contact — Devis site web gratuit Lorient | Axel Plaisance';
+const description = "Demandez un devis ou un audit gratuit pour votre site web à Lorient. Réponse sous 24 h ouvrées. Email, téléphone, formulaire. Lorient, Morbihan, Bretagne Sud.";
+---
+
+<BaseLayout title={title} description={description}>
+  <!-- SECTION 1 — Hero compact -->
+  <section class="container-editorial py-20 md:py-24">
+    <Eyebrow number="01" label="CONTACT" />
+    <h1 class="font-serif text-h1 tracking-tighter text-ink mt-4">
+      Parlons de votre projet.
+    </h1>
+    <p class="text-lede text-ink-soft mt-6 max-w-prose">
+      Trois lignes suffisent pour démarrer. Je vous réponds sous 24h ouvrées, avec un vrai mail rédigé à la main.
+    </p>
+  </section>
+
+  <!-- SECTION 2 — Grille infos + formulaire -->
+  <section class="container-editorial py-16 md:py-20 lg:py-24">
+    <div class="grid lg:grid-cols-[1fr_1.4fr] gap-12 lg:gap-16 items-start">
+      <!-- Ordre mobile : formulaire d abord, infos ensuite (priorite conversion) -->
+      <!-- En desktop : grille remet les colonnes a la bonne place via order- -->
+
+      <!-- Colonne gauche — Infos (desktop) / 2eme (mobile) -->
+      <aside class="order-2 lg:order-1">
+        <Eyebrow number="02" label="COMMENT ME JOINDRE" />
+
+        <div class="mt-8 space-y-6">
+          <!-- Bloc 1 — Email -->
+          <div class="border-t border-border-light pt-6">
+            <div class="flex items-center gap-3 mb-2">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-ink" aria-hidden="true">
+                <rect width="20" height="16" x="2" y="4" rx="2" />
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+              </svg>
+              <span class="font-mono text-eyebrow tracking-eyebrow uppercase text-mono">EMAIL</span>
+            </div>
+            <a
+              href="mailto:plaisance.axelp@gmail.com"
+              class="text-h5 font-sans font-medium text-ink underline underline-offset-4 decoration-border hover:decoration-ink transition-all"
+            >
+              plaisance.axelp@gmail.com
+            </a>
+          </div>
+
+          <!-- Bloc 2 — Telephone -->
+          <div class="border-t border-border-light pt-6">
+            <div class="flex items-center gap-3 mb-2">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-ink" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+              <span class="font-mono text-eyebrow tracking-eyebrow uppercase text-mono">TÉLÉPHONE</span>
+            </div>
+            <p class="text-h5 font-sans font-medium text-ink">
+              +33 X XX XX XX XX
+              <!-- TODO Axel: remplace par ton vrai numero -->
+            </p>
+            <p class="text-small text-ink-soft mt-1">Du lundi au vendredi, 9h-18h.</p>
+          </div>
+
+          <!-- Bloc 3 — Zone -->
+          <div class="border-t border-border-light pt-6">
+            <div class="flex items-center gap-3 mb-2">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-ink" aria-hidden="true">
+                <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              <span class="font-mono text-eyebrow tracking-eyebrow uppercase text-mono">ZONE</span>
+            </div>
+            <p class="text-body text-ink">
+              Lorient et tout le Morbihan. Déplacement possible sur le pays de Lorient (Lanester, Hennebont, Caudan, Quéven, Plœmeur).
+            </p>
+          </div>
+
+          <!-- Bloc 4 — Reponse -->
+          <div class="border-t border-border-light pt-6">
+            <div class="flex items-center gap-3 mb-2">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-ink" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              <span class="font-mono text-eyebrow tracking-eyebrow uppercase text-mono">RÉPONSE</span>
+            </div>
+            <p class="text-body text-ink">
+              Sous 24 heures, jours ouvrés. Le mail est rédigé à la main par moi, pas par une IA et pas par un commercial.
+            </p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Colonne droite — Formulaire Netlify (1ere mobile, 2eme desktop) -->
+      <div class="order-1 lg:order-2 bg-surface rounded-lg p-8 lg:p-10 border border-border-light">
+        <h2 class="font-serif text-h3 text-ink">Décrivez votre projet en 3 lignes.</h2>
+        <p class="text-small text-ink-soft mt-3">
+          Tous les champs marqués d'une étoile sont obligatoires. Les autres me font gagner du temps mais ne sont pas indispensables.
+        </p>
+
+        <!-- Formulaire Netlify Forms -->
+        <!-- data-netlify="true" + name = formulaire detecte automatiquement au build -->
+        <!-- netlify-honeypot = champ piege contre les bots -->
+        <form
+          name="contact"
+          method="POST"
+          action="/contact/merci"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          class="mt-8 space-y-6"
+        >
+          <!-- Champ cache requis par Netlify Forms -->
+          <input type="hidden" name="form-name" value="contact" />
+
+          <!-- Honeypot (cache pour humains, visible pour bots) -->
+          <p class="hidden">
+            <label>
+              Ne pas remplir : <input name="bot-field" />
+            </label>
+          </p>
+
+          <!-- Nom -->
+          <div>
+            <label for="nom" class="block text-small font-sans font-medium text-ink mb-2">
+              Nom complet <span aria-hidden="true">*</span>
+              <span class="sr-only">(obligatoire)</span>
+            </label>
+            <input
+              type="text"
+              id="nom"
+              name="nom"
+              required
+              autocomplete="name"
+              placeholder="Prénom et nom"
+              class="w-full bg-ivoire border border-border-light rounded px-4 py-3 text-body text-ink placeholder:text-mono focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/10 transition"
+            />
+          </div>
+
+          <!-- Entreprise -->
+          <div>
+            <label for="entreprise" class="block text-small font-sans font-medium text-ink mb-2">
+              Entreprise
+            </label>
+            <input
+              type="text"
+              id="entreprise"
+              name="entreprise"
+              autocomplete="organization"
+              placeholder="Nom de votre PME ou marque"
+              class="w-full bg-ivoire border border-border-light rounded px-4 py-3 text-body text-ink placeholder:text-mono focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/10 transition"
+            />
+            <p class="text-micro text-ink-soft mt-2">Optionnel, mais utile pour préparer le rendez-vous.</p>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label for="email" class="block text-small font-sans font-medium text-ink mb-2">
+              Email <span aria-hidden="true">*</span>
+              <span class="sr-only">(obligatoire)</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              autocomplete="email"
+              placeholder="votre@email.fr"
+              class="w-full bg-ivoire border border-border-light rounded px-4 py-3 text-body text-ink placeholder:text-mono focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/10 transition"
+            />
+          </div>
+
+          <!-- Telephone -->
+          <div>
+            <label for="telephone" class="block text-small font-sans font-medium text-ink mb-2">
+              Téléphone
+            </label>
+            <input
+              type="tel"
+              id="telephone"
+              name="telephone"
+              autocomplete="tel"
+              placeholder="06 ou 02 (optionnel)"
+              class="w-full bg-ivoire border border-border-light rounded px-4 py-3 text-body text-ink placeholder:text-mono focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/10 transition"
+            />
+            <p class="text-micro text-ink-soft mt-2">Si vous préférez que je vous rappelle plutôt que d'écrire.</p>
+          </div>
+
+          <!-- Votre besoin (v1.3) — slugs URL : ?besoin=creation|refonte|audit -->
+          <div>
+            <label for="besoin" class="block text-small font-sans font-medium text-ink mb-2">
+              Votre besoin
+            </label>
+            <select
+              id="besoin"
+              name="besoin"
+              class="w-full bg-ivoire border border-border-light rounded px-4 py-3 text-body text-ink focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/10 transition"
+            >
+              <option value="">Quel type de projet ?</option>
+              <option value="indecis">Je ne sais pas encore</option>
+              <option value="creation">Création de site — je n'ai pas encore de site</option>
+              <option value="refonte">Refonte de site — j'ai un site à moderniser</option>
+              <option value="audit">Audit seul de mon site actuel (gratuit)</option>
+            </select>
+          </div>
+
+          <!-- Type de projet -->
+          <div>
+            <label for="type" class="block text-small font-sans font-medium text-ink mb-2">
+              Type de projet <span aria-hidden="true">*</span>
+              <span class="sr-only">(obligatoire)</span>
+            </label>
+            <select
+              id="type"
+              name="type"
+              required
+              class="w-full bg-ivoire border border-border-light rounded px-4 py-3 text-body text-ink focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/10 transition"
+            >
+              <option value="">Quel type de projet ?</option>
+              <option value="creation">Création d'un site neuf</option>
+              <option value="refonte">Refonte d'un site existant</option>
+              <option value="audit">Audit gratuit de mon site actuel</option>
+              <option value="autre">Autre (à préciser dans le message)</option>
+            </select>
+          </div>
+
+          <!-- Message -->
+          <div>
+            <label for="message" class="block text-small font-sans font-medium text-ink mb-2">
+              Message <span aria-hidden="true">*</span>
+              <span class="sr-only">(obligatoire)</span>
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              required
+              rows="4"
+              placeholder="En 3 lignes : votre métier, ce que vous voulez, et quand vous voulez être en ligne. Le reste, on en parle."
+              class="w-full bg-ivoire border border-border-light rounded px-4 py-3 text-body text-ink placeholder:text-mono focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/10 transition resize-y"
+            ></textarea>
+          </div>
+
+          <!-- Submit -->
+          <button
+            type="submit"
+            class="w-full inline-flex items-center justify-center px-6 py-4 bg-ink text-ivoire text-body font-medium rounded hover:bg-[#1F1B17] transition-all duration-200"
+          >
+            Envoyer mon message
+          </button>
+
+          <!-- Microcopy RGPD -->
+          <p class="text-micro font-mono text-mono">
+            Vos données ne sont utilisées que pour vous répondre. Pas de revente, pas de newsletter, pas de tracker. Conservation 3 ans maximum. Voir la <a href="/mentions-legales" class="underline underline-offset-2">politique de confidentialité</a>.
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 — FAQ rapide (v1.3 : 6 → 4 questions ; retrait Q5 et Q6
+       deplacees sur /services pour eviter la redondance) -->
+  <section class="container-editorial py-16">
+    <div class="fade-in">
+      <Eyebrow number="03" label="RÉPONSES RAPIDES" />
+      <h2 class="font-serif text-h2 tracking-tighter text-ink mt-4">
+        Quatre questions, quatre réponses.
+      </h2>
+    </div>
+
+    <div class="mt-12 max-w-prose">
+      <details class="border-t border-border-light">
+        <summary class="flex items-start justify-between gap-4 py-6">
+          <span class="text-h5 font-sans font-medium text-ink">Sous combien de temps répondez-vous ?</span>
+          <svg class="faq-icon flex-shrink-0 mt-1" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+        </summary>
+        <p class="text-body text-ink-soft pb-6 max-w-prose">
+          24 heures ouvrées maximum, en pratique souvent dans la journée. Si vous écrivez le vendredi soir, vous aurez la réponse lundi matin.
+        </p>
+      </details>
+
+      <details class="border-t border-border-light">
+        <summary class="flex items-start justify-between gap-4 py-6">
+          <span class="text-h5 font-sans font-medium text-ink">Le devis engage-t-il à quelque chose ?</span>
+          <svg class="faq-icon flex-shrink-0 mt-1" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+        </summary>
+        <p class="text-body text-ink-soft pb-6 max-w-prose">
+          Non. Le devis est gratuit, sans engagement, valable 30 jours. Pas de relance commerciale automatique. Si vous ne donnez pas suite, je n'insiste pas.
+        </p>
+      </details>
+
+      <details class="border-t border-border-light">
+        <summary class="flex items-start justify-between gap-4 py-6">
+          <span class="text-h5 font-sans font-medium text-ink">Comment se passe un audit gratuit ?</span>
+          <svg class="faq-icon flex-shrink-0 mt-1" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+        </summary>
+        <p class="text-body text-ink-soft pb-6 max-w-prose">
+          Vous m'envoyez l'URL de votre site actuel. Sous 48h, je vous renvoie un PDF de 4-6 pages : ce qui marche, ce qui bloque, 3 priorités. Sans rendez-vous obligatoire, sans engagement.
+        </p>
+      </details>
+
+      <!-- Question 4 (v1.1, conservee v1.3) — Qui achete domaine et hebergement
+           (derniere question : border-b inclus) -->
+      <details class="border-t border-b border-border-light">
+        <summary class="flex items-start justify-between gap-4 py-6">
+          <span class="text-h5 font-sans font-medium text-ink">Qui achète le nom de domaine et l'hébergement ?</span>
+          <svg class="faq-icon flex-shrink-0 mt-1" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+        </summary>
+        <p class="text-body text-ink-soft pb-6 max-w-prose">
+          Vous, directement avec votre carte. Je vous guide à l'écran pour la création du compte (chez OVH, Gandi, Infomaniak ou Netlify selon ce qui colle à votre projet), puis je m'occupe de toute la configuration technique derrière. Pourquoi à votre nom ? Pour votre sécurité business : le domaine et l'hébergement vous appartiennent dès le jour 1. Si demain on arrête de travailler ensemble, vous gardez tout sans avoir à me demander quoi que ce soit. Pas d'otage, pas de dépendance.
+        </p>
+      </details>
+    </div>
+  </section>
+
+  <!-- Pre-selection du select "Votre besoin" depuis le parametre URL.
+       v1.3 : URLs depuis /services et accueil pointent vers
+       /contact?besoin=creation|refonte|audit.
+       Script is:inline (pas de bundling) : execute immediatement au chargement. -->
+  <script is:inline>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const besoin = params.get('besoin');
+      if (!besoin) return;
+      const select = document.getElementById('besoin');
+      if (!select) return;
+      // Verifier que l option existe avant de l affecter (defense)
+      const option = select.querySelector(`option[value="${besoin}"]`);
+      if (option) select.value = besoin;
+    })();
+  </script>
+</BaseLayout>

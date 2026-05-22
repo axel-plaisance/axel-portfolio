@@ -1,0 +1,42 @@
+---
+// NumberedItem.astro — Item numerote mutualise.
+// Iteration v1.2 — Cf. specs : 02-design/iteration-v1.2-design.md §7
+//
+// Utilise dans :
+//   - services.astro section "Ce qui influence le prix" (6 facteurs)
+//   - services.astro section "Mes engagements" (6 engagements)
+//
+// Sobriete typographique : numero mono + titre serif + description sans-serif.
+// PAS d icone, PAS de bordure, PAS de fond. Le numero mono porte tout le poids
+// du marqueur visuel.
+//
+// Semantique : <li> obligatoire — parent doit etre <ol> (liste ordonnee).
+
+export interface Props {
+  // Numero mono (ex : "01", "02"...)
+  num: string;
+  // Titre serif (3-12 mots)
+  title: string;
+  // Description body 1 ligne (10-20 mots)
+  description: string;
+}
+
+const { num, title, description } = Astro.props;
+---
+
+<li class="flex flex-col">
+  <!-- Numero : eyebrow mono 11px, letter-spacing 2px -->
+  <span class="font-mono text-eyebrow tracking-eyebrow uppercase text-mono">
+    {num}
+  </span>
+
+  <!-- Titre : serif 20px mobile / 22px desktop (text-[1.375rem]) -->
+  <h3 class="font-serif text-h5 lg:text-[1.375rem] tracking-tighter text-ink mt-3 leading-snug">
+    {title}
+  </h3>
+
+  <!-- Description : DM Sans 14px, leading-relaxed -->
+  <p class="text-small text-ink-soft mt-2 leading-relaxed">
+    {description}
+  </p>
+</li>

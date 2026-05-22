@@ -1,0 +1,87 @@
+---
+// Page CGV — placeholder en attendant le collage du contenu reel
+// NOTE pour Axel : colle ici les CGV deja redigees (PDF fourni dans le brief).
+// @conformite validera cette page avant publication.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+
+// Title court et sobre — page utilitaire, pas d enjeu SEO competitif.
+const title = 'CGV — Conditions générales de vente | Axel Plaisance';
+const description = 'Conditions générales de vente des prestations de création et refonte de sites web par Axel Plaisance, développeur web freelance à Lorient (Morbihan).';
+
+// Liste des articles a integrer (structure suggeree par @copywriting)
+const articles = [
+  { num: '01', title: 'Objet' },
+  { num: '02', title: 'Définitions' },
+  { num: '03', title: 'Devis et commande' },
+  { num: '04', title: 'Prix et modalités de paiement' },
+  { num: '05', title: 'Délais d\'exécution' },
+  { num: '06', title: 'Obligations du client' },
+  { num: '07', title: 'Obligations du prestataire' },
+  { num: '08', title: 'Propriété intellectuelle et cession' },
+  { num: '09', title: 'Maintenance et suivi après livraison' },
+  { num: '10', title: 'Rétractation (B2B / B2C)' },
+  { num: '11', title: 'Confidentialité' },
+  { num: '12', title: 'Responsabilité et limitation' },
+  { num: '13', title: 'Force majeure' },
+  { num: '14', title: 'Résiliation' },
+  { num: '15', title: 'Litiges et juridiction compétente' },
+  { num: '16', title: 'Médiation de la consommation' },
+];
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="max-w-prose mx-auto py-20 px-6">
+    <!-- Breadcrumb -->
+    <nav aria-label="Fil d'Ariane" class="mb-8">
+      <ol class="flex items-center gap-2 text-micro font-mono text-mono">
+        <li><a href="/" class="hover:text-ink transition-colors">Accueil</a></li>
+        <li aria-hidden="true">/</li>
+        <li>CGV</li>
+      </ol>
+    </nav>
+
+    <Eyebrow label="CGV — CONDITIONS GÉNÉRALES DE VENTE" />
+
+    <h1 class="font-serif text-h2 tracking-tighter text-ink mt-4">
+      Conditions générales de vente
+    </h1>
+
+    <p class="text-small text-ink-soft italic mt-2">
+      Mis à jour le 12 mai 2026
+    </p>
+
+    <!-- Avertissement placeholder -->
+    <aside class="mt-12 p-6 border border-border-light rounded-lg bg-surface">
+      <p class="font-mono text-eyebrow tracking-eyebrow uppercase text-mono">À COMPLÉTER</p>
+      <p class="text-body text-ink-soft mt-3">
+        <!-- TODO Axel: colle ici les CGV reelles redigees dans ton PDF. Respecte la numerotation des articles ci-dessous. -->
+        Le contenu des CGV est à coller depuis le PDF déjà rédigé. Structure des articles ci-dessous.
+      </p>
+    </aside>
+
+    <!-- Squelette des articles -->
+    {
+      articles.map((article) => (
+        <section class="mt-12 border-t border-border-light pt-12">
+          <p class="font-mono text-eyebrow tracking-eyebrow uppercase text-mono">
+            ARTICLE {article.num}
+          </p>
+          <h2 class="font-serif text-h4 text-ink mt-3">{article.title}</h2>
+          <p class="text-body text-ink-soft mt-4 italic">
+            <!-- TODO Axel: colle ici le contenu de l article {article.num} depuis ton PDF -->
+            Contenu à coller depuis le PDF CGV.
+          </p>
+        </section>
+      ))
+    }
+
+    <!-- Lien retour -->
+    <a
+      href="/"
+      class="inline-block mt-16 text-small text-ink underline underline-offset-4 decoration-border hover:decoration-ink transition-all"
+    >
+      ← Retour à l'accueil
+    </a>
+  </article>
+</BaseLayout>

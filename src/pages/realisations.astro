@@ -1,0 +1,121 @@
+---
+// Page Realisations
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import CTABand from '../components/CTABand.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+
+// Title : 60 car. — focus "sites web PME Morbihan" + marque.
+// Description : 155 car. — secteurs cibles + ancrage local + posture honnete.
+const title = 'Réalisations — Sites web PME du Morbihan | Axel Plaisance';
+const description = 'Trois projets en cours pour des PME du pays de Lorient : couvreur à Caudan, box CrossFit à Lorient, commerce de centre-ville. Transparence assumée.';
+---
+
+<BaseLayout title={title} description={description}>
+  <!-- SECTION 1 — Hero compact -->
+  <section class="container-editorial py-20 md:py-24">
+    <Eyebrow number="01" label="RÉALISATIONS" />
+    <h1 class="font-serif text-h1 tracking-tighter text-ink mt-4 max-w-[20ch]">
+      Trois projets en cours. Bientôt plus.
+    </h1>
+    <p class="text-lede text-ink-soft mt-6 max-w-prose">
+      Je viens de lancer l'activité. Voici ce sur quoi je travaille actuellement, en toute transparence.
+    </p>
+  </section>
+
+  <!-- SECTION 2 — Bloc transparence -->
+  <section class="container-editorial py-16 md:py-20 lg:py-24">
+    <div class="max-w-prose fade-in">
+      <Eyebrow number="02" label="TRANSPARENCE" />
+      <h2 class="font-serif text-h3 text-ink mt-4">
+        Pourquoi je ne vous montre pas vingt projets fictifs.
+      </h2>
+
+      <div class="mt-8 space-y-6 text-body text-ink-soft">
+        <p>
+          J'ai immatriculé mon activité récemment. Je pourrais remplir cette page avec des captures d'écran de sites trouvés sur Dribbble et faire semblant. Beaucoup de freelances le font. Pas moi.
+        </p>
+        <p>
+          À la place, je vous montre les trois projets que je livre dans les prochaines semaines : un couvreur à Caudan, une box CrossFit qui ouvre à Lorient, une boutique du centre-ville. Vous voyez ce qui est réel, à quoi vous attendre, et qui sera votre voisin de portfolio.
+        </p>
+        <p>
+          Si la transparence vous parle, on est faits pour travailler ensemble. Si vous cherchez une agence avec 10 ans d'archives et 200 logos clients, ce n'est pas moi — et c'est tout à fait légitime.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 — 3 cartes en cours -->
+  <section class="container-editorial py-16 md:py-20 lg:py-24">
+    <div class="fade-in">
+      <Eyebrow number="03" label="EN COURS" />
+      <h2 class="font-serif text-h2 tracking-tighter text-ink mt-4 max-w-[24ch]">
+        Trois projets, trois métiers, un mois et demi de travail.
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch mt-16">
+      <div id="btp" class="fade-in h-full scroll-mt-24" data-delay="0">
+        <ProjectCard
+          sector="BTP — COUVREUR"
+          name="Couvreur · Caudan"
+          description="Refonte complète d'un site vieux de 8 ans, lourd, illisible sur mobile, invisible sur Google. Objectif fixé avec le client : remonter sur 'couvreur Lorient', 'couvreur Caudan', 'réparation toiture Morbihan', et arrêter de perdre des appels parce que le numéro n'est pas cliquable sur mobile. 4 pages, périmètre sur-mesure évolutif."
+          meta="Livraison juin 2026"
+          visual="btp"
+        />
+      </div>
+      <div id="sport" class="fade-in h-full scroll-mt-24" data-delay="100">
+        <ProjectCard
+          sector="SPORT — COACHING CROSSFIT"
+          name="Atlas Box · Franck Attieh"
+          description="Site neuf pour une box CrossFit qui ouvre à Lorient. Objectif : convertir les visiteurs en séances d'essai gratuites. Planning intégré, présentation des coachs, tarifs affichés, fiche Google Business connectée. Création sur-mesure avec GEO inclus pour viser les requêtes 'CrossFit Lorient', 'salle de sport Morbihan'."
+          meta="Livraison mai 2026"
+          visual="sport"
+        />
+      </div>
+      <div id="commerce" class="fade-in h-full scroll-mt-24" data-delay="200">
+        <ProjectCard
+          sector="COMMERCE — BOUTIQUE LOCALE"
+          name="Boutique locale · Pays de Lorient"
+          description="Première mise en ligne pour un commerce de centre-ville qui fonctionne au bouche-à-oreille. Vitrine claire avec photos produits, horaires à jour, itinéraire, formulaire de réservation simple. Fiche Google Business à reprendre de zéro. Création sur-mesure adaptée à un démarrage."
+          meta="Brief en cours"
+          visual="commerce"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4 — Placeholder "Ils m'ont fait confiance" -->
+  <section class="container-editorial py-16 md:py-20 lg:py-24">
+    <div class="fade-in">
+      <div class="text-center mb-12">
+        <Eyebrow number="04" label="ILS M'ONT FAIT CONFIANCE" />
+      </div>
+
+      <div class="max-w-prose mx-auto text-center border border-border-light rounded-lg p-12 lg:p-16">
+        <h2 class="font-serif text-h4 text-ink">
+          La liste se remplit. Le prochain logo peut être le vôtre.
+        </h2>
+        <p class="text-body text-ink-soft mt-6 max-w-prose mx-auto">
+          Je n'affiche pas de faux témoignages. Je vous ajouterai ici quand vous serez livré, avec votre permission, et avec votre vrai retour. Pas avant.
+        </p>
+        <a
+          href="/contact"
+          class="inline-flex items-center mt-8 px-6 py-3.5 border border-border text-ink text-body font-medium rounded hover:border-ink transition-all duration-200"
+        >
+          Démarrer mon projet
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5 — CTABand -->
+  <CTABand
+    title="Votre projet peut rejoindre cette page dans 30 jours."
+    description="Brief offert. Audit offert. Réponse sous 24h ouvrées."
+    ctaText="Demander mon devis"
+    ctaHref="/contact"
+    secondaryText="Voir tous les services"
+    secondaryHref="/services"
+  />
+</BaseLayout>

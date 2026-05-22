@@ -1,0 +1,95 @@
+---
+// AutomationFeatured.astro — Encart pleine largeur Tier 3 (voicebot).
+//
+// Bloc sombre #2A2520, grid 2 cols desktop : texte (2fr) | citation (1fr).
+// Cf. specs : 02-design/page-automatisations-design.md §3.2.
+//
+// Le wrapper <section> est gere par la page parente (bg-dark + padding).
+// Ce composant ne pose QUE le container interieur + grid.
+
+export interface Props {
+  // Eyebrow mono (ex: "06 — AVANCÉ")
+  eyebrow: string;
+  // Titre H2 serif sur fond sombre
+  title: string;
+  // Lede descriptif (3 phrases environ)
+  lede: string;
+  // 3 benefices a lister (puces "•")
+  benefits: string[];
+  // Mention de cadrage (ex: "Projet plus technique et sur-mesure...")
+  mention: string;
+  // Citation editoriale (colonne droite)
+  quote: string;
+  // Attribution de la citation (ex: "— Couvreur, Pays de Lorient")
+  quoteAuthor: string;
+  // Libelle du CTA
+  ctaLabel: string;
+  // URL du CTA
+  ctaHref: string;
+}
+
+const { eyebrow, title, lede, benefits, mention, quote, quoteAuthor, ctaLabel, ctaHref } = Astro.props;
+---
+
+{/* Container interieur : max-w-editorial centre + padding horizontal */}
+<div class="container-editorial">
+  {/* Grid 2 cols desktop (2fr / 1fr) ; stack vertical en < lg */}
+  <div class="grid lg:grid-cols-[2fr_1fr] gap-12 lg:gap-16 items-center">
+    {/* ========== COLONNE GAUCHE — TEXTE (2fr) ========== */}
+    <div class="fade-in">
+      {/* Eyebrow mono ivoire desature (text-mono = #8A7E66, lisible sur sombre) */}
+      <p class="font-mono text-eyebrow tracking-eyebrow uppercase text-mono">
+        {eyebrow}
+      </p>
+
+      {/* H2 serif ivoire (32px mobile / 36px desktop) */}
+      <h2 class="font-serif text-h3 lg:text-[2.25rem] tracking-tighter text-ivoire mt-4 leading-tight">
+        {title}
+      </h2>
+
+      {/* Lede (text-border = #C9C1AE, recycle pour lede sur sombre) */}
+      <p class="text-lede text-border mt-6 max-w-prose">
+        {lede}
+      </p>
+
+      {/* Liste benefices (3 items, puces mono "•", ivoire 85%) */}
+      <ul class="mt-6 flex flex-col gap-3">
+        {benefits.map((b) => (
+          <li class="flex items-start gap-3 text-body text-[rgba(242,237,227,0.85)]">
+            <span class="text-mono font-mono mt-1" aria-hidden="true">•</span>
+            <span>{b}</span>
+          </li>
+        ))}
+      </ul>
+
+      {/* Mention de cadrage (mono 12px) */}
+      <p class="text-micro font-mono text-mono mt-8 max-w-prose">
+        {mention}
+      </p>
+
+      {/* CTA INVERSE (fond ivoire, texte ink) */}
+      <a
+        href={ctaHref}
+        class="mt-8 inline-flex items-center justify-center px-6 py-3.5 bg-ivoire text-ink text-body font-medium rounded hover:bg-[#E8E2D6] transition-all duration-200 hover:-translate-y-0.5"
+      >
+        {ctaLabel}
+      </a>
+    </div>
+
+    {/* ========== COLONNE DROITE — CITATION EDITORIALE (1fr) ========== */}
+    {/* Filet vertical gauche 2px ivoire 30% + padding gauche */}
+    <aside class="border-l-2 border-[rgba(242,237,227,0.30)] pl-6 lg:pl-8 fade-in" data-delay="200">
+      <p class="font-mono text-eyebrow tracking-eyebrow uppercase text-mono mb-4">
+        UN CAS CONCRET
+      </p>
+      {/* Citation serif italique (20px mobile / 24px desktop) */}
+      <blockquote class="text-h5 lg:text-h4 font-serif italic text-ivoire leading-snug">
+        {quote}
+      </blockquote>
+      {/* Attribution (mono 14px) */}
+      <p class="text-small font-mono text-mono mt-4">
+        {quoteAuthor}
+      </p>
+    </aside>
+  </div>
+</div>

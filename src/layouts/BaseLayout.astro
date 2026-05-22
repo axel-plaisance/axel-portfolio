@@ -1,0 +1,292 @@
+---
+// BaseLayout.astro — Layout principal partage par toutes les pages.
+// Inclut : <head> meta SEO + JSON-LD global + Open Graph + Twitter Card + fonts,
+// skip link, Header, slot, Footer, observer fade-in.
+//
+// Phase 5 — Optimisations @seo :
+// - Titles/descriptions optimises et passes par prop depuis chaque page
+// - Canonical absolu calcule sur Astro.site + pathname
+// - JSON-LD ProfessionalService global (LocalBusiness pour Lorient/Morbihan)
+// - meta robots configurable (noindex pour pages utilitaires type /contact/merci)
+// - Cle "alternate" hreflang fr-FR explicite
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+export interface Props {
+  // Titre de la page (apparait dans onglet + SEO). Cible : <= 60 caracteres.
+  title: string;
+  // Description meta pour SEO + previews sociaux. Cible : <= 160 caracteres.
+  description: string;
+  // URL canonique (defaut : URL courante absolue calculee sur Astro.site)
+  canonical?: string;
+  // Image OpenGraph (defaut : /og-default.jpg fournie plus tard par Axel)
+  ogImage?: string;
+  // Indexation : false = noindex,nofollow (pages utilitaires type "merci")
+  noindex?: boolean;
+}
+
+const { title, description, canonical, ogImage, noindex = false } = Astro.props;
+
+// URL canonique absolue : prop explicite > URL courante calculee sur Astro.site
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
+const ogImageUrl = ogImage ?? new URL('/og-default.jpg', Astro.site).toString();
+
+// JSON-LD — graphe d entites pour SEO + GEO (moteurs IA generatifs).
+// Phase 5 (@seo) : ProfessionalService.
+// Phase 6 (@geo) : Person (entite Axel reliee a la business) pour E-E-A-T.
+//
+// Iteration v1.2 (2026-05-12) — Repositionnement sur-mesure :
+//   - Retrait COMPLET des 3 entites Service (Essentiel/Pro/Premium) avec leurs
+//     offers.price chiffres.
+//   - Conservation de priceRange: "€€" (indicateur generique non-chiffre).
+//
+// Iteration v1.3 (2026-05-12) — Simplification radicale (2 axes) :
+//   - Ajout de 2 entites Service propres : Creation et Refonte
+//     (sans offers.price : devis personnalise, cf. v1.2).
+//   - Reliees au ProfessionalService via "provider".
+//   - Description ProfessionalService mise a jour (retrait "trois niveaux").
+//
+// TODO Axel : remplace les placeholders telephone quand definitif.
+const jsonLdGraph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    // ===== ENTITE 1 — Person (Axel) =====
+    // Lien explicite Axel <-> ProfessionalService pour E-E-A-T et citations IA.
+    {
+      '@type': 'Person',
+      '@id': 'https://axelplaisance.fr/#person',
+      name: 'Axel Plaisance',
+      jobTitle: 'Developpeur web freelance',
+      description:
+        "Developpeur web freelance base a Lorient. Specialise dans la creation et la refonte de sites web sur-mesure pour PME locales du Morbihan : BTP, sport, commerce, restauration.",
+      email: 'plaisance.axelp@gmail.com',
+      url: 'https://axelplaisance.fr',
+      image: 'https://axelplaisance.fr/og-default.jpg',
+      worksFor: { '@id': 'https://axelplaisance.fr/#identity' },
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Lorient',
+        addressRegion: 'Bretagne',
+        postalCode: '56100',
+        addressCountry: 'FR',
+      },
+      knowsAbout: [
+        'Astro framework',
+        'Creation de site web',
+        'Refonte de site internet',
+        'SEO local',
+        'Generative Engine Optimization (GEO)',
+        'Schema.org',
+        'Tailwind CSS',
+        'Netlify',
+        'Accessibilite web (WCAG)',
+        'Core Web Vitals',
+      ],
+      knowsLanguage: ['fr-FR'],
+      areaServed: [
+        { '@type': 'AdministrativeArea', name: 'Morbihan' },
+        { '@type': 'AdministrativeArea', name: 'Bretagne Sud' },
+      ],
+    },
+
+    // ===== ENTITE 2 — ProfessionalService (business d Axel) =====
+    // v1.2 : repositionnement sur-mesure. Plus de hasOfferCatalog chiffre.
+    // v1.3 : description mise a jour (retrait "trois niveaux"). 2 axes
+    // Creation/Refonte declares en entites Service separees ci-dessous.
+    {
+      '@type': 'ProfessionalService',
+      '@id': 'https://axelplaisance.fr/#identity',
+      name: 'Axel Plaisance',
+      alternateName: 'Axel Plaisance — Developpeur web Lorient',
+      description:
+        "Developpeur web freelance a Lorient (Morbihan). Creation et refonte de sites internet sur-mesure pour PME locales : BTP, sport, commerce, restauration. Devis et audit offerts sous 48h apres echange, un seul interlocuteur du devis a la formation.",
+      url: 'https://axelplaisance.fr',
+      // TODO Axel : remplace par ton vrai numero professionnel au format E.164
+      telephone: '+33-X-XX-XX-XX-XX',
+      email: 'plaisance.axelp@gmail.com',
+      image: 'https://axelplaisance.fr/og-default.jpg',
+      logo: 'https://axelplaisance.fr/favicon.svg',
+      founder: { '@id': 'https://axelplaisance.fr/#person' },
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Lorient',
+        addressRegion: 'Bretagne',
+        postalCode: '56100',
+        addressCountry: 'FR',
+      },
+      // Zones d intervention principales — pays de Lorient + Morbihan elargi
+      areaServed: [
+        { '@type': 'City', name: 'Lorient' },
+        { '@type': 'City', name: 'Lanester' },
+        { '@type': 'City', name: 'Hennebont' },
+        { '@type': 'City', name: 'Plœmeur' },
+        { '@type': 'City', name: 'Quéven' },
+        { '@type': 'City', name: 'Larmor-Plage' },
+        { '@type': 'City', name: 'Caudan' },
+        { '@type': 'City', name: 'Riantec' },
+        { '@type': 'City', name: 'Port-Louis' },
+        { '@type': 'City', name: 'Locmiquélic' },
+        { '@type': 'AdministrativeArea', name: 'Morbihan' },
+        { '@type': 'AdministrativeArea', name: 'Bretagne Sud' },
+      ],
+      serviceType: [
+        'Création de site web sur-mesure',
+        'Refonte de site internet',
+        'SEO local',
+        'GEO — référencement IA (ChatGPT, Perplexity, Google AI)',
+        'Intégration IA (assistant client, formulaire intelligent)',
+        'Maintenance et suivi de site',
+      ],
+      // Indicateur generique de gamme tarifaire (non-chiffre, acceptable v1.2)
+      priceRange: '€€',
+      currenciesAccepted: 'EUR',
+      paymentAccepted: 'Virement bancaire',
+      knowsLanguage: ['fr-FR'],
+      slogan: 'Du sur-mesure, à votre échelle.',
+      sameAs: [
+        // TODO Axel : ajoute ici tes profils sociaux quand crees (LinkedIn, Malt, etc.)
+      ],
+    },
+
+    // ===== ENTITE 3 — Service "Creation de site web" (v1.3) =====
+    // Axe 1 du repositionnement v1.3 : conception complete d un nouveau site.
+    {
+      '@type': 'Service',
+      '@id': 'https://axelplaisance.fr/#service-creation',
+      name: 'Création de site web',
+      description:
+        "Conception complete d un nouveau site web pour PME, du design a la mise en ligne. Sur-mesure selon l activite du client : identite visuelle, redaction, design responsive, SEO local, formation 1h offerte.",
+      serviceType: 'Création de site web',
+      provider: { '@id': 'https://axelplaisance.fr/#identity' },
+      areaServed: [
+        { '@type': 'City', name: 'Lorient' },
+        { '@type': 'AdministrativeArea', name: 'Morbihan' },
+        { '@type': 'AdministrativeArea', name: 'Bretagne Sud' },
+      ],
+      url: 'https://axelplaisance.fr/services#creation',
+    },
+
+    // ===== ENTITE 4 — Service "Refonte de site web" (v1.3) =====
+    // Axe 2 du repositionnement v1.3 : modernisation d un site existant.
+    {
+      '@type': 'Service',
+      '@id': 'https://axelplaisance.fr/#service-refonte',
+      name: 'Refonte de site web',
+      description:
+        "Modernisation d un site web existant : audit complet, refonte design et technique, migration des contenus, SEO local sans perte d acquis, mise en ligne sans rupture de service.",
+      serviceType: 'Refonte de site web',
+      provider: { '@id': 'https://axelplaisance.fr/#identity' },
+      areaServed: [
+        { '@type': 'City', name: 'Lorient' },
+        { '@type': 'AdministrativeArea', name: 'Morbihan' },
+        { '@type': 'AdministrativeArea', name: 'Bretagne Sud' },
+      ],
+      url: 'https://axelplaisance.fr/services#refonte',
+    },
+  ],
+};
+
+// Robots : noindex,nofollow uniquement si demande explicite (pages utilitaires)
+const robotsContent = noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
+---
+
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- SEO de base -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={robotsContent} />
+    <meta name="author" content="Axel Plaisance" />
+    <meta name="theme-color" content="#F2EDE3" />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang="fr-FR" href={canonicalUrl} />
+    <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
+
+    <!-- Open Graph (partage Facebook, LinkedIn, etc.) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Axel Plaisance" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:alt" content="Axel Plaisance — Développeur web freelance à Lorient" />
+    <meta property="og:locale" content="fr_FR" />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content="Axel Plaisance — Développeur web freelance à Lorient" />
+
+    <!-- Schema.org JSON-LD — graphe d entites (Person + ProfessionalService) -->
+    <!-- Phase 5 (@seo) + Phase 6 (@geo) + v1.2 sur-mesure (sans prix chiffres) -->
+    <!-- Ne s injecte pas sur les pages noindex (eviter le bruit de signalisation) -->
+    {!noindex && (
+      <script type="application/ld+json" set:html={JSON.stringify(jsonLdGraph)} />
+    )}
+
+    <!-- Google Fonts (preconnect pour gagner du temps DNS) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:wght@400&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Slot head : permet a chaque page d injecter du JSON-LD additionnel -->
+    <!-- (ex : FAQPage sur /services). N est rendu que pour les pages indexables. -->
+    {!noindex && <slot name="head" />}
+  </head>
+
+  <body>
+    <!-- Skip link : permet aux utilisateurs clavier / lecteurs d ecran de sauter le menu -->
+    <a href="#main" class="skip-link">Aller au contenu principal</a>
+
+    <Header />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <!-- Script IntersectionObserver pour les animations .fade-in -->
+    <!-- is:inline = pas de bundling, executable immediatement -->
+    <script is:inline>
+      // On initialise l observer une fois le DOM pret
+      (function () {
+        // Si l utilisateur a active "reduce motion", on rend tout visible direct
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduceMotion) {
+          document.querySelectorAll('.fade-in').forEach((el) => el.classList.add('is-visible'));
+          return;
+        }
+
+        // Observer standard : on revele l element quand 10% est dans le viewport
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                io.unobserve(entry.target); // une seule fois
+              }
+            });
+          },
+          { threshold: 0.1, rootMargin: '0px 0px -10% 0px' }
+        );
+
+        document.querySelectorAll('.fade-in').forEach((el) => io.observe(el));
+      })();
+    </script>
+  </body>
+</html>

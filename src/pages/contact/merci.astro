@@ -1,0 +1,38 @@
+---
+// Page de remerciement apres envoi du formulaire Netlify.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Eyebrow from '../../components/Eyebrow.astro';
+
+const title = 'Message envoyé — Merci | Axel Plaisance';
+const description = 'Votre message est bien arrivé. Réponse sous 24h ouvrées.';
+// Page utilitaire post-formulaire : exclue de l index Google et du sitemap.
+---
+
+<BaseLayout title={title} description={description} noindex={true}>
+  <section class="container-editorial py-24 lg:py-32">
+    <div class="max-w-prose">
+      <Eyebrow label="MESSAGE ENVOYÉ" />
+      <h1 class="font-serif text-h1 tracking-tighter text-ink mt-4">
+        Reçu. Merci.
+      </h1>
+      <p class="text-lede text-ink-soft mt-6">
+        Votre message est arrivé. Je vous réponds sous 24h ouvrées, depuis
+        <a href="mailto:plaisance.axelp@gmail.com" class="text-ink underline underline-offset-4 decoration-border">plaisance.axelp@gmail.com</a>
+        — pensez à vérifier vos spams au cas où.
+      </p>
+      <p class="text-body text-ink-soft mt-6">
+        En attendant, vous pouvez
+        <a href="/services" class="text-ink underline underline-offset-4 decoration-border hover:decoration-ink">consulter les tarifs</a>
+        ou
+        <a href="/realisations" class="text-ink underline underline-offset-4 decoration-border hover:decoration-ink">voir les projets en cours</a>.
+      </p>
+
+      <a
+        href="/"
+        class="inline-block mt-12 text-small text-ink underline underline-offset-4 decoration-border hover:decoration-ink transition-all"
+      >
+        ← Retour à l'accueil
+      </a>
+    </div>
+  </section>
+</BaseLayout>

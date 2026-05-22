@@ -1,0 +1,111 @@
+---
+// SpecialtyCard.astro — Carte secteur ou service (section "Pour qui ?" / "Services" / "Inclus").
+//
+// Iteration v1.4 (2026-05-12) — Regle universelle d'alignement vertical :
+//   - Conteneur racine deja en h-full flex-col (OK).
+//   - Lien optionnel : encapsule dans un <footer class="mt-auto pt-6">
+//     (au lieu de mt-6 inline-block) pour aligner les liens en bas des cartes
+//     quand le parent est en items-stretch.
+//   - Si une grille mixe cartes avec et sans lien (cas non present actuellement
+//     mais a anticiper), un placeholder invisible <footer aria-hidden> preserve
+//     l'espace pour ne pas casser l'alignement.
+//   - Hauteurs min ajoutees sur eyebrow / titre / description (cf. spec @design §3.4).
+//
+// Cf. specs : 02-design/iteration-v1.4-design.md §3.4.
+
+export interface Props {
+  eyebrow: string; // ex: "01 — BTP"
+  title: string;
+  description: string;
+  // Nom d icone Lucide pour rendu inline (on garde simple : on accepte un SVG via slot ou un nom symbolique)
+  icon?: string;
+  linkHref?: string;
+  linkLabel?: string;
+  // Tag optionnel ("AVANCÉ" sur la carte IA)
+  tag?: string;
+}
+
+const { eyebrow, title, description, icon, linkHref, linkLabel, tag } = Astro.props;
+
+// Bibliotheque d icones inline (Lucide, stroke 1.5px).
+// On choisit l icone selon le nom passe en prop.
+const icons: Record<string, string> = {
+  hammer: '<path d="m15 12-8.5 8.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L12 9"/><path d="M17.64 15 22 10.64"/><path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86L16.01 4.6a5.56 5.56 0 0 0-3.94-1.64H9l.92.82A6.18 6.18 0 0 1 12 8.4v1.56l2 2h2.47l2.26 1.91"/>',
+  dumbbell: '<path d="M14.4 14.4 9.6 9.6"/><path d="M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l-1.768 1.767a2 2 0 1 1 2.828 2.829z"/><path d="m21.5 21.5-1.4-1.4"/><path d="M3.9 3.9 2.5 2.5"/><path d="M6.404 12.768a2 2 0 1 1-2.829-2.829l1.768-1.767a2 2 0 1 1-2.828-2.829l2.828-2.828a2 2 0 1 1 2.829 2.828l1.767-1.768a2 2 0 1 1 2.829 2.829z"/>',
+  store: '<path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-2.48-1.7a.5.5 0 0 0-.92 0A2.7 2.7 0 0 1 14 12a2.7 2.7 0 0 1-2.6-1.7a.5.5 0 0 0-.92 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-2.48-1.7a.5.5 0 0 0-.92 0A2.7 2.7 0 0 1 2 12a2 2 0 0 1-2-2V7"/>',
+  'chef-hat': '<path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z"/><path d="M6 17h12"/>',
+  'pen-tool': '<path d="M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z"/><path d="m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18"/><path d="m2.3 2.3 7.286 7.286"/><circle cx="11" cy="11" r="2"/>',
+  'refresh-cw': '<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+  search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  sparkles: '<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/>',
+  bot: '<path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/>',
+  wrench: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+  gift: '<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/>',
+  'graduation-cap': '<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>',
+  server: '<rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/>',
+  smartphone: '<rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>',
+  'shield-check': '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+  mail: '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+  phone: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',
+  'map-pin': '<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+};
+
+const iconSvg = icon && icons[icon] ? icons[icon] : null;
+---
+
+<article class="relative flex flex-col h-full bg-ivoire border border-border-light rounded-lg p-6 lg:p-8 transition-all duration-300 ease-editorial hover:border-border hover:-translate-y-0.5">
+  {
+    tag && (
+      <span class="absolute top-4 right-4 inline-block px-2 py-1 bg-surface font-mono text-eyebrow tracking-eyebrow uppercase text-ink rounded">
+        {tag}
+      </span>
+    )
+  }
+
+  <!-- Icone -->
+  {
+    iconSvg && (
+      <svg
+        viewBox="0 0 24 24"
+        width="24"
+        height="24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="text-ink mb-6"
+        aria-hidden="true"
+        set:html={iconSvg}
+      />
+    )
+  }
+
+  <!-- Eyebrow — v1.4 : h-4 (1 ligne fixe). -->
+  <p class="font-mono text-eyebrow tracking-eyebrow uppercase text-mono h-4">{eyebrow}</p>
+
+  <!-- Titre — v1.4 : min-h-[56px] (max 2 lignes sans 500 20px). -->
+  <h3 class="text-h5 font-sans font-medium text-ink mt-3 min-h-[56px]">{title}</h3>
+
+  <!-- Description — v1.4 : min-h calibre sur pire cas (max 4 lignes ~150 car). -->
+  <p class="text-small text-ink-soft mt-3 min-h-[112px] lg:min-h-[96px]">{description}</p>
+
+  <!-- Lien optionnel — v1.4 : footer mt-auto pour aligner les liens en bas.
+       Placeholder invisible si linkHref absent : preserve l'alignement dans
+       une grille mixte (cas a anticiper). -->
+  {
+    linkHref && linkLabel ? (
+      <footer class="mt-auto pt-6">
+        <a
+          href={linkHref}
+          class="text-small text-ink underline underline-offset-4 decoration-border hover:decoration-ink transition-all inline-block"
+        >
+          {linkLabel}
+        </a>
+      </footer>
+    ) : (
+      <footer class="mt-auto pt-6" aria-hidden="true"></footer>
+    )
+  }
+</article>

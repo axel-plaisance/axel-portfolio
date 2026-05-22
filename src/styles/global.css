@@ -1,0 +1,132 @@
+/* Styles globaux du site */
+/* Tailwind est injecte automatiquement via @astrojs/tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Variables CSS utilisees pour les transitions personnalisees */
+:root {
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-base: 300ms;
+  --duration-scroll: 700ms;
+}
+
+/* ===== BASE ===== */
+@layer base {
+  /* Reglages de base sur le body */
+  body {
+    @apply bg-ivoire text-ink font-sans antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Selection texte (couleur de la marque) */
+  ::selection {
+    background-color: #2A2520;
+    color: #F2EDE3;
+  }
+
+  /* Focus visible par defaut (accessibilite clavier).
+     Double anneau (ivoire + ink) pour rester visible sur fond clair ET sur fond sombre. */
+  :focus-visible {
+    outline: 2px solid #2A2520;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px #F2EDE3;
+    border-radius: 2px;
+  }
+  /* Sur les sections a fond sombre (bg-dark), on inverse l ordre des anneaux
+     pour que le contraste reste eleve (anneau ivoire en premier, puis halo ink). */
+  .bg-dark :focus-visible {
+    outline: 2px solid #F2EDE3;
+    box-shadow: 0 0 0 4px #2A2520;
+  }
+
+  /* On retire l outline par defaut sur les clics souris uniquement */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Pas de mots coupes par defaut (regle editoriale) */
+  h1, h2, h3, h4, h5, h6 {
+    hyphens: manual;
+  }
+}
+
+/* ===== UTILITAIRES PERSO ===== */
+
+/* Conteneur principal aligne sur la grille editoriale */
+.container-editorial {
+  @apply max-w-editorial mx-auto px-6 md:px-8 lg:px-12;
+}
+
+/* Animation .fade-in au scroll (declenchee par IntersectionObserver dans BaseLayout) */
+.fade-in {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--duration-scroll) var(--ease-editorial),
+              transform var(--duration-scroll) var(--ease-editorial);
+}
+.fade-in.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger : delais via data-attribute pour les grilles de cartes */
+.fade-in[data-delay="100"] { transition-delay: 100ms; }
+.fade-in[data-delay="200"] { transition-delay: 200ms; }
+.fade-in[data-delay="300"] { transition-delay: 300ms; }
+
+/* Skip link (accessibilite — saut au contenu principal) */
+.skip-link {
+  @apply sr-only;
+}
+.skip-link:focus {
+  @apply not-sr-only fixed top-4 left-4 z-50 bg-ink text-ivoire px-4 py-2 rounded;
+}
+
+/* Burger mobile — animation 3 lignes vers croix */
+.burger-line {
+  @apply block h-[1.5px] w-6 bg-ink;
+  transition: transform 300ms var(--ease-editorial), opacity 300ms var(--ease-editorial);
+  transform-origin: center;
+}
+.burger[aria-expanded="true"] .burger-line:nth-child(1) {
+  transform: translateY(7.5px) rotate(45deg);
+}
+.burger[aria-expanded="true"] .burger-line:nth-child(2) {
+  opacity: 0;
+}
+.burger[aria-expanded="true"] .burger-line:nth-child(3) {
+  transform: translateY(-7.5px) rotate(-45deg);
+}
+
+/* FAQ <details> — animation chevron */
+details > summary {
+  list-style: none;
+  cursor: pointer;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details > summary .faq-icon {
+  transition: transform 300ms var(--ease-editorial);
+}
+details[open] > summary .faq-icon {
+  transform: rotate(45deg);
+}
+
+/* ===== PREFERS-REDUCED-MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .fade-in {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

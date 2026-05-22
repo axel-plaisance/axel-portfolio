@@ -1,0 +1,47 @@
+---
+// CTABand.astro — Bande horizontale brun fonce, fin de page commerciale.
+export interface Props {
+  title: string;
+  description?: string;
+  ctaText: string;
+  ctaHref: string;
+  secondaryText?: string;
+  secondaryHref?: string;
+}
+
+const { title, description, ctaText, ctaHref, secondaryText, secondaryHref } = Astro.props;
+---
+
+<section class="bg-dark py-20 md:py-24 lg:py-32">
+  <div class="container-editorial">
+    <div class="grid lg:grid-cols-2 gap-12 items-end">
+      <!-- Colonne gauche — Titre -->
+      <h2 class="font-serif text-h2 lg:text-h1 tracking-tighter text-ivoire">
+        {title}
+      </h2>
+
+      <!-- Colonne droite — Sous-texte + CTAs -->
+      <div class="flex flex-col gap-6">
+        {description && <p class="text-lede text-border">{description}</p>}
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a
+            href={ctaHref}
+            class="inline-flex items-center justify-center px-6 py-3.5 bg-ivoire text-ink text-body font-medium rounded hover:bg-[#E8E2D5] transition-all duration-200 hover:-translate-y-0.5"
+          >
+            {ctaText}
+          </a>
+          {
+            secondaryText && secondaryHref && (
+              <a
+                href={secondaryHref}
+                class="inline-flex items-center justify-center px-6 py-3.5 text-ivoire text-body font-medium underline underline-offset-4 decoration-border hover:decoration-ivoire transition-all duration-200"
+              >
+                {secondaryText}
+              </a>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

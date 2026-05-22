@@ -1,0 +1,667 @@
+---
+// Page Automatisations intelligentes — 8 sections selon page-automatisations-design.md.
+// Textes : 03-copywriting/textes-automatisations.md (zero invention).
+// Iteration v2 Phase 4 — implementation Astro.
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import CTABand from '../components/CTABand.astro';
+import MethodStep from '../components/MethodStep.astro';
+import SectionMarker from '../components/SectionMarker.astro';
+import AutomationCard from '../components/AutomationCard.astro';
+import AutomationFeatured from '../components/AutomationFeatured.astro';
+import ProblemPunchline from '../components/ProblemPunchline.astro';
+
+// Phase 5 v2 — @seo : meta optimisés pour le mot-clé primaire "chatbot IA
+// + automatisations PME Morbihan". Title 58 caractères (mot-clé principal en
+// tête, zone géographique élargie, marque en fin). Description 145 caractères
+// (3 services concrets, zone "pays de Lorient", angle confiance "hébergé en
+// France", délai chiffré).
+const title = 'Chatbot IA & automatisations PME Morbihan | Axel Plaisance';
+const description = 'Chatbot, formulaire de devis intelligent et notifications auto pour PME du pays de Lorient. Hébergé en France, mise en place sous 2 à 4 semaines.';
+
+// Phase 5 v2 — @seo : JSON-LD additionnel injecté via slot="head" du BaseLayout
+// (même pattern que la FAQPage de services.astro Phase 6). On NE redéfinit PAS
+// les entités déjà présentes dans le @graph global (Person + ProfessionalService —
+// v1.2 : les 3 Service formules Essentiel/Pro/Premium ont été retirées du @graph
+// au profit du repositionnement sur-mesure). On ajoute ici un OfferCatalog dédié
+// rattaché à l'@id de la ProfessionalService existante, qui regroupe les
+// 5 Services Automatisations spécifiques à cette page. Chaque Service hérite
+// du provider via @id ; chaque Service est typé Service + serviceType +
+// areaServed (communes du pays de Lorient cohérentes avec BaseLayout) + category
+// commune "Automatisations IA".
+//
+// Justification de la structure OfferCatalog :
+// - Cohérent avec ce que @seo Phase 5 v1 a fait pour les 3 formules (catalogue
+//   `Formules création de site web` dans la ProfessionalService).
+// - Permet aux LLM (ChatGPT, Perplexity, AI Overviews) de citer chaque service
+//   automatisation individuellement comme entité indexable.
+// - Pas de doublon avec le @graph global : on attache l'OfferCatalog à l'@id
+//   `#identity` déjà déclaré, et chaque Service a son @id propre `#auto-*`.
+const automatisationsAreaServed = [
+  { '@type': 'City', name: 'Lorient' },
+  { '@type': 'City', name: 'Lanester' },
+  { '@type': 'City', name: 'Hennebont' },
+  { '@type': 'City', name: 'Plœmeur' },
+  { '@type': 'City', name: 'Quéven' },
+  { '@type': 'City', name: 'Larmor-Plage' },
+  { '@type': 'City', name: 'Caudan' },
+  { '@type': 'City', name: 'Riantec' },
+  { '@type': 'City', name: 'Port-Louis' },
+  { '@type': 'City', name: 'Locmiquélic' },
+  { '@type': 'AdministrativeArea', name: 'Morbihan' },
+  { '@type': 'AdministrativeArea', name: 'Bretagne Sud' },
+];
+
+// Phase 6 v2 (@geo) — Enrichissement GEO de la page /automatisations.
+// On ajoute au @graph existant (@seo : OfferCatalog + 5 Service) :
+//   - 1 FAQPage (4 questions de la section 7, reflet EXACT du HTML)
+//   - 1 HowTo (les 4 etapes de la section "En pratique" 04)
+// La FAQ est l'arme n°1 du GEO : format Q/R = format de reponse naturel
+// des LLM (ChatGPT, Perplexity, Google AI Overview). Le HowTo declenche
+// des rich results Google et alimente les reponses "comment faire pour..."
+// dans Perplexity et ChatGPT.
+// Pas de doublon avec le FAQPage de /services (qui contient 7 questions
+// distinctes sur les tarifs/formules). Chaque page a son propre FAQPage.
+
+const automatisationsJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    // ===== OfferCatalog "Automatisations IA" =====
+    // Rattaché à la ProfessionalService existante (#identity du BaseLayout).
+    // Permet aux moteurs (Google + LLM) de comprendre que cette page liste
+    // un catalogue cohérent de 5 services rattachés à la même entité.
+    {
+      '@type': 'OfferCatalog',
+      '@id': 'https://axelplaisance.fr/automatisations#catalog',
+      name: 'Automatisations IA pour PME locales',
+      description:
+        "Catalogue des automatisations intelligentes proposées aux PME du pays de Lorient : chatbot site web, formulaire de devis intelligent, notifications WhatsApp/email, automatisations sur mesure, voicebot téléphonique. Hébergement France, conformité RGPD.",
+      provider: { '@id': 'https://axelplaisance.fr/#identity' },
+      itemListElement: [
+        { '@type': 'Offer', itemOffered: { '@id': 'https://axelplaisance.fr/automatisations#auto-chatbot' } },
+        { '@type': 'Offer', itemOffered: { '@id': 'https://axelplaisance.fr/automatisations#auto-devis' } },
+        { '@type': 'Offer', itemOffered: { '@id': 'https://axelplaisance.fr/automatisations#auto-notifications' } },
+        { '@type': 'Offer', itemOffered: { '@id': 'https://axelplaisance.fr/automatisations#auto-sur-mesure' } },
+        { '@type': 'Offer', itemOffered: { '@id': 'https://axelplaisance.fr/automatisations#auto-voicebot' } },
+      ],
+    },
+
+    // ===== Service 1 — Chatbot site web =====
+    {
+      '@type': 'Service',
+      '@id': 'https://axelplaisance.fr/automatisations#auto-chatbot',
+      name: 'Chatbot site web',
+      serviceType: 'Intégration de chatbot pour PME',
+      category: 'Automatisations IA',
+      description:
+        "Assistant conversationnel intégré au site qui répond aux questions des clients 24h/24 (horaires, tarifs, prestations, zones d'intervention), apprend des documents du dirigeant et filtre les demandes sérieuses. Hébergé en France, conformité RGPD.",
+      provider: { '@id': 'https://axelplaisance.fr/#identity' },
+      areaServed: automatisationsAreaServed,
+      audience: { '@type': 'BusinessAudience', name: 'PME locale du Morbihan' },
+      url: 'https://axelplaisance.fr/automatisations#tier-1',
+      offers: {
+        '@type': 'Offer',
+        availability: 'https://schema.org/InStock',
+        deliveryLeadTime: { '@type': 'QuantitativeValue', minValue: 14, maxValue: 28, unitCode: 'DAY' },
+      },
+    },
+
+    // ===== Service 2 — Formulaire de devis intelligent =====
+    {
+      '@type': 'Service',
+      '@id': 'https://axelplaisance.fr/automatisations#auto-devis',
+      name: 'Formulaire de devis intelligent',
+      serviceType: 'Formulaire de qualification de leads pour PME',
+      category: 'Automatisations IA',
+      description:
+        "Formulaire dynamique qui adapte ses questions à l'activité du visiteur, qualifie sa demande (zone, budget, urgence), filtre les hors-cible et livre au dirigeant un dossier déjà cadré. Économise 10 à 15 minutes par devis traité.",
+      provider: { '@id': 'https://axelplaisance.fr/#identity' },
+      areaServed: automatisationsAreaServed,
+      audience: { '@type': 'BusinessAudience', name: 'PME locale du Morbihan' },
+      url: 'https://axelplaisance.fr/automatisations#tier-1',
+      offers: {
+        '@type': 'Offer',
+        availability: 'https://schema.org/InStock',
+        deliveryLeadTime: { '@type': 'QuantitativeValue', minValue: 14, maxValue: 28, unitCode: 'DAY' },
+      },
+    },
+
+    // ===== Service 3 — Notifications WhatsApp / email automatiques =====
+    {
+      '@type': 'Service',
+      '@id': 'https://axelplaisance.fr/automatisations#auto-notifications',
+      name: 'Notifications WhatsApp et email automatiques',
+      serviceType: 'Notifications automatiques pour PME (WhatsApp, email, SMS)',
+      category: 'Automatisations IA',
+      description:
+        "Système d'alertes instantanées et de rappels automatiques par WhatsApp, email ou SMS : confirmation de rendez-vous, rappel 24h avant pour réduire les no-shows, relance post-prestation pour les avis Google. Configuré une fois, tourne ensuite sans intervention.",
+      provider: { '@id': 'https://axelplaisance.fr/#identity' },
+      areaServed: automatisationsAreaServed,
+      audience: { '@type': 'BusinessAudience', name: 'PME locale du Morbihan' },
+      url: 'https://axelplaisance.fr/automatisations',
+      offers: {
+        '@type': 'Offer',
+        availability: 'https://schema.org/InStock',
+        deliveryLeadTime: { '@type': 'QuantitativeValue', minValue: 14, maxValue: 28, unitCode: 'DAY' },
+      },
+    },
+
+    // ===== Service 4 — Automatisations sur mesure =====
+    {
+      '@type': 'Service',
+      '@id': 'https://axelplaisance.fr/automatisations#auto-sur-mesure',
+      name: 'Automatisations sur mesure pour PME',
+      serviceType: 'Connexion et automatisation entre outils existants (agenda, CRM, facturation, emails)',
+      category: 'Automatisations IA',
+      description:
+        "Connecte les outils du quotidien (agenda, fichier clients, facturation, emails) pour éliminer les copier-coller, synchroniser contacts, devis et factures, et déclencher des workflows automatiques sans changer les outils en place.",
+      provider: { '@id': 'https://axelplaisance.fr/#identity' },
+      areaServed: automatisationsAreaServed,
+      audience: { '@type': 'BusinessAudience', name: 'PME locale du Morbihan' },
+      url: 'https://axelplaisance.fr/automatisations',
+      offers: {
+        '@type': 'Offer',
+        availability: 'https://schema.org/InStock',
+        deliveryLeadTime: { '@type': 'QuantitativeValue', minValue: 14, maxValue: 28, unitCode: 'DAY' },
+      },
+    },
+
+    // ===== Service 5 — Voicebot téléphonique =====
+    {
+      '@type': 'Service',
+      '@id': 'https://axelplaisance.fr/automatisations#auto-voicebot',
+      name: 'Voicebot téléphonique',
+      serviceType: 'Répondeur intelligent et qualification des appels entrants',
+      category: 'Automatisations IA',
+      description:
+        "Répondeur intelligent qui prend les appels entrants pendant que le dirigeant est sur chantier ou en rendez-vous : pose les bonnes questions, identifie le sujet, filtre les démarcheurs et transmet un résumé écrit avant chaque rappel. Projet sur-mesure.",
+      provider: { '@id': 'https://axelplaisance.fr/#identity' },
+      areaServed: automatisationsAreaServed,
+      audience: { '@type': 'BusinessAudience', name: 'PME locale du Morbihan' },
+      url: 'https://axelplaisance.fr/automatisations',
+      offers: {
+        '@type': 'Offer',
+        availability: 'https://schema.org/InStock',
+      },
+    },
+
+    // ===== FAQPage — 4 questions de la section 7 (Phase 6 v2 @geo) =====
+    // Reflet EXACT du HTML de la FAQ (pas de paraphrase). Format answer-first
+    // déjà respecté par @copywriting (réponses qui commencent par "Non."/"Oui."/
+    // "Entre 2 et 4 semaines..."). Idéal pour citation directe par les LLM.
+    {
+      '@type': 'FAQPage',
+      '@id': 'https://axelplaisance.fr/automatisations#faq',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: "L'IA va-t-elle remplacer mon équipe ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Non. L'IA prend en charge les tâches répétitives qui rongent votre quotidien — répondre aux mêmes questions, trier les demandes, envoyer les confirmations. Votre équipe garde la relation client, les décisions, les vrais coachings ou interventions. C'est un assistant qui filtre et prépare, pas un commercial qui décide à votre place.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Est-ce compliqué à utiliser après livraison ?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Non. Vous n'avez aucun nouvel outil à apprendre — l'automatisation se branche sur ce que vous utilisez déjà (votre boîte mail, votre téléphone, votre agenda). Je vous forme 1 heure pour les ajustements de base, puis le système tourne tout seul. Si quelque chose ne va pas, je reste joignable — c'est mon numéro que vous avez.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Mes données clients sont-elles protégées ?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Oui. Tout est hébergé en France, conforme RGPD. Vos données ne sortent jamais d'Europe, et personne d'autre que vous n'y a accès. Vous restez propriétaire de la totalité de vos informations clients, à tout moment. Si demain vous voulez tout récupérer ou tout supprimer, c'est fait en une demi-journée, sans condition.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Combien de temps pour mettre en place ?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Entre 2 et 4 semaines selon le service choisi. Discussion la première semaine, conception et validation la deuxième, mise en place et tests la troisième, formation et ajustements la dernière. Un chatbot simple peut être en ligne en 10 jours. Une automatisation sur mesure complexe prend plutôt un mois complet.",
+          },
+        },
+      ],
+    },
+
+    // ===== HowTo — Mise en place d'une automatisation IA (Phase 6 v2 @geo) =====
+    // 4 étapes de la section "En pratique" (04) : Discussion / Conception /
+    // Mise en place / Suivi. Reflet EXACT du HTML, pas de paraphrase.
+    // Active les rich results Google "Comment faire..." et alimente les
+    // réponses Perplexity/ChatGPT sur "comment mettre en place une
+    // automatisation IA pour PME".
+    {
+      '@type': 'HowTo',
+      '@id': 'https://axelplaisance.fr/automatisations#howto',
+      name: "Mise en place d'une automatisation IA pour PME",
+      description:
+        "Quatre étapes courtes pour installer une automatisation intelligente dans une PME du pays de Lorient : discussion, conception, mise en place, suivi.",
+      totalTime: 'P4W',
+      step: [
+        {
+          '@type': 'HowToStep',
+          position: 1,
+          name: 'Discussion',
+          text: "On échange 30 minutes en visio ou par téléphone. Vous me racontez votre quotidien, vos irritants, les questions qui reviennent — je vous dis ce qui est faisable et combien ça pèse.",
+          url: 'https://axelplaisance.fr/automatisations#methode',
+        },
+        {
+          '@type': 'HowToStep',
+          position: 2,
+          name: 'Conception',
+          text: "Je vous envoie un scénario clair : qui répond quoi, à qui, à quel moment, par quel canal. Vous validez ou vous corrigez avant que je touche au moindre paramètre.",
+          url: 'https://axelplaisance.fr/automatisations#methode',
+        },
+        {
+          '@type': 'HowToStep',
+          position: 3,
+          name: 'Mise en place',
+          text: "Je configure l'outil, je le branche à votre site et à vos canaux, je le teste en conditions réelles. Hébergement en France systématique pour vos données.",
+          url: 'https://axelplaisance.fr/automatisations#methode',
+        },
+        {
+          '@type': 'HowToStep',
+          position: 4,
+          name: 'Suivi',
+          text: "Une formation de 1 heure pour que vous gardiez la main, sans devoir apprendre un nouvel outil. Ajustements inclus le premier mois, je reste joignable derrière.",
+          url: 'https://axelplaisance.fr/automatisations#methode',
+        },
+      ],
+    },
+  ],
+};
+---
+
+<BaseLayout title={title} description={description}>
+  <!-- Phase 5 v2 (@seo) + Phase 6 v2 (@geo) — JSON-LD additionnel injecte via
+       slot="head". Un seul bloc <script> qui contient un @graph regroupant :
+         - 1 OfferCatalog "Automatisations IA" (Phase 5 v2 @seo)
+         - 5 Service auto-* : chatbot, devis intelligent, notifications,
+           sur-mesure, voicebot (Phase 5 v2 @seo)
+         - 1 FAQPage (4 questions de la section 7) — Phase 6 v2 @geo
+         - 1 HowTo (4 etapes "En pratique") — Phase 6 v2 @geo
+       Toutes les entites Service sont rattachees a la ProfessionalService
+       deja declaree dans le @graph global du BaseLayout via @id. Pas de
+       duplication d entites. Pas de doublon avec le FAQPage de /services
+       (qui contient 7 questions distinctes sur les tarifs/formules). -->
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(automatisationsJsonLd)} />
+
+  <!-- =============================================== -->
+  <!-- SECTION 1 — HERO (fond ivoire)                  -->
+  <!-- =============================================== -->
+  <!-- SectionMarker vertical "AUTOMATISATIONS — 01" en marge gauche (>= lg). -->
+  <section class="bg-ivoire relative overflow-x-clip py-20 md:py-28 lg:py-32">
+    <SectionMarker label="AUTOMATISATIONS — 01" />
+
+    <div class="container-editorial relative z-10">
+      <Eyebrow number="01" label="AUTOMATISATIONS INTELLIGENTES" />
+
+      {/* H1 court (max-w-[18ch]) — clamp via les classes Tailwind h2 puis h1 puis display */}
+      <h1 class="font-serif text-h2 sm:text-h1 lg:text-display tracking-tighter text-ink mt-4 max-w-[18ch]">
+        Vos outils travaillent pendant que vous dormez.
+      </h1>
+
+      <p class="text-lede text-ink-soft mt-6 max-w-3xl">
+        J'installe des outils intelligents qui répondent à vos clients, qualifient vos demandes et préviennent votre équipe — sans que vous ayez à intervenir. Conçu pour les PME du Pays de Lorient qui veulent gagner du temps sans changer leurs habitudes.
+      </p>
+
+      <div class="mt-10 flex flex-col sm:flex-row gap-4">
+        <a
+          href="/contact?service=automatisation"
+          class="inline-flex items-center justify-center px-6 py-3.5 bg-ink text-ivoire text-body font-medium rounded hover:bg-[#1F1B17] transition-all duration-200 hover:-translate-y-0.5"
+        >
+          Demander un devis
+        </a>
+        <a
+          href="#tier-1"
+          class="inline-flex items-center justify-center px-6 py-3.5 border border-border text-ink text-body font-medium rounded hover:border-ink transition-all duration-200"
+        >
+          Voir les exemples
+        </a>
+      </div>
+
+      <p class="text-micro font-mono text-mono mt-6">
+        Hébergé en France · Vos données restent ici
+      </p>
+    </div>
+  </section>
+
+  <!-- =============================================== -->
+  <!-- SECTION 2 — PROBLEME → SOLUTION (fond surface)  -->
+  <!-- =============================================== -->
+  <section class="bg-surface relative overflow-x-clip">
+    {/* Numero geant "02" : couleur ivoire (inverse du fond surface) */}
+    <span
+      class="hidden md:block absolute top-6 -right-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-ivoire z-0 pointer-events-none select-none"
+      aria-hidden="true"
+    >02</span>
+
+    <div class="container-editorial py-16 md:py-20 lg:py-24 relative z-10">
+      <div class="fade-in">
+        <Eyebrow number="02" label="LE PROBLÈME RÉEL" />
+        <h2 class="font-serif text-h2 lg:text-h1 tracking-tighter text-ink mt-4 max-w-[24ch]">
+          Ce que vous perdez aujourd'hui sans automatisation.
+        </h2>
+      </div>
+
+      {/* GRILLE 3 punchlines : 1 col mobile, 3 cols md+ */}
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 mt-16">
+        <div class="fade-in" data-delay="0">
+          <ProblemPunchline
+            num="01"
+            text="Des clients qui appellent à 22h et trouvent un répondeur. Le lendemain, ils sont déjà chez le concurrent."
+          />
+        </div>
+        <div class="fade-in" data-delay="100">
+          <ProblemPunchline
+            num="02"
+            text="Des heures à trier des demandes par email — la moitié ne mèneront jamais à un devis signé."
+          />
+        </div>
+        <div class="fade-in" data-delay="200">
+          <ProblemPunchline
+            num="03"
+            text="Les mêmes questions qui reviennent dix fois par semaine. Vos horaires. Vos tarifs. Votre zone d'intervention."
+          />
+        </div>
+      </div>
+
+      {/* PHRASE DE TRANSITION (italique serif centree) */}
+      <div class="mt-16 md:mt-20 max-w-2xl mx-auto text-center fade-in">
+        <p class="font-serif italic text-h4 lg:text-h3 tracking-tight text-ink-soft">
+          Bonne nouvelle : tout ça peut tourner sans vous.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================== -->
+  <!-- SECTION 3 — TIER 1 SERVICES PHARES (fond ivoire) -->
+  <!-- =============================================== -->
+  {/* Ancre #tier-1 ciblee par le CTA ghost du hero */}
+  <section id="tier-1" class="bg-ivoire relative overflow-x-clip">
+    <SectionMarker label="SERVICES PHARES — 03" />
+
+    {/* Numero geant "03" : couleur surface (inverse du fond ivoire) */}
+    <span
+      class="hidden md:block absolute top-6 -right-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-surface z-0 pointer-events-none select-none"
+      aria-hidden="true"
+    >03</span>
+
+    <div class="container-editorial py-16 md:py-20 lg:py-24 relative z-10">
+      <div class="fade-in">
+        <Eyebrow number="03" label="SERVICES PHARES" />
+        <h2 class="font-serif text-h2 lg:text-h1 tracking-tighter text-ink mt-4 max-w-[24ch]">
+          Les deux services qui font la différence.
+        </h2>
+        <p class="text-lede text-ink-soft mt-6 max-w-prose">
+          Deux automatisations qui se mettent en place vite, se voient tout de suite côté client, et libèrent votre quotidien dès la première semaine.
+        </p>
+      </div>
+
+      {/* GRILLE 2 cartes primary : 1 col mobile, 2 cols lg+ */}
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch mt-16">
+        <div class="fade-in h-full" data-delay="0">
+          <AutomationCard
+            tier="primary"
+            icon="chatbot"
+            title="Chatbot pour votre site"
+            lede="Un assistant qui répond aux questions de vos clients sur votre site, à toute heure, avec vos vraies infos. Vous gardez la main sur les conversations qui comptent."
+            benefits={[
+              'Répond aux questions fréquentes : horaires, tarifs, zones, prestations',
+              'Ne perd plus jamais un client qui passe à 22h ou le dimanche',
+              "Apprend de vos documents et parle dans votre style",
+            ]}
+            example="Exemple — Un plombier de Quéven reçoit « Vous intervenez le weekend ? » à 22h47. L'assistant répond, propose un créneau lundi matin, envoie un mémo au pro le lendemain."
+            ctaHref="/contact?service=chatbot"
+          />
+        </div>
+        <div class="fade-in h-full" data-delay="100">
+          <AutomationCard
+            tier="primary"
+            icon="form"
+            title="Formulaire de devis intelligent"
+            lede="Un formulaire qui pose les bonnes questions selon l'activité du visiteur, qualifie sa demande, et vous arrive avec un dossier déjà cadré à étudier."
+            benefits={[
+              'Reçoit des demandes triées, prêtes à chiffrer',
+              'Filtre les hors-zone, hors-budget et les curieux sans suite',
+              'Vous fait gagner 10 à 15 minutes par devis',
+            ]}
+            example="Exemple — Un coach sportif à Lorient distingue « perte de poids » et « préparation marathon » dès la première question. Le formulaire enchaîne avec les bonnes questions adaptées à chaque objectif."
+            ctaHref="/contact?service=devis-intelligent"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================== -->
+  <!-- SECTION 4 — EN PRATIQUE (fond surface)          -->
+  <!-- =============================================== -->
+  <!-- id="methode" : ancre referencee par le HowTo JSON-LD (Phase 6 v2 @geo) -->
+  <section id="methode" class="bg-surface relative overflow-x-clip">
+    {/* Numero geant "04" : couleur ivoire (inverse du fond surface) */}
+    <span
+      class="hidden md:block absolute top-6 -right-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-ivoire z-0 pointer-events-none select-none"
+      aria-hidden="true"
+    >04</span>
+
+    <div class="container-editorial py-16 md:py-20 lg:py-24 relative z-10">
+      <div class="fade-in">
+        <Eyebrow number="04" label="EN PRATIQUE" />
+        <h2 class="font-serif text-h2 lg:text-h1 tracking-tighter text-ink mt-4">
+          Comment ça marche, en pratique.
+        </h2>
+        <p class="text-lede text-ink-soft mt-6 max-w-prose">
+          Quatre étapes courtes. Vous savez à l'avance ce qui se passe, quand, et ce que vous aurez à valider.
+        </p>
+      </div>
+
+      {/* Process 4 etapes — layout vertical empile (cf. accueil), max-w-3xl pour densifier */}
+      <div class="mt-16 space-y-10 max-w-3xl">
+        <div class="fade-in">
+          <MethodStep
+            number="01"
+            title="Discussion"
+            description="On échange 30 minutes en visio ou par téléphone. Vous me racontez votre quotidien, vos irritants, les questions qui reviennent — je vous dis ce qui est faisable et combien ça pèse."
+          />
+        </div>
+        <div class="fade-in border-t border-border-light pt-10">
+          <MethodStep
+            number="02"
+            title="Conception"
+            description="Je vous envoie un scénario clair : qui répond quoi, à qui, à quel moment, par quel canal. Vous validez ou vous corrigez avant que je touche au moindre paramètre."
+          />
+        </div>
+        <div class="fade-in border-t border-border-light pt-10">
+          <MethodStep
+            number="03"
+            title="Mise en place"
+            description="Je configure l'outil, je le branche à votre site et à vos canaux, je le teste en conditions réelles. Hébergement en France systématique pour vos données."
+          />
+        </div>
+        <div class="fade-in border-t border-border-light pt-10">
+          <MethodStep
+            number="04"
+            title="Suivi"
+            description="Une formation de 1 heure pour que vous gardiez la main, sans devoir apprendre un nouvel outil. Ajustements inclus le premier mois, je reste joignable derrière."
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================== -->
+  <!-- SECTION 5 — TIER 2 COMPLEMENTS (fond ivoire)    -->
+  <!-- =============================================== -->
+  <section class="bg-ivoire relative overflow-x-clip">
+    <SectionMarker label="COMPLÉMENTS — 05" />
+
+    {/* Numero geant "05" : position INVERSEE haut-GAUCHE (alternance)
+        couleur surface (inverse du fond ivoire). */}
+    <span
+      class="hidden md:block absolute top-6 -left-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-surface z-0 pointer-events-none select-none"
+      aria-hidden="true"
+    >05</span>
+
+    <div class="container-editorial py-16 md:py-20 lg:py-24 relative z-10">
+      <div class="fade-in">
+        <Eyebrow number="05" label="COMPLÉMENTS" />
+        <h2 class="font-serif text-h2 lg:text-h1 tracking-tighter text-ink mt-4">
+          D'autres briques utiles, à la carte.
+        </h2>
+        <p class="text-lede text-ink-soft mt-6 max-w-prose">
+          Deux automatisations à ajouter selon votre besoin réel. Configurées une fois, elles tournent sans rien demander de plus à votre équipe.
+        </p>
+      </div>
+
+      {/* GRILLE 2 cartes secondary : 1 col mobile, 2 cols lg+ */}
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch mt-16">
+        <div class="fade-in h-full" data-delay="0">
+          <AutomationCard
+            tier="secondary"
+            icon="notifications"
+            title="Notifications automatiques"
+            lede="Une alerte instantanée sur votre téléphone dès qu'un client remplit votre formulaire, réserve un créneau ou confirme un rendez-vous. Plus rien ne passe à la trappe."
+            benefits={[
+              'Réagissez en minutes, pas en heures',
+              'Confirmations et rappels envoyés sans intervention',
+              'Vos clients se sentent considérés, sans surcharge pour vous',
+            ]}
+            example="Exemple — Un restaurant lorientais reçoit une réservation à 12h45. Notification WhatsApp instantanée au gérant, confirmation automatique au client, rappel SMS 24h avant le service."
+            ctaHref="/contact?service=notifications"
+          />
+        </div>
+        <div class="fade-in h-full" data-delay="100">
+          <AutomationCard
+            tier="secondary"
+            icon="automations"
+            title="Automatisations sur mesure"
+            lede="Vos outils du quotidien — agenda, fichier clients, facturation, emails — connectés entre eux pour éviter les saisies manuelles et les oublis."
+            benefits={[
+              'Élimine les copier-coller entre vos logiciels',
+              'Synchronise contacts, devis et factures automatiquement',
+              "S'adapte à vos outils actuels sans tout chambouler",
+            ]}
+            example="Exemple — Une boutique du centre-ville reçoit une commande en ligne. Stock mis à jour, facture générée, email envoyé au client, notification à l'équipe — sans aucune saisie manuelle."
+            ctaHref="/contact?service=automatisations-sur-mesure"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================== -->
+  <!-- SECTION 6 — TIER 3 VOICEBOT (fond sombre)       -->
+  <!-- =============================================== -->
+  {/* La section <bg-dark> est ici directement (le composant ne pose pas son bg) */}
+  <section class="bg-dark py-24 lg:py-32">
+    <AutomationFeatured
+      eyebrow="06 — AVANCÉ"
+      title="Voicebot téléphonique."
+      lede="Un répondeur intelligent qui prend vos appels entrants pendant que vous êtes sur chantier ou en rendez-vous. Il pose les bonnes questions, identifie le sujet de l'appel, filtre les démarcheurs et vous transmet un résumé clair. Vous rappelez les vrais prospects, vous oubliez les autres."
+      benefits={[
+        'Ne ratez plus jamais un appel — même en pleine journée chargée',
+        'Reçoit un résumé écrit avant chaque rappel',
+        'Filtre les démarcheurs, garde les vrais prospects',
+      ]}
+      mention="Projet plus technique et sur-mesure. On en discute ensemble pour voir si c'est adapté à votre activité."
+      quote="« L'idée n'est pas de remplacer votre standard. Juste de ne plus jamais rater un client parce qu'on était sur un toit. »"
+      quoteAuthor="— Couvreur, Pays de Lorient"
+      ctaLabel="Demander un devis →"
+      ctaHref="/contact?service=voicebot"
+    />
+  </section>
+
+  <!-- =============================================== -->
+  <!-- SECTION 7 — FAQ IA (fond ivoire)                -->
+  <!-- =============================================== -->
+  <section class="bg-ivoire relative overflow-x-clip">
+    {/* Numero geant "07" : couleur surface (inverse du fond ivoire) */}
+    <span
+      class="hidden md:block absolute top-6 -right-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-surface z-0 pointer-events-none select-none"
+      aria-hidden="true"
+    >07</span>
+
+    <div class="container-editorial py-16 md:py-20 lg:py-24 relative z-10">
+      <div class="fade-in max-w-3xl">
+        <Eyebrow number="07" label="QUESTIONS FRÉQUENTES" />
+        <h2 class="font-serif text-h2 tracking-tighter text-ink mt-4">
+          Les questions qu'on me pose vraiment.
+        </h2>
+      </div>
+
+      {/* Liste FAQ (pattern <details> identique a services.astro §5) */}
+      <div class="mt-12 max-w-3xl">
+        {/* Question 1 — L'IA va-t-elle remplacer mon equipe ? */}
+        <details class="border-t border-border-light">
+          <summary class="flex items-start justify-between gap-4 py-6">
+            <span class="text-h5 font-sans font-medium text-ink">L'IA va-t-elle remplacer mon équipe ?</span>
+            <svg class="faq-icon flex-shrink-0 mt-1" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </summary>
+          <p class="text-body text-ink-soft pb-6 max-w-prose">
+            Non. L'IA prend en charge les tâches répétitives qui rongent votre quotidien — répondre aux mêmes questions, trier les demandes, envoyer les confirmations. Votre équipe garde la relation client, les décisions, les vrais coachings ou interventions. C'est un assistant qui filtre et prépare, pas un commercial qui décide à votre place.
+          </p>
+        </details>
+
+        {/* Question 2 — Complique a utiliser apres livraison ? */}
+        <details class="border-t border-border-light">
+          <summary class="flex items-start justify-between gap-4 py-6">
+            <span class="text-h5 font-sans font-medium text-ink">Est-ce compliqué à utiliser après livraison ?</span>
+            <svg class="faq-icon flex-shrink-0 mt-1" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </summary>
+          <p class="text-body text-ink-soft pb-6 max-w-prose">
+            Non. Vous n'avez aucun nouvel outil à apprendre — l'automatisation se branche sur ce que vous utilisez déjà (votre boîte mail, votre téléphone, votre agenda). Je vous forme 1 heure pour les ajustements de base, puis le système tourne tout seul. Si quelque chose ne va pas, je reste joignable — c'est mon numéro que vous avez.
+          </p>
+        </details>
+
+        {/* Question 3 — Donnees clients protegees ? */}
+        <details class="border-t border-border-light">
+          <summary class="flex items-start justify-between gap-4 py-6">
+            <span class="text-h5 font-sans font-medium text-ink">Mes données clients sont-elles protégées ?</span>
+            <svg class="faq-icon flex-shrink-0 mt-1" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </summary>
+          <p class="text-body text-ink-soft pb-6 max-w-prose">
+            Oui. Tout est hébergé en France, conforme RGPD. Vos données ne sortent jamais d'Europe, et personne d'autre que vous n'y a accès. Vous restez propriétaire de la totalité de vos informations clients, à tout moment. Si demain vous voulez tout récupérer ou tout supprimer, c'est fait en une demi-journée, sans condition.
+          </p>
+        </details>
+
+        {/* Question 4 — Combien de temps pour mettre en place ? */}
+        <details class="border-t border-b border-border-light">
+          <summary class="flex items-start justify-between gap-4 py-6">
+            <span class="text-h5 font-sans font-medium text-ink">Combien de temps pour mettre en place ?</span>
+            <svg class="faq-icon flex-shrink-0 mt-1" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </summary>
+          <p class="text-body text-ink-soft pb-6 max-w-prose">
+            Entre 2 et 4 semaines selon le service choisi. Discussion la première semaine, conception et validation la deuxième, mise en place et tests la troisième, formation et ajustements la dernière. Un chatbot simple peut être en ligne en 10 jours. Une automatisation sur mesure complexe prend plutôt un mois complet.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================== -->
+  <!-- SECTION 8 — CTABAND FINAL (fond sombre)         -->
+  <!-- =============================================== -->
+  <CTABand
+    title="Curieux de ce qu'on peut automatiser chez vous ?"
+    description="30 minutes de discussion gratuite. Pas d'engagement, pas de relance, pas de baratin commercial."
+    ctaText="Demander un devis"
+    ctaHref="/contact?service=automatisation"
+    secondaryText="Voir tous les services"
+    secondaryHref="/services"
+  />
+</BaseLayout>

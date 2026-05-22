@@ -1,0 +1,18 @@
+# Configuration Netlify
+# Doc : https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Headers de securite par defaut sur toutes les pages
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+# Note : pas de redirect "catch-all" 404 ici.
+# Astro genere /404.html automatiquement, Netlify le servira en cas de page inconnue.

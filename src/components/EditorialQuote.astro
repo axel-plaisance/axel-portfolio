@@ -1,0 +1,39 @@
+---
+// EditorialQuote.astro — Bloc citation editoriale.
+// Bloc respiration entre 2 sections de meme fond : se distingue par l espace
+// (padding section augmente) et l italique serif (seul usage de l italique).
+// Cf. iteration-v1.md §3.D.
+
+export interface Props {
+  // Etiquette mono au-dessus de la citation (ex: "UNE CONVICTION")
+  eyebrow: string;
+  // Citation complete, guillemets francais inclus directement dans la string
+  quote: string;
+  // Auteur optionnel ; le tiret cadratin "—" est ajoute par le composant
+  author?: string;
+}
+
+const { eyebrow, quote, author } = Astro.props;
+---
+
+<!-- Padding vertical augmente vs sections standard pour bloc respiration -->
+<section class="container-editorial py-24 md:py-28 lg:py-32 relative">
+  <div class="max-w-[700px] mx-auto text-center relative z-10 fade-in">
+    <!-- Eyebrow mono 11px, espace de 32px sous l etiquette -->
+    <p class="font-mono text-eyebrow tracking-eyebrow uppercase text-mono mb-8">
+      {eyebrow}
+    </p>
+
+    <!-- Citation : italique serif, 28/36px responsive, leading serre -->
+    <blockquote
+      class="font-serif italic tracking-tight text-ink text-[1.75rem] md:text-[2.25rem] leading-[1.3]"
+    >
+      {quote}
+    </blockquote>
+
+    <!-- Auteur : 14px sans-serif, prefixe d un tiret cadratin -->
+    {author && (
+      <cite class="block not-italic text-small text-ink-soft mt-8">— {author}</cite>
+    )}
+  </div>
+</section>

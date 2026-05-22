@@ -1,0 +1,9 @@
+# robots.txt — axelplaisance.fr
+# Mis a jour : 2026-05-12 (Phase 5 @seo)
+
+User-agent: *
+Allow: /
+Disallow: /contact/merci
+Disallow: /404
+
+Sitemap: https://axelplaisance.fr/sitemap-index.xml

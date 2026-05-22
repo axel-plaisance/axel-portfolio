@@ -1,0 +1,41 @@
+---
+// Page 404 personnalisee
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+
+const title = 'Page introuvable | Axel Plaisance';
+const description = 'La page que vous cherchez n\'existe pas ou a été déplacée.';
+// Page utilitaire : exclue de l index Google et du JSON-LD (cf. BaseLayout).
+---
+
+<BaseLayout title={title} description={description} noindex={true}>
+  <section class="container-editorial py-24 lg:py-32">
+    <div class="max-w-prose">
+      <Eyebrow number="404" label="PAGE INTROUVABLE" />
+      <h1 class="font-serif text-display tracking-tighter text-ink mt-4">
+        404.
+      </h1>
+      <p class="text-lede text-ink-soft mt-6">
+        Cette page n'existe pas (ou plus). Pas de panique, voici comment retrouver votre chemin.
+      </p>
+
+      <ul class="mt-8 space-y-3">
+        <li>
+          <a href="/" class="text-body text-ink underline underline-offset-4 decoration-border hover:decoration-ink">
+            → Page d'accueil
+          </a>
+        </li>
+        <li>
+          <a href="/services" class="text-body text-ink underline underline-offset-4 decoration-border hover:decoration-ink">
+            → Services &amp; tarifs
+          </a>
+        </li>
+        <li>
+          <a href="/contact" class="text-body text-ink underline underline-offset-4 decoration-border hover:decoration-ink">
+            → Me contacter
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

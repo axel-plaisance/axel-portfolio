@@ -1,0 +1,24 @@
+---
+// MethodStep.astro — Etape de la section Methode.
+// Layout : numero geant a gauche, contenu a droite (desktop). Empile mobile.
+export interface Props {
+  number: string; // ex: "01"
+  title: string;
+  description: string;
+}
+
+const { number, title, description } = Astro.props;
+---
+
+<article class="grid grid-cols-1 md:grid-cols-[80px_1fr] lg:grid-cols-[120px_1fr] gap-4 md:gap-6 lg:gap-12 items-start">
+  <!-- Numero (taille reduite sur mobile) -->
+  <p class="font-serif text-h2 md:text-h1 lg:text-display text-mono leading-none">
+    {number}
+  </p>
+
+  <!-- Contenu -->
+  <div>
+    <h3 class="font-serif text-h4 text-ink">{title}</h3>
+    <p class="text-body text-ink-soft mt-3 max-w-prose">{description}</p>
+  </div>
+</article>

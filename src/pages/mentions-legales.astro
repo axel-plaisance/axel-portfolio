@@ -1,0 +1,114 @@
+---
+// Page Mentions legales
+// NOTE pour Axel : les blocs [A COMPLETER] sont a remplir avec tes vraies infos.
+// @conformite validera cette page avant publication.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+
+// Title court et sobre — pas d enjeu SEO sur cette page (utilitaire).
+const title = 'Mentions légales | Axel Plaisance';
+const description = 'Mentions légales du site axelplaisance.fr : éditeur, hébergeur, propriété intellectuelle, données personnelles, cookies, litiges.';
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="max-w-prose mx-auto py-20 px-6">
+    <!-- Breadcrumb -->
+    <nav aria-label="Fil d'Ariane" class="mb-8">
+      <ol class="flex items-center gap-2 text-micro font-mono text-mono">
+        <li><a href="/" class="hover:text-ink transition-colors">Accueil</a></li>
+        <li aria-hidden="true">/</li>
+        <li>Mentions légales</li>
+      </ol>
+    </nav>
+
+    <Eyebrow label="MENTIONS LÉGALES" />
+
+    <h1 class="font-serif text-h2 tracking-tighter text-ink mt-4">
+      Mentions légales
+    </h1>
+
+    <p class="text-small text-ink-soft italic mt-2">
+      Mis à jour le 12 mai 2026
+    </p>
+
+    <!-- Article 01 -->
+    <section class="mt-12">
+      <h2 class="font-serif text-h4 text-ink">01 — Éditeur du site</h2>
+      <div class="text-body text-ink-soft mt-4 space-y-3">
+        <p>Le site <strong>axelplaisance.fr</strong> est édité par :</p>
+        <ul class="space-y-1 list-none">
+          <li><strong>Axel Plaisance</strong>, entrepreneur individuel</li>
+          <li>Adresse : <!-- TODO Axel: complete avec ton adresse postale pro -->[À COMPLÉTER — adresse postale professionnelle]</li>
+          <li>Email : <a href="mailto:plaisance.axelp@gmail.com" class="text-ink underline underline-offset-4 decoration-border">plaisance.axelp@gmail.com</a></li>
+          <li>Téléphone : <!-- TODO Axel: complete -->[À COMPLÉTER]</li>
+          <li>SIRET : <!-- TODO Axel: complete avec ton SIRET reel -->[À COMPLÉTER]</li>
+          <li>Code APE/NAF : <!-- TODO Axel: typiquement 6201Z -->[À COMPLÉTER — typiquement 6201Z]</li>
+          <li>TVA non applicable, art. 293 B du CGI (micro-entrepreneur)</li>
+        </ul>
+        <p><strong>Directeur de la publication</strong> : Axel Plaisance.</p>
+      </div>
+    </section>
+
+    <!-- Article 02 -->
+    <section class="mt-12 border-t border-border-light pt-12">
+      <h2 class="font-serif text-h4 text-ink">02 — Hébergeur</h2>
+      <div class="text-body text-ink-soft mt-4 space-y-3">
+        <p>Le site est hébergé par :</p>
+        <ul class="space-y-1 list-none">
+          <li><strong>Netlify, Inc.</strong></li>
+          <li>Adresse : 44 Montgomery Street, Suite 300, San Francisco, California 94104, USA</li>
+          <li>Site : <a href="https://netlify.com" rel="noopener noreferrer" target="_blank" class="text-ink underline underline-offset-4 decoration-border">netlify.com</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Article 03 -->
+    <section class="mt-12 border-t border-border-light pt-12">
+      <h2 class="font-serif text-h4 text-ink">03 — Propriété intellectuelle</h2>
+      <p class="text-body text-ink-soft mt-4">
+        L'ensemble du contenu de ce site (textes, images, code, charte graphique) est la propriété exclusive d'Axel Plaisance, sauf mention contraire. Toute reproduction, représentation, modification ou exploitation, totale ou partielle, est interdite sans autorisation écrite préalable.
+      </p>
+    </section>
+
+    <!-- Article 04 -->
+    <section class="mt-12 border-t border-border-light pt-12">
+      <h2 class="font-serif text-h4 text-ink">04 — Données personnelles</h2>
+      <div class="text-body text-ink-soft mt-4 space-y-3">
+        <p>
+          Les données collectées via le formulaire de contact (nom, email, téléphone, message) sont utilisées uniquement pour vous répondre. Elles ne sont jamais cédées, vendues ou utilisées à des fins commerciales tierces.
+        </p>
+        <p>
+          Pour exercer vos droits d'accès, de rectification ou de suppression, écrivez à <a href="mailto:plaisance.axelp@gmail.com" class="text-ink underline underline-offset-4 decoration-border">plaisance.axelp@gmail.com</a>.
+        </p>
+        <p>
+          <!-- TODO Axel: lien vers politique de confidentialite a creer par @conformite -->
+          Voir aussi la politique de confidentialité complète (à venir).
+        </p>
+      </div>
+    </section>
+
+    <!-- Article 05 -->
+    <section class="mt-12 border-t border-border-light pt-12">
+      <h2 class="font-serif text-h4 text-ink">05 — Cookies</h2>
+      <p class="text-body text-ink-soft mt-4">
+        Ce site utilise uniquement des cookies strictement nécessaires à son fonctionnement. Aucun cookie publicitaire, aucun tracker tiers, aucun service de profilage.
+      </p>
+    </section>
+
+    <!-- Article 06 -->
+    <section class="mt-12 border-t border-border-light pt-12">
+      <h2 class="font-serif text-h4 text-ink">06 — Litiges</h2>
+      <p class="text-body text-ink-soft mt-4">
+        Tout litige relatif à l'utilisation de ce site est soumis au droit français. À défaut d'accord amiable, les tribunaux de Lorient seront seuls compétents.
+      </p>
+    </section>
+
+    <!-- Lien retour -->
+    <a
+      href="/"
+      class="inline-block mt-16 text-small text-ink underline underline-offset-4 decoration-border hover:decoration-ink transition-all"
+    >
+      ← Retour à l'accueil
+    </a>
+  </article>
+</BaseLayout>

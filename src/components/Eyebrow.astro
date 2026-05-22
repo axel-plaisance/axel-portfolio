@@ -1,0 +1,22 @@
+---
+// Eyebrow.astro — Etiquette numerotee mono ("01 — SECTION").
+export interface Props {
+  // Numero optionnel (ex: "01")
+  number?: string;
+  // Libelle (ex: "POUR QUI ?")
+  label: string;
+  // Variante visuelle pour fond sombre (memes couleurs, juste semantique)
+  tone?: 'light' | 'dark';
+}
+
+const { number, label, tone = 'light' } = Astro.props;
+---
+
+<span
+  class:list={[
+    'inline-block font-mono text-eyebrow tracking-eyebrow uppercase',
+    tone === 'dark' ? 'text-mono' : 'text-mono',
+  ]}
+>
+  {number && <>{number} — </>}{label}
+</span>

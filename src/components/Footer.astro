@@ -1,0 +1,67 @@
+---
+// Footer.astro — Pied de page sur 3 colonnes desktop, empile mobile.
+---
+
+<footer class="bg-ivoire border-t border-border-light mt-24">
+  <div class="container-editorial py-16">
+    <!-- 3 colonnes desktop, 1 colonne mobile -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <!-- Colonne 1 — Brand + tagline -->
+      <div>
+        <p class="font-serif text-h5 text-ink">
+          Axel Plaisance<span class="text-mono">.</span>
+        </p>
+        <p class="text-small text-ink-soft mt-2">
+          Développeur web freelance · Lorient & Morbihan
+        </p>
+      </div>
+
+      <!-- Colonne 2 — Navigation -->
+      <nav aria-label="Navigation pied de page">
+        <p class="text-eyebrow font-mono tracking-eyebrow uppercase text-mono mb-4">
+          Navigation
+        </p>
+        <ul class="flex flex-col gap-2">
+          <li><a href="/services" class="text-small text-ink hover:text-mono transition-colors">Services &amp; tarifs</a></li>
+          {/* v2 (Phase 4) : ajout entre Services et Realisations, meme ordre que le Header */}
+          <li><a href="/automatisations" class="text-small text-ink hover:text-mono transition-colors">Automatisations</a></li>
+          <li><a href="/realisations" class="text-small text-ink hover:text-mono transition-colors">Réalisations</a></li>
+          <li><a href="/contact" class="text-small text-ink hover:text-mono transition-colors">Contact</a></li>
+          <li><a href="/mentions-legales" class="text-small text-ink hover:text-mono transition-colors">Mentions légales</a></li>
+          <li><a href="/cgv" class="text-small text-ink hover:text-mono transition-colors">CGV</a></li>
+        </ul>
+      </nav>
+
+      <!-- Colonne 3 — Contact -->
+      <div>
+        <p class="text-eyebrow font-mono tracking-eyebrow uppercase text-mono mb-4">
+          Contact
+        </p>
+        <ul class="flex flex-col gap-2">
+          <li>
+            <a href="mailto:plaisance.axelp@gmail.com" class="text-small text-ink hover:text-mono transition-colors">
+              plaisance.axelp@gmail.com
+            </a>
+            <!-- TODO Axel: remplace par ton email pro si different -->
+          </li>
+          <li class="text-small text-ink-soft">
+            +33 X XX XX XX XX
+            <!-- TODO Axel: remplace par ton vrai numero -->
+          </li>
+          <li class="text-small text-ink-soft">Lorient — Morbihan</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="border-t border-border-light pt-8 mt-12 flex flex-col md:flex-row justify-between gap-4">
+      <p class="text-micro font-mono text-mono">
+        © 2026 Axel Plaisance — SIRET XXX XXX XXX 00000
+        <!-- TODO Axel: remplace par ton SIRET reel -->
+      </p>
+      <p class="text-micro font-mono text-mono">
+        Site fait main, sans tracker.
+      </p>
+    </div>
+  </div>
+</footer>

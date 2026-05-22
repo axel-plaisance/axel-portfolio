@@ -1,0 +1,30 @@
+---
+// ProblemPunchline.astro — Punchline numerotee + phrase italique serif.
+//
+// Style retenu (option A par @design) : numerotation mono uppercase tracking-2px
+// en haut + phrase italique serif en dessous, separes par un hairline top.
+// Cf. specs : 02-design/page-automatisations-design.md §3.3.
+
+export interface Props {
+  // Numero (ex: "01", "02", "03")
+  num: string;
+  // Phrase de punchline (12-20 mots, italique serif)
+  text: string;
+}
+
+const { num, text } = Astro.props;
+---
+
+{/* Hairline en haut + padding pour signaler la separation visuelle.
+    flex-col simple : le numero au-dessus, le texte en dessous. */}
+<article class="flex flex-col border-t border-border-light pt-8">
+  {/* Numero mono 11px uppercase tracking-eyebrow text-mono */}
+  <span class="font-mono text-eyebrow tracking-eyebrow uppercase text-mono">
+    {num}
+  </span>
+
+  {/* Phrase italique serif (20px mobile / 24px desktop) */}
+  <p class="font-serif italic text-h5 lg:text-h4 text-ink leading-snug mt-4 tracking-tight">
+    {text}
+  </p>
+</article>
