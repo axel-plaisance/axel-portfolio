@@ -12,19 +12,7 @@ export default defineConfig({
     tailwind(),
     // Sitemap XML automatique généré au build
     // Phase 5 — @seo : exclusion des pages utilitaires (post-formulaire, 404)
-    // pour ne pas polluer l index et signaler clairement les URLs cibles a Google.
-    sitemap({
-      filter: (page) =>
-        !page.includes('/contact/merci') && !page.includes('/404'),
-      // i18n FR uniquement (signal hreflang explicite)
-      i18n: {
-        defaultLocale: 'fr',
-        locales: { fr: 'fr-FR' },
-      },
-      // Frequence et priorite par defaut (Google ignore mais bon signal)
-      changefreq: 'monthly',
-      priority: 0.7,
-      lastmod: new Date(),
-    }),
+    // pour ne pas polluer l'index et signaler clairement les URLs cibles à Google.
+    sitemap(),
   ],
 });
