@@ -1,87 +1,777 @@
 ---
-// Page CGV — placeholder en attendant le collage du contenu reel
-// NOTE pour Axel : colle ici les CGV deja redigees (PDF fourni dans le brief).
-// @conformite validera cette page avant publication.
+// src/pages/cgv.astro
+// Conditions Générales de Vente — Axel Plaisance
+// Version 1.1 — En vigueur à compter du 12 mai 2026
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Eyebrow from '../components/Eyebrow.astro';
 
-// Title court et sobre — page utilitaire, pas d enjeu SEO competitif.
-const title = 'CGV — Conditions générales de vente | Axel Plaisance';
-const description = 'Conditions générales de vente des prestations de création et refonte de sites web par Axel Plaisance, développeur web freelance à Lorient (Morbihan).';
+// Identité du prestataire (réutilisée dans l'article 1)
+const prestataire = {
+  nom: "Axel PLAISANCE",
+  statut: "Entrepreneur individuel (EI) exerçant sous le régime de la micro-entreprise",
+  adresse: "7 Rue Molière, 56600 LANESTER, France",
+  tel: "07 82 72 41 75",
+  email: "contact@axelplaisance.fr",
+  site: "axelplaisance.fr",
+  siret: "104 517 040 00010",
+  ape: "62.01Z (Programmation informatique)",
+  tva: "Micro-entreprise — TVA non applicable, article 293 B du Code général des impôts",
+  hebergeur: "O2switch SAS, 222-224 Boulevard Gustave Flaubert, 63000 Clermont-Ferrand, France",
+  rcpro: "Stello, contrat n° C-ST-69FF244558EE2, en vigueur depuis le 09/05/2026. Couverture mondiale (hors États-Unis et Canada)."
+};
 
-// Liste des articles a integrer (structure suggeree par @copywriting)
 const articles = [
-  { num: '01', title: 'Objet' },
-  { num: '02', title: 'Définitions' },
-  { num: '03', title: 'Devis et commande' },
-  { num: '04', title: 'Prix et modalités de paiement' },
-  { num: '05', title: 'Délais d\'exécution' },
-  { num: '06', title: 'Obligations du client' },
-  { num: '07', title: 'Obligations du prestataire' },
-  { num: '08', title: 'Propriété intellectuelle et cession' },
-  { num: '09', title: 'Maintenance et suivi après livraison' },
-  { num: '10', title: 'Rétractation (B2B / B2C)' },
-  { num: '11', title: 'Confidentialité' },
-  { num: '12', title: 'Responsabilité et limitation' },
-  { num: '13', title: 'Force majeure' },
-  { num: '14', title: 'Résiliation' },
-  { num: '15', title: 'Litiges et juridiction compétente' },
-  { num: '16', title: 'Médiation de la consommation' },
+  {
+    num: "01",
+    title: "Identification du prestataire",
+    intro: "Les présentes Conditions Générales de Vente (ci-après « CGV ») régissent l'ensemble des prestations fournies par :",
+    identification: true,
+  },
+  {
+    num: "02",
+    title: "Champ d'application",
+    content: `Les présentes CGV s'appliquent, sans restriction ni réserve, à toutes les prestations de services fournies par le Prestataire à des clients professionnels agissant dans le cadre de leur activité économique : entreprises (TPE, PME, ETI), artisans, commerçants, professions libérales, associations exerçant une activité économique, collectivités publiques et établissements publics, dans les domaines suivants :
+
+- Conception et création de sites web
+- Refonte et modernisation de sites existants
+- Maintenance technique et fonctionnelle de sites web
+- Optimisation pour les moteurs de recherche (SEO)
+- Conseil et accompagnement en stratégie digitale
+
+Les présentes CGV ne s'appliquent pas aux consommateurs au sens de l'article liminaire du Code de la consommation. Le Prestataire ne contracte pas avec des particuliers à titre personnel.
+
+Toute commande passée par le Client implique l'acceptation pleine et entière des présentes CGV, qui prévalent sur tout autre document du Client (CGA, bons de commande, etc.) sauf accord exprès et écrit du Prestataire.`
+  },
+  {
+    num: "03",
+    title: "Définitions",
+    content: `Dans les présentes CGV, les termes suivants ont la signification suivante :
+
+- **« Prestataire »** : Axel PLAISANCE, micro-entrepreneur
+- **« Client »** : toute personne physique ou morale, professionnelle, ayant accepté un devis du Prestataire
+- **« Devis »** : document descriptif et chiffré de la prestation, valable 30 jours à compter de son émission
+- **« Contrat »** : ensemble formé par le devis accepté, les présentes CGV et tout document annexé
+- **« Livrable »** : tout résultat de la prestation remis au Client (site web, fichiers, accès, documentation)
+- **« Recettage »** : procédure de validation des Livrables par le Client
+- **« Jour ouvré »** : du lundi au vendredi, hors jours fériés français`
+  },
+  {
+    num: "04",
+    title: "Formation du contrat",
+    sections: [
+      {
+        sub: "4.1",
+        title: "Devis",
+        content: `Toute prestation fait l'objet d'un devis écrit et détaillé, transmis au Client par email ou en main propre. Le devis précise notamment :
+
+- La nature et le périmètre exact de la prestation
+- Le tarif détaillé net de taxes (TVA non applicable, article 293 B du CGI)
+- Les délais d'exécution prévus
+- Les modalités de paiement
+- La date de validité (30 jours par défaut)`
+      },
+      {
+        sub: "4.2",
+        title: "Acceptation",
+        content: `Le devis est considéré comme accepté lorsque le Client retourne au Prestataire :
+
+- Le devis signé avec la mention manuscrite « Lu et approuvé, bon pour accord »
+- OU une acceptation écrite par email reprenant explicitement les termes du devis
+- ET le règlement de l'acompte prévu (cf. Article 7)
+
+L'acceptation du devis vaut acceptation expresse des présentes CGV.`
+      },
+      {
+        sub: "4.3",
+        title: "Modifications du devis",
+        content: `Toute modification souhaitée par le Client après acceptation du devis fera l'objet d'un avenant écrit, qui pourra entraîner une révision du tarif et/ou des délais.`
+      }
+    ]
+  },
+  {
+    num: "05",
+    title: "Description des prestations",
+    sections: [
+      {
+        sub: "5.1",
+        title: "Création de site web",
+        content: `Le Prestataire propose plusieurs formules de création de site (ESSENTIEL, PRO, PREMIUM), dont les caractéristiques précises, le périmètre, le tarif et les délais sont détaillés dans le devis remis au Client.
+
+Chaque formule inclut systématiquement :
+
+- Conception graphique sur-mesure adaptée à l'activité du Client
+- Développement responsive (compatible ordinateur, tablette, téléphone)
+- Optimisation SEO de base (balises, structure, performance)
+- Hébergement professionnel et certificat SSL la première année
+- Formation à l'utilisation de l'interface d'administration
+- Documentation utilisateur écrite
+
+Les tarifs en vigueur sont communiqués sur demande et précisés dans le devis personnalisé établi pour chaque projet.`
+      },
+      {
+        sub: "5.2",
+        title: "Maintenance mensuelle",
+        content: `Une offre de maintenance mensuelle est proposée séparément, dont les conditions précises sont détaillées dans le document « Conditions de maintenance et d'évolution » fourni en annexe au moment de la livraison.
+
+Les tarifs et conditions d'engagement de la maintenance sont précisés dans le devis ou contrat de maintenance dédié, avec un engagement minimum de 6 mois renouvelables tacitement.`
+      },
+      {
+        sub: "5.3",
+        title: "Prestations sur-mesure",
+        content: `Toute demande sortant du cadre des formules standards (e-commerce, applications complexes, intégrations spécifiques) fait l'objet d'un devis sur-mesure.`
+      }
+    ]
+  },
+  {
+    num: "06",
+    title: "Tarifs",
+    sections: [
+      {
+        sub: "6.1",
+        title: "Établissement des tarifs",
+        content: `Les tarifs sont exprimés en euros, TVA non applicable — article 293 B du Code général des impôts (régime de la franchise en base de TVA — micro-entreprise non assujettie). Aucune TVA ne pourra être facturée au Client, ni récupérée par celui-ci.
+
+Pour les besoins du présent contrat, l'expression « net de taxes » désigne le montant total dû par le Client, aucun supplément de TVA ne s'appliquant.
+
+Les tarifs en vigueur sont ceux indiqués sur le devis accepté par le Client. Ils sont fermes pour la durée de validité du devis (30 jours).`
+      },
+      {
+        sub: "6.2",
+        title: "Révision des tarifs",
+        content: `Les tarifs des prestations récurrentes (maintenance mensuelle notamment) peuvent être révisés annuellement, avec un préavis de 2 mois adressé par email. Le Client dispose alors d'un droit de résiliation sans frais s'il n'accepte pas la nouvelle tarification.`
+      },
+      {
+        sub: "6.3",
+        title: "Frais annexes",
+        content: `Sauf mention contraire dans le devis, les éléments suivants ne sont pas inclus dans le tarif et restent à la charge du Client :
+
+- Achat de nom de domaine (~10-15 € / an)
+- Achat de photos sous licence (banques d'images professionnelles)
+- Création de logo (sauf si explicitement mentionné dans le devis)
+- Rédaction de contenus longs (articles de blog au-delà de 5 articles initiaux)
+- Frais de tiers liés à des outils externes (Stripe, Calendly, etc.)`
+      }
+    ]
+  },
+  {
+    num: "07",
+    title: "Modalités de paiement",
+    sections: [
+      {
+        sub: "7.1",
+        title: "Échéancier",
+        content: `Sauf accord spécifique mentionné au devis, le règlement des prestations de création s'effectue selon l'échéancier suivant :
+
+- **30 % à la commande** (acompte) — déclencheur du démarrage des travaux
+- **30 % à mi-projet** — à la livraison de la version intermédiaire pour validation
+- **40 % à la livraison finale** — avant mise en ligne définitive
+
+L'acompte initial de 30 % est non remboursable en cas d'annulation du Client après démarrage des travaux (cf. Article 14).`
+      },
+      {
+        sub: "7.2",
+        title: "Délai de paiement",
+        content: `Sauf mention contraire, les factures sont payables à **30 jours** à compter de leur date d'émission, par virement bancaire sur le compte indiqué sur la facture.`
+      },
+      {
+        sub: "7.3",
+        title: "Pénalités de retard",
+        content: `Conformément à l'article L.441-10 du Code de commerce, tout retard de paiement entraîne de plein droit, sans qu'aucune mise en demeure ne soit nécessaire :
+
+- L'application de **pénalités de retard au taux de 3 fois le taux d'intérêt légal en vigueur**
+- Une **indemnité forfaitaire pour frais de recouvrement de 40 €** (article D.441-5 du Code de commerce)
+- Le remboursement des frais de recouvrement complémentaires sur justificatifs si ceux-ci excèdent 40 €`
+      },
+      {
+        sub: "7.4",
+        title: "Suspension de service",
+        content: `En cas de non-paiement à l'échéance, et après une relance écrite restée sans effet sous 8 jours, le Prestataire se réserve le droit de suspendre les services en cours (mise hors ligne du site, suspension de la maintenance) jusqu'à régularisation complète.`
+      }
+    ]
+  },
+  {
+    num: "08",
+    title: "Délai d'exécution",
+    sections: [
+      {
+        sub: "8.1",
+        title: "Délais indicatifs",
+        content: `Les délais mentionnés au devis sont des délais indicatifs et fonction de la complexité du projet, à compter de la réception de l'acompte ET de l'ensemble des éléments nécessaires fournis par le Client (textes, images, accès).`
+      },
+      {
+        sub: "8.2",
+        title: "Causes de retard imputables au Client",
+        content: `Le Prestataire ne saurait être tenu responsable d'un retard de livraison causé par :
+
+- La fourniture tardive ou incomplète des contenus par le Client
+- L'absence de réponse du Client sous 5 jours ouvrés à une sollicitation explicite
+- Des modifications de périmètre demandées en cours de projet`
+      },
+      {
+        sub: "8.3",
+        title: "Retard imputable au Prestataire",
+        content: `En cas de retard de livraison significatif et exclusivement imputable au Prestataire (au-delà de 15 jours ouvrés sur les délais convenus au devis), et sauf cas de force majeure (Article 13), le Client pourra prétendre à une remise commerciale calculée comme suit :
+
+- **5 % du montant de la prestation par semaine entamée de retard** supplémentaire, à compter du 16ᵉ jour ouvré de retard
+- **Plafond de 15 % du montant total net de taxes** de la prestation concernée
+
+Cette remise constitue la seule indemnité due par le Prestataire au titre du retard, à l'exclusion de tout autre dédommagement direct ou indirect. Elle s'applique sous forme d'avoir sur la facture finale ou de remboursement si la facture finale a déjà été acquittée.`
+      }
+    ]
+  },
+  {
+    num: "08 bis",
+    title: "Obligation de coopération du Client",
+    content: `Le bon déroulement de la prestation suppose une collaboration active du Client. À ce titre, le Client s'engage à :
+
+- Fournir l'ensemble des **contenus et éléments nécessaires** (textes, photos, logos, accès aux outils existants) dans un délai maximum de **7 jours ouvrés** à compter de la demande du Prestataire
+- Désigner un **interlocuteur unique** habilité à valider les choix au nom du Client
+- **Répondre aux sollicitations** du Prestataire sous 5 jours ouvrés maximum
+- Valider ou contester par écrit les livrables intermédiaires dans les délais convenus
+- Effectuer les paiements aux échéances prévues
+
+En cas de manquement répété et caractérisé du Client à ces obligations, et après une mise en demeure écrite restée sans effet sous 15 jours, le Prestataire pourra :
+
+- Suspendre l'exécution de la prestation jusqu'à régularisation
+- Facturer un supplément forfaitaire de **200 € net de taxes** pour réactivation du dossier après 30 jours d'inactivité du Client
+- En cas d'inactivité prolongée de plus de **60 jours sans nouvelle du Client**, considérer le contrat comme résilié de plein droit, les sommes perçues restant acquises au Prestataire en compensation des travaux réalisés`
+  },
+  {
+    num: "09",
+    title: "Recettage et livraison",
+    sections: [
+      {
+        sub: "9.1",
+        title: "Procédure de recettage",
+        content: `À la livraison, le Client dispose de **7 jours ouvrés** pour procéder au recettage du Livrable et signaler par écrit (email) tout dysfonctionnement ou non-conformité par rapport au cahier des charges figurant au devis.`
+      },
+      {
+        sub: "9.2",
+        title: "Acceptation tacite",
+        content: `À défaut de retour du Client sous 7 jours ouvrés, la prestation est réputée acceptée sans réserve. La facture finale devient due immédiatement.`
+      },
+      {
+        sub: "9.3",
+        title: "Corrections",
+        content: `Le Prestataire s'engage à corriger gratuitement, dans un délai raisonnable, toute non-conformité avérée par rapport au cahier des charges initial. Les modifications hors périmètre initial feront l'objet d'un devis complémentaire.`
+      },
+      {
+        sub: "9.4",
+        title: "Modifications incluses",
+        content: `Le devis inclut **un round de retours et corrections** sur les éléments graphiques et textuels. Tout round supplémentaire de modifications structurelles fera l'objet d'un avenant facturé en sus, sur la base du tarif horaire de **50 € net de taxes / heure**.`
+      }
+    ]
+  },
+  {
+    num: "10",
+    title: "Droit de rétractation",
+    content: `Conformément à l'article L.221-3 du Code de la consommation, les professionnels (entreprises, indépendants, associations) employant 5 salariés ou moins bénéficient d'un **droit de rétractation de 14 jours** à compter de la signature du contrat, lorsque celui-ci est conclu hors établissement.
+
+**Modalités d'exercice** : par email à contact@axelplaisance.fr, avec mention claire de la volonté de se rétracter.
+
+**Important** : si le Client souhaite que la prestation démarre avant l'expiration du délai de rétractation, il doit en faire la demande expresse et écrite. Dans ce cas, le Client perd son droit de rétractation sur la partie déjà exécutée et sera redevable du montant correspondant aux travaux effectivement réalisés.`
+  },
+  {
+    num: "10 bis",
+    title: "Garantie post-livraison",
+    sections: [
+      {
+        sub: "10 bis.1",
+        title: "Période de garantie",
+        content: `À compter de la mise en ligne définitive du site, le Prestataire offre une **garantie de bon fonctionnement de 30 jours calendaires**, couvrant la correction gratuite des bugs critiques imputables au développement initial.`
+      },
+      {
+        sub: "10 bis.2",
+        title: "Sont couverts par la garantie",
+        content: `Sont considérés comme bugs critiques couverts par la présente garantie :
+
+- Une page qui ne se charge pas ou affiche une erreur
+- Un formulaire qui ne fonctionne pas
+- Un dysfonctionnement majeur de l'interface d'administration
+- Un problème d'affichage sur les principaux navigateurs (Chrome, Firefox, Safari, Edge — 2 dernières versions)
+- Un problème d'affichage sur les principaux appareils mobiles (iOS et Android récents)`
+      },
+      {
+        sub: "10 bis.3",
+        title: "Sont exclus de la garantie",
+        content: `- Les modifications de contenu effectuées par le Client via l'interface d'administration ayant entraîné un dysfonctionnement
+- Les évolutions ou ajouts demandés par le Client
+- Les pannes liées à des services tiers (hébergeur, services externes intégrés)
+- Les dysfonctionnements liés à des navigateurs obsolètes ou non maintenus
+- Les modifications du périmètre initial ou demandes de nouvelles fonctionnalités`
+      },
+      {
+        sub: "10 bis.4",
+        title: "Au-delà de la garantie",
+        content: `Passés les 30 jours de garantie, toute intervention fera l'objet d'un devis spécifique, ou pourra être prise en charge dans le cadre d'un contrat de maintenance mensuelle (cf. Article 5.2).`
+      }
+    ]
+  },
+  {
+    num: "11",
+    title: "Propriété intellectuelle",
+    sections: [
+      {
+        sub: "11.1",
+        title: "Cession des droits au Client",
+        content: `À compter de l'**encaissement effectif du règlement intégral du prix** de la prestation, le Prestataire cède au Client, à titre exclusif, les droits patrimoniaux portant sur les éléments créés spécifiquement pour le projet (éléments graphiques, code source HTML/CSS/JavaScript spécifique, configuration CMS personnalisée).
+
+Conformément à l'article L.131-3 du Code de la propriété intellectuelle, la cession s'entend dans les conditions suivantes :
+
+- **Droits cédés** : droit de reproduction, droit de représentation, droit d'adaptation et de modification, droit de traduction et droit de mise à disposition du public en ligne
+- **Étendue** : exploitation sous toute forme et sur tous supports numériques liés à l'exploitation du site web objet du contrat
+- **Destination** : exploitation à des fins commerciales et non commerciales du Client, y compris communication, publicité et représentation institutionnelle
+- **Territoire** : monde entier
+- **Durée** : durée légale de protection des droits d'auteur
+
+Le Client devient également propriétaire des contenus qu'il a fournis (textes, photos, vidéos), dont il garantit détenir les droits.
+
+La cession est subordonnée au paiement intégral. À défaut de paiement à l'échéance finale, aucun droit n'est cédé et toute exploitation du Livrable par le Client constituera une contrefaçon au sens des articles L.335-2 et suivants du Code de la propriété intellectuelle.`
+      },
+      {
+        sub: "11.2",
+        title: "Conservation des droits par le Prestataire",
+        content: `Le Prestataire conserve l'intégralité de ses droits sur :
+
+- Ses méthodes, savoir-faire, et processus de création
+- Ses outils et templates génériques réutilisables
+- Tout élément non spécifique au projet du Client`
+      },
+      {
+        sub: "11.3",
+        title: "Droit de référence",
+        content: `Le Prestataire se réserve le droit de mentionner la prestation réalisée dans son portfolio commercial (site web, démarchage, réseaux sociaux), sauf opposition expresse écrite du Client formulée avant la livraison.`
+      },
+      {
+        sub: "11.4",
+        title: "Mention de paternité",
+        content: `Le Prestataire pourra inclure une mention discrète en pied de page du site livré (« Site créé par Axel Plaisance — axelplaisance.fr »). Cette mention pourra être retirée sur demande écrite du Client moyennant un supplément de **200 € net de taxes**.`
+      }
+    ]
+  },
+  {
+    num: "12",
+    title: "Confidentialité",
+    content: `Le Prestataire s'engage à conserver la stricte confidentialité de toutes les informations transmises par le Client dans le cadre de la prestation (données commerciales, financières, techniques, personnelles).
+
+Cette obligation persiste pendant toute la durée du contrat et **5 ans après son terme**.
+
+Le Client s'engage réciproquement à ne pas divulguer les méthodes, outils ou processus du Prestataire à des tiers.`
+  },
+  {
+    num: "13",
+    title: "Force majeure",
+    content: `Aucune des parties ne pourra être tenue responsable d'un manquement à ses obligations en cas de force majeure au sens de l'article 1218 du Code civil.
+
+Sont notamment considérés comme cas de force majeure : grèves générales, catastrophes naturelles, pandémies entraînant des restrictions légales, pannes majeures et prolongées des infrastructures Internet ou des services tiers utilisés (hébergeurs, FAI), guerre, attentat, décision gouvernementale.
+
+En cas de force majeure de plus de 30 jours, chaque partie pourra demander la résiliation du contrat sans indemnité.`
+  },
+  {
+    num: "14",
+    title: "Annulation et résiliation",
+    sections: [
+      {
+        sub: "14.1",
+        title: "Annulation par le Client avant démarrage",
+        content: `Si le Client annule sa commande avant le démarrage effectif des travaux, l'acompte de 30 % reste acquis au Prestataire à titre de dédit forfaitaire et indemnité minimale couvrant les frais d'étude préliminaire, de cadrage du projet, de réservation du planning de production, et le manque à gagner lié à l'indisponibilité du Prestataire pour d'autres clients sur la période concernée.
+
+Ce montant est expressément convenu entre les parties et constitue une évaluation forfaitaire raisonnable du préjudice subi par le Prestataire en cas de défection du Client.`
+      },
+      {
+        sub: "14.2",
+        title: "Annulation par le Client en cours de projet",
+        content: `Si le Client annule sa commande après le démarrage des travaux, il sera redevable :
+
+- De l'acompte initial de 30 % (non remboursable)
+- Des sommes correspondant aux travaux déjà effectués, sur justificatif d'un état d'avancement détaillé fourni par le Prestataire`
+      },
+      {
+        sub: "14.3",
+        title: "Résiliation par le Prestataire",
+        content: `Le Prestataire pourra résilier le contrat de plein droit, après mise en demeure restée sans effet sous 15 jours, en cas de :
+
+- Non-paiement d'une échéance
+- Manquement grave du Client à ses obligations contractuelles (non-fourniture des éléments, comportement abusif, etc.)
+
+Dans ce cas, les sommes versées restent acquises au Prestataire en compensation des travaux réalisés.`
+      }
+    ]
+  },
+  {
+    num: "15",
+    title: "Limitation de responsabilité",
+    sections: [
+      {
+        sub: "15.1",
+        title: "Obligation de moyens",
+        content: `Le Prestataire est tenu à une obligation de moyens et non de résultat. Il s'engage à mettre en œuvre tous les moyens techniques et professionnels nécessaires à la bonne réalisation de la prestation, dans le respect des règles de l'art.`
+      },
+      {
+        sub: "15.2",
+        title: "Plafond de responsabilité",
+        content: `En cas de manquement avéré du Prestataire, sa responsabilité ne pourra en aucun cas excéder **le montant total des sommes effectivement perçues** au titre de la prestation concernée.`
+      },
+      {
+        sub: "15.3",
+        title: "Exclusions et limites",
+        content: `Le Prestataire ne saurait être tenu responsable :
+
+- Des conséquences directes ou indirectes liées à l'utilisation faite du site par le Client (contenus publiés, modifications, opérations commerciales, choix éditoriaux)
+- Des défaillances des services tiers (hébergeur, registrar, services externes intégrés tels que Stripe, Calendly, outils analytics)
+- Des pertes de données dues à des actions du Client sur son interface d'administration
+- De tout préjudice indirect : perte de clientèle, perte de chiffre d'affaires, perte de données, atteinte à l'image, perte de chance`
+      },
+      {
+        sub: "15.4",
+        title: "Réserve d'ordre public",
+        content: `Les limitations et exclusions de responsabilité prévues au présent article ne s'appliquent pas :
+
+- En cas de faute lourde ou dolosive du Prestataire
+- En cas de dommage corporel
+- Pour toute autre obligation dont la limitation serait prohibée par une disposition d'ordre public du droit français`
+      }
+    ]
+  },
+  {
+    num: "16",
+    title: "Données personnelles (RGPD)",
+    sections: [
+      {
+        sub: "16.1",
+        title: "Données traitées par le Prestataire en tant que Responsable de traitement",
+        content: `Dans le cadre de la relation contractuelle, le Prestataire traite des données personnelles concernant le Client et ses interlocuteurs (nom, prénom, fonction, email, téléphone, adresse postale, coordonnées bancaires pour facturation).`
+      },
+      {
+        sub: "16.2",
+        title: "Finalités et bases légales",
+        content: `| Finalité | Base légale |
+|----------|-------------|
+| Exécution du contrat et suivi de projet | Exécution contractuelle (art. 6.1.b RGPD) |
+| Facturation et comptabilité | Obligation légale (art. 6.1.c RGPD) |
+| Suivi de relation commerciale post-projet | Intérêt légitime (art. 6.1.f RGPD) |
+| Prospection sur prestations similaires | Intérêt légitime, opposition possible à tout moment |`
+      },
+      {
+        sub: "16.3",
+        title: "Durées de conservation",
+        content: `| Catégorie de données | Durée | Fondement |
+|----------------------|-------|-----------|
+| Données de facturation et comptables | 10 ans à compter de la clôture de l'exercice | Article L.123-22 du Code de commerce |
+| Données contractuelles (devis, contrats, livrables) | 5 ans à compter de la fin de la relation | Prescription commerciale, art. L.110-4 C. com. |
+| Données de prospection et CRM | 3 ans à compter du dernier contact effectif | Recommandation CNIL |`
+      },
+      {
+        sub: "16.4",
+        title: "Droits du Client",
+        content: `Le Client dispose, conformément aux articles 15 à 22 du RGPD, des droits suivants : accès, rectification, effacement, portabilité, opposition, limitation du traitement, et droit de définir des directives post-mortem.
+
+Pour exercer ces droits : **contact@axelplaisance.fr**, accompagné d'un justificatif d'identité.
+
+Le Client dispose également du droit d'introduire une réclamation auprès de la **Commission Nationale de l'Informatique et des Libertés (CNIL)** — 3 Place de Fontenoy, TSA 80715, 75334 PARIS CEDEX 07 — www.cnil.fr.`
+      },
+      {
+        sub: "16.5",
+        title: "Hébergement et transferts",
+        content: `Les données sont hébergées en France (O2switch SAS, Auvergne-Rhône-Alpes). Aucun transfert hors Union européenne n'est effectué par le Prestataire dans le cadre de la prestation. Si un service tiers intégré au site implique un tel transfert (analytics, formulaires externes, etc.), le Client en sera informé en amont.`
+      },
+      {
+        sub: "16.6",
+        title: "Sécurité",
+        content: `Le Prestataire met en œuvre des mesures techniques et organisationnelles appropriées pour assurer la sécurité des données : chiffrement des accès (HTTPS/SSL), mots de passe forts, sauvegardes régulières, mises à jour de sécurité.`
+      }
+    ]
+  },
+  {
+    num: "16 bis",
+    title: "Sous-traitance RGPD",
+    content: `Lorsque la prestation implique le traitement de données personnelles pour le compte du Client (par exemple : développement d'un formulaire de contact, espace client, newsletter, base utilisateurs, e-commerce), le Prestataire intervient en qualité de **sous-traitant au sens de l'article 28 du RGPD**, et le Client en qualité de responsable de traitement.
+
+**16 bis.1 — Engagements du Prestataire (sous-traitant)**
+
+- Traiter les données personnelles uniquement sur instruction documentée du Client
+- Garantir la confidentialité des données et la formation des personnes habilitées à les traiter
+- Mettre en œuvre les mesures de sécurité techniques et organisationnelles appropriées (art. 32 RGPD)
+- Notifier le Client de toute violation de données dans un délai de 72 heures à compter de sa découverte
+- Assister le Client dans la réponse aux demandes d'exercice de droits des personnes concernées
+- À la fin de la prestation, restituer ou supprimer les données personnelles selon le choix du Client
+- Tenir un registre des activités de traitement effectuées pour le compte du Client
+
+**16 bis.2 — Sous-traitance ultérieure**
+
+Le Prestataire ne pourra recourir à un sous-traitant ultérieur qu'avec l'autorisation écrite préalable du Client. Sont d'ores et déjà autorisés : l'hébergeur O2switch (France), et tout outil tiers intégré sur instruction écrite du Client (ex : Brevo, Stripe, Calendly).
+
+**16 bis.3 — Convention de sous-traitance distincte**
+
+Pour les projets impliquant un traitement significatif de données personnelles, une convention de sous-traitance dédiée conforme à l'article 28 RGPD pourra être signée en annexe au présent contrat, à la demande de l'une ou l'autre des parties.`
+  },
+  {
+    num: "17",
+    title: "Litiges et droit applicable",
+    sections: [
+      {
+        sub: "17.1",
+        title: "Droit applicable",
+        content: `Les présentes CGV et toute prestation qui en découle sont soumises au **droit français**.`
+      },
+      {
+        sub: "17.2",
+        title: "Règlement amiable",
+        content: `En cas de différend, les parties s'engagent à rechercher une solution amiable dans un délai de **30 jours** avant toute action contentieuse, par lettre recommandée avec accusé de réception adressée à l'adresse du siège du Prestataire.`
+      },
+      {
+        sub: "17.3",
+        title: "Tribunal compétent",
+        content: `À défaut de résolution amiable, **les tribunaux du ressort de Lorient (Morbihan)** seront seuls compétents, y compris en cas de pluralité de défendeurs ou d'appel en garantie.`
+      }
+    ]
+  },
+  {
+    num: "18",
+    title: "Dispositions générales",
+    sections: [
+      {
+        sub: "18.1",
+        title: "Modifications des CGV",
+        content: `Le Prestataire se réserve le droit de modifier les présentes CGV à tout moment. Les CGV applicables sont celles en vigueur à la date de signature du devis par le Client.`
+      },
+      {
+        sub: "18.2",
+        title: "Nullité partielle",
+        content: `Si l'une des clauses des présentes CGV est déclarée nulle ou inapplicable, les autres clauses demeurent applicables.`
+      },
+      {
+        sub: "18.3",
+        title: "Non-renonciation",
+        content: `Le fait pour le Prestataire de ne pas se prévaloir d'un manquement du Client à l'une de ses obligations ne saurait être interprété comme une renonciation à s'en prévaloir ultérieurement.`
+      },
+      {
+        sub: "18.4",
+        title: "Intégralité du contrat",
+        content: `Les présentes CGV, ensemble avec le devis accepté et le contrat de prestation signé, constituent l'intégralité de l'accord entre les parties.`
+      }
+    ]
+  }
 ];
+
+function renderContent(text) {
+  if (!text) return '';
+  const lines = text.split('\n');
+  let html = '';
+  let inList = false;
+  let inTable = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+
+    if (line.trim().startsWith('|')) {
+      if (!inTable) {
+        inTable = true;
+        const headers = line.split('|').filter(c => c.trim()).map(c => c.trim());
+        html += '<table class="cgv-table"><thead><tr>';
+        headers.forEach(h => html += `<th>${h}</th>`);
+        html += '</tr></thead><tbody>';
+        if (lines[i + 1] && lines[i + 1].includes('---')) i++;
+        continue;
+      } else {
+        const cells = line.split('|').filter(c => c.trim()).map(c => c.trim());
+        html += '<tr>';
+        cells.forEach(c => html += `<td>${formatInline(c)}</td>`);
+        html += '</tr>';
+        continue;
+      }
+    } else if (inTable) {
+      html += '</tbody></table>';
+      inTable = false;
+    }
+
+    if (line.trim().startsWith('- ')) {
+      if (!inList) {
+        html += '<ul class="cgv-list">';
+        inList = true;
+      }
+      html += `<li>${formatInline(line.trim().substring(2))}</li>`;
+      continue;
+    } else if (inList && line.trim() === '') {
+      html += '</ul>';
+      inList = false;
+      continue;
+    } else if (inList) {
+      html += '</ul>';
+      inList = false;
+    }
+
+    if (line.trim()) {
+      html += `<p>${formatInline(line)}</p>`;
+    }
+  }
+
+  if (inList) html += '</ul>';
+  if (inTable) html += '</tbody></table>';
+  return html;
+}
+
+function formatInline(text) {
+  return text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
 ---
 
-<BaseLayout title={title} description={description}>
-  <article class="max-w-prose mx-auto py-20 px-6">
-    <!-- Breadcrumb -->
-    <nav aria-label="Fil d'Ariane" class="mb-8">
-      <ol class="flex items-center gap-2 text-micro font-mono text-mono">
-        <li><a href="/" class="hover:text-ink transition-colors">Accueil</a></li>
-        <li aria-hidden="true">/</li>
-        <li>CGV</li>
+<BaseLayout
+  title="Conditions Générales de Vente | Axel Plaisance"
+  description="CGV d'Axel Plaisance, développeur web freelance à Lorient. Prestations B2B de création et refonte de sites web pour PME."
+>
+  <main class="cgv-page">
+    <header class="cgv-header">
+      <p class="cgv-eyebrow">Document légal</p>
+      <h1>Conditions Générales de Vente</h1>
+      <p class="cgv-meta">Version 1.1 — En vigueur à compter du 12 mai 2026</p>
+      <p class="cgv-intro">
+        Les présentes CGV régissent les prestations de création et refonte de sites web
+        fournies par Axel Plaisance à ses clients professionnels.
+      </p>
+    </header>
+
+    <nav class="cgv-toc" aria-label="Sommaire des articles">
+      <h2>Sommaire</h2>
+      <ol>
+        {articles.map((article) => (
+          <li>
+            <a href={`#article-${article.num.replace(/\s+/g, '-')}`}>
+              <span class="toc-num">Article {article.num}</span>
+              <span class="toc-title">{article.title}</span>
+            </a>
+          </li>
+        ))}
       </ol>
     </nav>
 
-    <Eyebrow label="CGV — CONDITIONS GÉNÉRALES DE VENTE" />
+    <section class="cgv-content">
+      {articles.map((article) => (
+        <details class="cgv-article" id={`article-${article.num.replace(/\s+/g, '-')}`} open>
+          <summary>
+            <span class="article-num">Article {article.num}</span>
+            <span class="article-title">{article.title}</span>
+            <svg class="chevron" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </summary>
 
-    <h1 class="font-serif text-h2 tracking-tighter text-ink mt-4">
-      Conditions générales de vente
-    </h1>
+          <div class="article-body">
+            {article.identification && (
+              <>
+                <p>{article.intro}</p>
+                <dl class="prestataire-fiche">
+                  <dt>Identité</dt><dd>{prestataire.nom}</dd>
+                  <dt>Statut</dt><dd>{prestataire.statut}</dd>
+                  <dt>Adresse</dt><dd>{prestataire.adresse}</dd>
+                  <dt>Téléphone</dt><dd><a href={`tel:+33${prestataire.tel.replace(/\s/g, '').substring(1)}`}>{prestataire.tel}</a></dd>
+                  <dt>Email</dt><dd><a href={`mailto:${prestataire.email}`}>{prestataire.email}</a></dd>
+                  <dt>Site web</dt><dd>{prestataire.site}</dd>
+                  <dt>SIRET</dt><dd>{prestataire.siret}</dd>
+                  <dt>Code APE</dt><dd>{prestataire.ape}</dd>
+                  <dt>Régime fiscal</dt><dd>{prestataire.tva}</dd>
+                  <dt>Hébergeur du site</dt><dd>{prestataire.hebergeur}</dd>
+                  <dt>RC Professionnelle</dt><dd>{prestataire.rcpro} Attestation disponible sur simple demande.</dd>
+                </dl>
+                <p><em>Ci-après dénommé « le Prestataire ».</em></p>
+              </>
+            )}
 
-    <p class="text-small text-ink-soft italic mt-2">
-      Mis à jour le 12 mai 2026
-    </p>
+            {article.sections && article.sections.map((section) => (
+              <div class="article-section">
+                <h3>
+                  <span class="section-num">{section.sub}</span>
+                  {section.title}
+                </h3>
+                <div set:html={renderContent(section.content)} />
+              </div>
+            ))}
 
-    <!-- Avertissement placeholder -->
-    <aside class="mt-12 p-6 border border-border-light rounded-lg bg-surface">
-      <p class="font-mono text-eyebrow tracking-eyebrow uppercase text-mono">À COMPLÉTER</p>
-      <p class="text-body text-ink-soft mt-3">
-        <!-- TODO Axel: colle ici les CGV reelles redigees dans ton PDF. Respecte la numerotation des articles ci-dessous. -->
-        Le contenu des CGV est à coller depuis le PDF déjà rédigé. Structure des articles ci-dessous.
-      </p>
-    </aside>
+            {article.content && (
+              <div set:html={renderContent(article.content)} />
+            )}
+          </div>
+        </details>
+      ))}
+    </section>
 
-    <!-- Squelette des articles -->
-    {
-      articles.map((article) => (
-        <section class="mt-12 border-t border-border-light pt-12">
-          <p class="font-mono text-eyebrow tracking-eyebrow uppercase text-mono">
-            ARTICLE {article.num}
-          </p>
-          <h2 class="font-serif text-h4 text-ink mt-3">{article.title}</h2>
-          <p class="text-body text-ink-soft mt-4 italic">
-            <!-- TODO Axel: colle ici le contenu de l article {article.num} depuis ton PDF -->
-            Contenu à coller depuis le PDF CGV.
-          </p>
-        </section>
-      ))
-    }
-
-    <!-- Lien retour -->
-    <a
-      href="/"
-      class="inline-block mt-16 text-small text-ink underline underline-offset-4 decoration-border hover:decoration-ink transition-all"
-    >
-      ← Retour à l'accueil
-    </a>
-  </article>
+    <footer class="cgv-footer">
+      <p>Document mis à jour le 10/05/2026 — Version 1.1</p>
+      <p>Axel PLAISANCE — Création de sites web — 7 Rue Molière, 56600 LANESTER</p>
+      <p>SIRET 104 517 040 00010 — <a href="mailto:contact@axelplaisance.fr">contact@axelplaisance.fr</a></p>
+    </footer>
+  </main>
 </BaseLayout>
+
+<style>
+  .cgv-page {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 6rem;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #2a2625;
+    line-height: 1.65;
+  }
+  .cgv-header { margin-bottom: 4rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(42, 38, 37, 0.1); }
+  .cgv-eyebrow { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: #8b9d6e; margin: 0 0 1rem; font-weight: 500; }
+  .cgv-header h1 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 500; margin: 0 0 1rem; color: #2a2625; letter-spacing: -0.02em; }
+  .cgv-meta { font-size: 0.875rem; color: rgba(42, 38, 37, 0.6); margin: 0 0 1.5rem; font-style: italic; }
+  .cgv-intro { font-size: 1.0625rem; color: rgba(42, 38, 37, 0.8); margin: 0; max-width: 65ch; }
+  .cgv-toc { background: #ede6d6; padding: 2rem; border-radius: 8px; margin-bottom: 4rem; }
+  .cgv-toc h2 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.5rem; font-weight: 500; margin: 0 0 1.5rem; color: #2a2625; }
+  .cgv-toc ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+  .cgv-toc a { display: grid; grid-template-columns: 110px 1fr; gap: 1rem; padding: 0.5rem 0; text-decoration: none; color: #2a2625; transition: color 0.2s ease; font-size: 0.9375rem; }
+  .cgv-toc a:hover { color: #8b9d6e; }
+  .toc-num { color: rgba(42, 38, 37, 0.5); font-variant-numeric: tabular-nums; font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .toc-title { font-weight: 500; }
+  .cgv-content { display: flex; flex-direction: column; gap: 0.5rem; }
+  .cgv-article { border-bottom: 1px solid rgba(42, 38, 37, 0.08); scroll-margin-top: 2rem; }
+  .cgv-article summary { display: flex; align-items: center; gap: 1rem; padding: 1.5rem 0; cursor: pointer; list-style: none; user-select: none; transition: color 0.2s ease; }
+  .cgv-article summary::-webkit-details-marker { display: none; }
+  .cgv-article summary:hover { color: #8b9d6e; }
+  .article-num { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(42, 38, 37, 0.5); min-width: 100px; font-variant-numeric: tabular-nums; }
+  .article-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.5rem; font-weight: 500; flex: 1; color: #2a2625; }
+  .chevron { transition: transform 0.3s ease; color: rgba(42, 38, 37, 0.4); flex-shrink: 0; }
+  .cgv-article[open] .chevron { transform: rotate(180deg); }
+  .article-body { padding: 0 0 2.5rem; max-width: 70ch; }
+  .article-body p { margin: 0 0 1rem; color: rgba(42, 38, 37, 0.85); }
+  .article-body p:last-child { margin-bottom: 0; }
+  .article-body strong { color: #2a2625; font-weight: 600; }
+  .article-body em { font-style: italic; color: rgba(42, 38, 37, 0.7); }
+  .article-body a { color: #8b9d6e; text-decoration: underline; text-underline-offset: 3px; }
+  .article-section { margin-bottom: 2rem; }
+  .article-section:last-child { margin-bottom: 0; }
+  .article-section h3 { font-size: 1.0625rem; font-weight: 600; color: #2a2625; margin: 0 0 0.75rem; display: flex; align-items: baseline; gap: 0.75rem; }
+  .section-num { font-size: 0.8125rem; color: #8b9d6e; font-variant-numeric: tabular-nums; font-weight: 500; letter-spacing: 0.02em; }
+  .cgv-list { margin: 0.5rem 0 1rem; padding-left: 1.25rem; }
+  .cgv-list li { margin-bottom: 0.5rem; color: rgba(42, 38, 37, 0.85); }
+  .cgv-list li::marker { color: #8b9d6e; }
+  .cgv-table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; font-size: 0.9375rem; }
+  .cgv-table th, .cgv-table td { text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid rgba(42, 38, 37, 0.1); vertical-align: top; }
+  .cgv-table th { background: #ede6d6; font-weight: 600; font-size: 0.875rem; color: #2a2625; }
+  .cgv-table tbody tr:hover { background: rgba(237, 230, 214, 0.3); }
+  .prestataire-fiche { background: #faf7ef; padding: 1.5rem; border-radius: 6px; margin: 1rem 0 1.5rem; display: grid; grid-template-columns: 150px 1fr; gap: 0.5rem 1.5rem; }
+  .prestataire-fiche dt { font-weight: 600; color: rgba(42, 38, 37, 0.7); font-size: 0.875rem; }
+  .prestataire-fiche dd { margin: 0; color: #2a2625; font-size: 0.9375rem; }
+  .prestataire-fiche a { color: #8b9d6e; text-decoration: none; }
+  .prestataire-fiche a:hover { text-decoration: underline; }
+  .cgv-footer { margin-top: 5rem; padding-top: 2rem; border-top: 1px solid rgba(42, 38, 37, 0.1); text-align: center; font-size: 0.8125rem; color: rgba(42, 38, 37, 0.6); }
+  .cgv-footer p { margin: 0.25rem 0; }
+  .cgv-footer a { color: #8b9d6e; text-decoration: none; }
+  @media (max-width: 640px) {
+    .cgv-page { padding: 2rem 1rem 4rem; }
+    .cgv-toc { padding: 1.5rem; }
+    .cgv-toc a { grid-template-columns: 1fr; gap: 0.25rem; }
+    .cgv-article summary { flex-wrap: wrap; gap: 0.5rem; }
+    .article-num { width: 100%; min-width: 0; }
+    .article-title { font-size: 1.25rem; }
+    .prestataire-fiche { grid-template-columns: 1fr; gap: 0.25rem; }
+    .prestataire-fiche dt { margin-top: 0.5rem; }
+    .cgv-table { font-size: 0.875rem; }
+    .cgv-table th, .cgv-table td { padding: 0.5rem; }
+  }
+  @media print {
+    .cgv-article { page-break-inside: avoid; }
+    .cgv-article[open] .chevron, .chevron { display: none; }
+    .cgv-toc { page-break-after: always; }
+  }
+</style>
