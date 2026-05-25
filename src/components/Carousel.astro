@@ -1,24 +1,7 @@
 ---
-// Carousel.astro — Carrousel mobile/tablette avec "peek" effect.
-//
-// Actif sur < 1024px. Au-dessus : affichage grille normale (slot fallback via classes Tailwind).
-//
-// USAGE :
-//   <Carousel id="realisations-carousel" ariaLabel="Créations et maquettes en cours">
-//     <CardA />
-//     <CardB />
-//     <CardC />
-//   </Carousel>
-//
-// Le parent doit gérer l'affichage desktop (grid) en passant les enfants directement.
-// Ce composant n'active le mode carrousel qu'en < lg (1024px).
-//
-// Spécifications visuelles :
-//   - Chaque carte prend ~85% de la largeur de l'écran sur mobile
-//   - On voit ~15% de la carte suivante ("peek")
-//   - Scroll-snap mandatory : la carte s'aligne au bord gauche
-//   - Indicateurs (dots) sous le carrousel
-//   - Gestes : swipe natif tactile (pas de JS lourd)
+// Carousel.astro v2 — CSS pur, sans Tailwind arbitrary values.
+// Mode carrousel actif uniquement < 1024px (mobile + tablette).
+// Sur desktop : passthrough total (les enfants se retrouvent dans la grille parent).
 
 interface Props {
   id: string;
@@ -28,13 +11,9 @@ interface Props {
 const { id, ariaLabel } = Astro.props;
 ---
 
-<div
-  class="carousel-wrapper relative lg:contents"
-  data-carousel-id={id}
->
-  <!-- Track : scrollable horizontalement sur < lg, contents (= passe-plat) sur >= lg -->
+<div class="carousel-wrapper" data-carousel-id={id}>
   <div
-    class="carousel-track lg:contents"
+    class="carousel-track"
     role="region"
     aria-label={ariaLabel}
     aria-roledescription="carousel"
@@ -42,44 +21,72 @@ const { id, ariaLabel } = Astro.props;
     <slot />
   </div>
 
-  <!-- Indicateurs (dots) — visibles uniquement < lg -->
-  <div
-    class="carousel-dots lg:hidden flex justify-center gap-2 mt-6"
-    aria-hidden="true"
-  >
-    <!-- Les dots sont générés dynamiquement par le script en fonction du nombre d'enfants -->
+  <div class="carousel-dots" aria-hidden="true">
+    <!-- Dots générés par le script -->
   </div>
 </div>
 
 <style>
-  /* Mode carrousel : actif uniquement < lg (1024px) */
+  /* ========================================== */
+  /* MODE MOBILE / TABLETTE < 1024px            */
+  /* ========================================== */
   @media (max-width: 1023px) {
+    .carousel-wrapper {
+      display: block !important;
+      width: 100%;
+    }
+
     .carousel-track {
-      display: flex;
-      gap: 1rem;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scroll-padding-left: 1.5rem;
-      padding: 0.5rem 1.5rem 1rem;
-      margin: 0 -1.5rem;
+      display: flex !important;
+      gap: 1rem !important;
+      overflow-x: auto !important;
+      scroll-snap-type: x mandatory !important;
+      scroll-padding-left: 1.5rem !important;
+      padding: 0.5rem 1.5rem 1rem !important;
+      margin: 0 -1.5rem !important;
       scrollbar-width: none;
       -ms-overflow-style: none;
       -webkit-overflow-scrolling: touch;
     }
 
     .carousel-track::-webkit-scrollbar {
-      display: none;
+      display: none !important;
     }
 
-    /* Chaque enfant direct devient une "slide" */
+    /* Chaque enfant devient une slide */
     .carousel-track > * {
-      flex: 0 0 85%;
-      scroll-snap-align: start;
-      scroll-snap-stop: always;
+      flex: 0 0 85% !important;
+      scroll-snap-align: start !important;
+      scroll-snap-stop: always !important;
+      min-width: 0;
+    }
+
+    .carousel-dots {
+      display: flex !important;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
     }
   }
 
-  /* Indicateurs (dots) */
+  /* ========================================== */
+  /* MODE DESKTOP >= 1024px : passthrough       */
+  /* ========================================== */
+  @media (min-width: 1024px) {
+    .carousel-wrapper {
+      display: contents !important;
+    }
+
+    .carousel-track {
+      display: contents !important;
+    }
+
+    .carousel-dots {
+      display: none !important;
+    }
+  }
+
+  /* Dots */
   .carousel-dots button {
     width: 8px;
     height: 8px;
@@ -99,7 +106,6 @@ const { id, ariaLabel } = Astro.props;
 </style>
 
 <script is:inline>
-  // Génération des dots + sync avec la position de scroll
   (function () {
     document.querySelectorAll('.carousel-wrapper').forEach((wrapper) => {
       const track = wrapper.querySelector('.carousel-track');
@@ -126,7 +132,6 @@ const { id, ariaLabel } = Astro.props;
 
       const dots = Array.from(dotsContainer.children);
 
-      // Met à jour le dot actif selon la position de scroll
       const updateActiveDot = () => {
         const trackRect = track.getBoundingClientRect();
         const centerX = trackRect.left + trackRect.width / 2;
@@ -154,7 +159,6 @@ const { id, ariaLabel } = Astro.props;
         window.requestAnimationFrame(updateActiveDot);
       });
 
-      // Recalcule au redimensionnement (passage portrait/paysage)
       window.addEventListener('resize', updateActiveDot);
     });
   })();
