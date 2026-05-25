@@ -1,26 +1,15 @@
 ---
-// Page Accueil — 8 sections selon mockups-description.md.
-// Textes : textes-finaux.md (zero invention).
+// Page Accueil — v1.4 (2026-05-25)
+// Modifications session :
+//   - Hero : nouveau titre "Le site qui ramène vos prochains clients." (sans 30 jours)
+//   - Hero : nouveau sous-titre orienté bénéfice / local
+//   - "30 jours" gardé uniquement dans la colonne droite (DÉLAI)
+//   - Suppression bloc EditorialQuote ("Une conviction")
+//   - Suppression filet éditorial #1 (devenu orphelin)
+//   - Resserrement vertical -50% sur toutes les sections (py-20→py-10, py-16→py-8…)
 //
-// Iteration v1 (2026-05-13) — Mise en page editoriale :
-//   1. Hero : items-end -> items-start (alignement haut)
-//   2. PricingCard : refactor flex (cf composant)
-//   3. Combler les vides :
-//      - alternance fond ivoire / surface elevee
-//      - numeros de section geants en arriere-plan (z-0)
-//      - filets editoriaux ". . ." entre sections de meme fond
-//      - blocs respiration : EditorialQuote + KeyFigure
-//      - SectionMarker vertical en marge gauche (>= 1024px)
-//
-// Iteration v1.2 (2026-05-12) — Repositionnement sur-mesure :
-//   - Section 06 "FORMULES" → "APPROCHE"
-//   - Plus aucun prix affiche sur la page
-//
-// Iteration v1.3 (2026-05-12) — Simplification radicale :
-//   - 3 LevelTeaserCard supprimees → 2 ApproachCard variant compact
-//   - CTA global "Voir les niveaux en detail" → "Voir tous mes services"
-//   - CTABand final secondaryText "Voir les tarifs" → "Voir tous les services"
-//   - Meta description mise a jour (sans mention "trois niveaux")
+// Note : la section RÉALISATIONS contient encore des noms de projets en dur
+// (Atlas Box · Franck Attieh, etc.) à revoir lors d'une prochaine session.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Eyebrow from '../components/Eyebrow.astro';
 import CTABand from '../components/CTABand.astro';
@@ -28,14 +17,10 @@ import ApproachCard from '../components/ApproachCard.astro';
 import MethodStep from '../components/MethodStep.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import SpecialtyCard from '../components/SpecialtyCard.astro';
-import EditorialQuote from '../components/EditorialQuote.astro';
 import KeyFigure from '../components/KeyFigure.astro';
 import SectionMarker from '../components/SectionMarker.astro';
 import AutomationIcon from '../components/icons/AutomationIcon.astro';
 
-// Meta optimisees v1.3 — sans mention "trois niveaux" (devenu obsolete).
-// Title : 56 car. — focus "Développeur web Lorient" + marque.
-// Description : 158 car. — sur-mesure, devis + audit offerts, delai 2-4 semaines.
 const title = 'Développeur web Lorient (56) — Sites PME | Axel Plaisance';
 const description = 'Création et refonte de sites web sur-mesure pour les PME du Morbihan. Devis et audit offerts, livraison en 2 à 4 semaines, un seul interlocuteur. Sans engagement.';
 ---
@@ -44,23 +29,21 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
   <!-- =============================================== -->
   <!-- SECTION 1 — HERO ASYMETRIQUE (fond ivoire)      -->
   <!-- =============================================== -->
-  <!-- bg-ivoire = fond global, conserve pour rappel des tokens -->
-  <section class="bg-ivoire container-editorial py-20 md:py-28 lg:py-32">
-    <!-- items-start (iter v1) : les 2 colonnes alignees sur leur haut -->
+  <section class="bg-ivoire container-editorial py-10 md:py-14 lg:py-16">
     <div class="grid lg:grid-cols-[1.4fr_1fr] gap-12 lg:gap-16 items-start">
       <!-- Colonne gauche -->
       <div>
         <Eyebrow number="01" label="ACCUEIL" />
 
-        <h1 class="font-serif text-h1 lg:text-display tracking-tighter text-ink mt-4 max-w-[14ch]">
-          Le site web<br />de votre PME,<br />livré sous 30 jours.
+        <h1 class="font-serif text-h1 lg:text-display tracking-tighter text-ink mt-4 max-w-[18ch]">
+          Le site qui ramène vos prochains clients.
         </h1>
 
         <p class="text-lede text-ink-soft mt-6 max-w-[56ch]">
-          Développeur web indépendant à Lorient. Je conçois votre site sur-mesure, je le livre clés en main, et je reste votre seul interlocuteur — du premier mail à la formation.
+          Création sur-mesure pour artisans, commerçants et indépendants du pays de Lorient. Un seul interlocuteur, de la première idée à la mise en ligne.
         </p>
 
-        <div class="mt-10 flex flex-col sm:flex-row gap-4">
+        <div class="mt-8 flex flex-col sm:flex-row gap-4">
           <a
             href="/services"
             class="inline-flex items-center justify-center px-6 py-3.5 bg-ink text-ivoire text-body font-medium rounded hover:bg-[#1F1B17] transition-all duration-200 hover:-translate-y-0.5"
@@ -80,21 +63,19 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
         </p>
       </div>
 
-      <!-- Colonne droite — 3 stats.
-           Aucun padding-top : la baseline du DELAI s aligne avec 01 — ACCUEIL.
-           Sur mobile (< lg), bascule sous la colonne gauche via mt-16. -->
-      <aside class="flex flex-col mt-16 lg:mt-0">
+      <!-- Colonne droite — 3 stats (30 jours conservé ici) -->
+      <aside class="flex flex-col mt-12 lg:mt-0">
         <div class="fade-in" data-delay="100">
           <p class="font-mono text-eyebrow tracking-eyebrow uppercase text-mono">DÉLAI</p>
           <p class="font-serif text-h2 text-ink mt-2">30 jours</p>
           <p class="text-small text-ink-soft mt-2">Maximum, contractuel. Brief lundi, site en ligne avant fin du mois.</p>
         </div>
-        <div class="border-t border-border-light pt-6 mt-6 fade-in" data-delay="200">
+        <div class="border-t border-border-light pt-4 mt-4 fade-in" data-delay="200">
           <p class="font-mono text-eyebrow tracking-eyebrow uppercase text-mono">INTERLOCUTEUR</p>
           <p class="font-serif text-h2 text-ink mt-2">1 seul</p>
           <p class="text-small text-ink-soft mt-2">Vous parlez à la personne qui code votre site. Pas à un standard.</p>
         </div>
-        <div class="border-t border-border-light pt-6 mt-6 fade-in" data-delay="300">
+        <div class="border-t border-border-light pt-4 mt-4 fade-in" data-delay="300">
           <p class="font-mono text-eyebrow tracking-eyebrow uppercase text-mono">APPROCHE</p>
           <p class="font-serif text-h2 text-ink mt-2">Sur-mesure</p>
           <p class="text-small text-ink-soft mt-2">Création ou refonte selon votre situation. Devis personnalisé après échange.</p>
@@ -106,18 +87,13 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
   <!-- =============================================== -->
   <!-- SECTION 2 — POUR QUI ? (fond surface elevee)    -->
   <!-- =============================================== -->
-  <!--
-    relative + overflow-x-clip : permet au numero geant "02" de deborder
-    sans creer de scroll horizontal ni casser le sticky header.
-  -->
   <section class="bg-surface relative overflow-x-clip">
-    <!-- Numero geant "02" : couleur ivoire (= inverse du fond surface) -->
     <span
       class="hidden md:block absolute top-6 -right-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-ivoire z-0 pointer-events-none select-none"
       aria-hidden="true"
     >02</span>
 
-    <div class="container-editorial py-16 md:py-20 lg:py-24 relative z-10">
+    <div class="container-editorial py-8 md:py-10 lg:py-12 relative z-10">
       <div class="fade-in">
         <Eyebrow number="02" label="POUR QUI ?" />
         <h2 class="font-serif text-h2 lg:text-h1 tracking-tighter text-ink mt-4 max-w-[20ch]">
@@ -128,7 +104,7 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 items-stretch mt-16">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 items-stretch mt-8">
         <div class="fade-in h-full" data-delay="0">
           <SpecialtyCard
             eyebrow="01 — BTP"
@@ -176,17 +152,15 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
   <!-- =============================================== -->
   <!-- SECTION 3 — METHODE (fond ivoire)               -->
   <!-- =============================================== -->
-  <!-- SectionMarker vertical "MÉTHODE — 03" en marge gauche (>= lg) -->
   <section class="bg-ivoire relative overflow-x-clip">
     <SectionMarker label="MÉTHODE — 03" />
 
-    <!-- Numero geant "03" : couleur surface (= inverse du fond ivoire) -->
     <span
       class="hidden md:block absolute top-6 -right-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-surface z-0 pointer-events-none select-none"
       aria-hidden="true"
     >03</span>
 
-    <div class="container-editorial py-16 md:py-20 lg:py-24 relative z-10">
+    <div class="container-editorial py-8 md:py-10 lg:py-12 relative z-10">
       <div class="fade-in">
         <Eyebrow number="03" label="MÉTHODE" />
         <h2 class="font-serif text-h2 lg:text-h1 tracking-tighter text-ink mt-4">
@@ -197,7 +171,7 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
         </p>
       </div>
 
-      <div class="mt-16 space-y-10">
+      <div class="mt-8 space-y-5">
         <div class="fade-in">
           <MethodStep
             number="01"
@@ -205,28 +179,28 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
             description="On se parle en visio ou par téléphone. Vous me dites où vous en êtes, ce qui bloque, ce que vous voulez. Je vous dis ce qui est faisable et combien ça coûte."
           />
         </div>
-        <div class="fade-in border-t border-border-light pt-10">
+        <div class="fade-in border-t border-border-light pt-5">
           <MethodStep
             number="02"
             title="Conception — maquettes sous 5 jours"
             description="Je vous envoie une maquette de chaque page importante. Vous validez, vous me dites ce qui cloche. Aller-retours libres jusqu'à ce que ça vous plaise."
           />
         </div>
-        <div class="fade-in border-t border-border-light pt-10">
+        <div class="fade-in border-t border-border-light pt-5">
           <MethodStep
             number="03"
             title="Développement — code propre, site rapide"
             description="Je code votre site. Mobile-first, accessible, optimisé pour Google. Je vous montre les pages au fur et à mesure pour que rien ne vous surprenne à la fin."
           />
         </div>
-        <div class="fade-in border-t border-border-light pt-10">
+        <div class="fade-in border-t border-border-light pt-5">
           <MethodStep
             number="04"
             title="Mise en ligne — vous n'avez rien à faire"
             description="Je configure le domaine, l'hébergement et les emails pour vous : DNS, SSL, paramétrage. Le jour J, vous me donnez le feu vert, je mets en ligne. Les frais récurrents (domaine, emails) sont réglés directement aux fournisseurs — détails dans la FAQ."
           />
         </div>
-        <div class="fade-in border-t border-border-light pt-10">
+        <div class="fade-in border-t border-border-light pt-5">
           <MethodStep
             number="05"
             title="Suivi — formation 1h offerte"
@@ -238,48 +212,17 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
   </section>
 
   <!-- =============================================== -->
-  <!-- FILET EDITORIAL #1 — entre Methode et Quote     -->
-  <!-- =============================================== -->
-  <!--
-    Deux sections de meme fond (ivoire) qui se suivent : on intercale un
-    filet 0.5px + ornement central ". . ." pour signaler la pause editoriale
-    sans rompre la continuite chromatique.
-  -->
-  <div class="bg-ivoire">
-    <div class="relative max-w-5xl mx-auto px-6">
-      <div class="border-t border-border-light absolute inset-x-6 top-1/2"></div>
-      <div class="relative flex justify-center py-12">
-        <span class="px-4 bg-ivoire font-mono text-eyebrow tracking-eyebrow uppercase text-mono">
-          · · ·
-        </span>
-      </div>
-    </div>
-  </div>
-
-  <!-- =============================================== -->
-  <!-- SECTION 3-bis — EDITORIAL QUOTE (fond ivoire)   -->
-  <!-- =============================================== -->
-  <div class="bg-ivoire">
-    <EditorialQuote
-      eyebrow="UNE CONVICTION"
-      quote="« Un bon site ne se contente pas d'exister. Il ramène vos prochains clients. »"
-      author="Axel Plaisance"
-    />
-  </div>
-
-  <!-- =============================================== -->
   <!-- SECTION 4 — SERVICES (fond surface elevee)      -->
   <!-- =============================================== -->
   <section class="bg-surface relative overflow-x-clip">
     <SectionMarker label="SERVICES — 04" />
 
-    <!-- Numero geant "04" : couleur ivoire (inverse du fond surface) -->
     <span
       class="hidden md:block absolute top-6 -right-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-ivoire z-0 pointer-events-none select-none"
       aria-hidden="true"
     >04</span>
 
-    <div class="container-editorial py-16 md:py-20 lg:py-24 relative z-10">
+    <div class="container-editorial py-8 md:py-10 lg:py-12 relative z-10">
       <div class="fade-in">
         <Eyebrow number="04" label="SERVICES" />
         <h2 class="font-serif text-h2 lg:text-h1 tracking-tighter text-ink mt-4">
@@ -290,7 +233,7 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch mt-16">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch mt-8">
         <div class="fade-in h-full" data-delay="0">
           <SpecialtyCard
             eyebrow="01 — CRÉATION"
@@ -347,12 +290,8 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
   <!-- =============================================== -->
   <!-- SECTION 5 — TEASER AUTOMATISATIONS (sombre)     -->
   <!-- =============================================== -->
-  <!-- Refonte v2 (Phase 4) : teaser 3 mini-cartes vers /automatisations.
-       Cf. specs : 02-design/page-automatisations-design.md §1
-       Textes  : 03-copywriting/textes-automatisations.md §A -->
-  <section class="bg-dark py-24 lg:py-32">
+  <section class="bg-dark py-12 lg:py-16">
     <div class="container-editorial">
-      {/* HEADER bloc (max-w-3xl, mb-16) */}
       <div class="max-w-3xl fade-in">
         <Eyebrow number="05" label="DIFFÉRENCIATEUR" tone="dark" />
         <h2 class="font-serif text-h2 lg:text-[3rem] tracking-tighter text-ivoire mt-4">
@@ -363,11 +302,7 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
         </p>
       </div>
 
-      {/* GRILLE 3 mini-cartes teaser (transparent, bordure ivoire 30%)
-           v1.4 : items-stretch + h-full + flex-col + min-h sur description
-           pour aligner les 3 cartes meme si la description varie. */}
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch mt-16">
-        {/* Mini-carte 1 — Chatbot site */}
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch mt-8">
         <article
           class="fade-in h-full flex flex-col border border-[rgba(242,237,227,0.30)] rounded-lg p-6 transition-all duration-300 ease-editorial hover:border-[rgba(242,237,227,0.50)] hover:-translate-y-0.5"
           data-delay="0"
@@ -381,7 +316,6 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
           </p>
         </article>
 
-        {/* Mini-carte 2 — Devis intelligent */}
         <article
           class="fade-in h-full flex flex-col border border-[rgba(242,237,227,0.30)] rounded-lg p-6 transition-all duration-300 ease-editorial hover:border-[rgba(242,237,227,0.50)] hover:-translate-y-0.5"
           data-delay="100"
@@ -395,7 +329,6 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
           </p>
         </article>
 
-        {/* Mini-carte 3 — Notifications auto */}
         <article
           class="fade-in h-full flex flex-col border border-[rgba(242,237,227,0.30)] rounded-lg p-6 transition-all duration-300 ease-editorial hover:border-[rgba(242,237,227,0.50)] hover:-translate-y-0.5"
           data-delay="200"
@@ -410,8 +343,7 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
         </article>
       </div>
 
-      {/* CTA bouton inverse "Voir tous les services →" — aligne gauche, vers /automatisations */}
-      <div class="mt-16 fade-in" data-delay="300">
+      <div class="mt-8 fade-in" data-delay="300">
         <a
           href="/automatisations"
           class="inline-flex items-center justify-center px-6 py-3.5 bg-ivoire text-ink text-body font-medium rounded hover:bg-[#E8E2D6] transition-all duration-200 hover:-translate-y-0.5"
@@ -424,23 +356,17 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
   </section>
 
   <!-- =============================================== -->
-  <!-- SECTION 6 — APPROCHE (fond ivoire) — v1.3       -->
+  <!-- SECTION 6 — APPROCHE (fond ivoire)              -->
   <!-- =============================================== -->
-  <!-- Refonte v1.3 : passage de 3 LevelTeaserCard a 2 ApproachCard variant compact.
-       Cf. specs : 02-design/iteration-v1.3-design.md §3
-       Textes  : 03-copywriting/textes-simplification-v1-3.md §9 -->
   <section class="bg-ivoire relative overflow-x-clip">
     <SectionMarker label="APPROCHE — 06" />
 
-    <!-- Numero geant "06" — position INVERSEE en haut-GAUCHE
-         pour casser la monotonie des 4 sections precedentes en haut-droite.
-         Couleur surface (inverse du fond ivoire). -->
     <span
       class="hidden md:block absolute top-6 -left-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-surface z-0 pointer-events-none select-none"
       aria-hidden="true"
     >06</span>
 
-    <div class="container-editorial py-16 md:py-20 lg:py-24 relative z-10">
+    <div class="container-editorial py-8 md:py-10 lg:py-12 relative z-10">
       <div class="fade-in">
         <Eyebrow number="06" label="APPROCHE" />
         <h2 class="font-serif text-h2 lg:text-h1 tracking-tighter text-ink mt-4 max-w-[20ch]">
@@ -451,10 +377,7 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
         </p>
       </div>
 
-      <!-- Grille 2 ApproachCard variant compact. max-w-4xl (896px) : 2 cartes
-           a ~430px chacune, ideal pour titre serif + description courte.
-           items-stretch + h-full = CTAs alignes horizontalement. -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-stretch mt-16 max-w-4xl">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-stretch mt-8 max-w-4xl">
         <div class="fade-in h-full" data-delay="0">
           <ApproachCard
             size="compact"
@@ -477,8 +400,7 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
         </div>
       </div>
 
-      <!-- CTA global vers la page Services + microcopy mono. -->
-      <div class="fade-in mt-12 max-w-4xl" data-delay="300">
+      <div class="fade-in mt-6 max-w-4xl" data-delay="300">
         <a
           href="/services"
           class="inline-flex items-center justify-center px-6 py-3.5 bg-ink text-ivoire text-body font-medium rounded hover:bg-[#1F1B17] transition-all duration-200 hover:-translate-y-0.5"
@@ -493,12 +415,12 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
   </section>
 
   <!-- =============================================== -->
-  <!-- FILET EDITORIAL #2 — entre Formules et KeyFigure -->
+  <!-- FILET EDITORIAL — entre Approche et KeyFigure   -->
   <!-- =============================================== -->
   <div class="bg-ivoire">
     <div class="relative max-w-5xl mx-auto px-6">
       <div class="border-t border-border-light absolute inset-x-6 top-1/2"></div>
-      <div class="relative flex justify-center py-12">
+      <div class="relative flex justify-center py-6">
         <span class="px-4 bg-ivoire font-mono text-eyebrow tracking-eyebrow uppercase text-mono">
           · · ·
         </span>
@@ -524,13 +446,12 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
   <section class="bg-surface relative overflow-x-clip">
     <SectionMarker label="RÉALISATIONS — 07" />
 
-    <!-- Numero geant "07" : couleur ivoire (inverse du fond surface) -->
     <span
       class="hidden md:block absolute top-6 -right-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-ivoire z-0 pointer-events-none select-none"
       aria-hidden="true"
     >07</span>
 
-    <div class="container-editorial py-16 md:py-20 lg:py-24 relative z-10">
+    <div class="container-editorial py-8 md:py-10 lg:py-12 relative z-10">
       <div class="fade-in">
         <Eyebrow number="07" label="RÉALISATIONS" />
         <h2 class="font-serif text-h2 lg:text-h1 tracking-tighter text-ink mt-4 max-w-[24ch]">
@@ -541,7 +462,7 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch mt-16">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch mt-8">
         <div class="fade-in h-full" data-delay="0">
           <ProjectCard
             sector="BTP — COUVREUR"
@@ -571,7 +492,7 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
         </div>
       </div>
 
-      <div class="mt-12 text-center">
+      <div class="mt-8 text-center">
         <a
           href="/realisations"
           class="text-body text-ink underline underline-offset-4 decoration-border hover:decoration-ink transition-all"
