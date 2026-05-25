@@ -1,15 +1,14 @@
 ---
 // Header.astro — Navigation principale sticky.
-// Fond ivoire translucide + blur, burger mobile, lien actif souligne.
+// v2.1 (2026-05-25) — FIX bug menu mobile :
+//   - z-index : z-40 → z-[60] (passe au-dessus du header en z-50)
+//   - Fond ivoire 100% opaque (plus de transparence accidentelle)
+//   - Ajout de la touche Escape pour fermer le menu
+//   - Empêche le scroll du body de manière plus robuste
 
-// On recupere le chemin de la page courante pour souligner le bon lien
 const currentPath = Astro.url.pathname;
-
-// On normalise le chemin (sans slash final, sauf pour "/")
 const normalizedPath = currentPath === '/' ? '/' : currentPath.replace(/\/$/, '');
 
-// Liens de navigation
-// v2 (Phase 4) : ajout du lien Automatisations entre Services et Realisations.
 const navLinks = [
   { href: '/', label: 'Accueil' },
   { href: '/services', label: 'Services' },
@@ -18,7 +17,6 @@ const navLinks = [
   { href: '/contact', label: 'Contact' },
 ];
 
-// Helper : un lien est actif si le chemin courant correspond
 const isActive = (href: string): boolean => {
   if (href === '/') return normalizedPath === '/';
   return normalizedPath === href || normalizedPath.startsWith(href + '/');
@@ -38,9 +36,7 @@ const isActive = (href: string): boolean => {
       Axel Plaisance<span class="text-mono">.</span>
     </a>
 
-    <!-- Navigation desktop (cachee sur mobile).
-         v2 (Phase 4) : gap-8 -> gap-6 sur lg, gap-8 sur xl, pour absorber le 5e lien
-         (Automatisations) sans wrap entre 1024 et 1280px. -->
+    <!-- Navigation desktop (cachée < lg) -->
     <nav class="hidden lg:flex items-center gap-6 xl:gap-8" aria-label="Navigation principale">
       {
         navLinks.map((link) => (
@@ -66,9 +62,9 @@ const isActive = (href: string): boolean => {
       Discutons
     </a>
 
-    <!-- Burger mobile (visible <1024px) -->
+    <!-- Burger mobile (visible < lg) -->
     <button
-      class="burger lg:hidden flex flex-col gap-1.5 p-2 -mr-2"
+      class="burger lg:hidden flex flex-col gap-1.5 p-2 -mr-2 relative z-[70]"
       aria-label="Ouvrir le menu"
       aria-expanded="false"
       aria-controls="mobile-menu"
@@ -80,10 +76,16 @@ const isActive = (href: string): boolean => {
     </button>
   </div>
 
-  <!-- Menu mobile (overlay plein ecran) -->
+  <!-- Menu mobile (overlay plein écran) -->
+  <!-- FIX v2.1 :
+       - z-[60] : passe au-dessus du header sticky (z-50)
+       - bg-ivoire opaque (sans transparence)
+       - top-0 (couvre tout l'écran depuis le haut, plus de superposition)
+       - pt-20 : padding-top pour laisser l'espace du header visible
+  -->
   <div
     id="mobile-menu"
-    class="lg:hidden fixed inset-0 top-16 bg-ivoire z-40 hidden flex-col p-6"
+    class="lg:hidden fixed inset-0 top-0 bg-ivoire z-[60] hidden flex-col px-6 pt-20 pb-6"
     aria-hidden="true"
   >
     <nav class="flex flex-col gap-6 mt-8" aria-label="Navigation mobile">
@@ -111,33 +113,46 @@ const isActive = (href: string): boolean => {
 </header>
 
 <script is:inline>
-  // Toggle du menu mobile
+  // Toggle du menu mobile + Escape pour fermer
   (function () {
     const burger = document.querySelector('.burger');
     const menu = document.getElementById('mobile-menu');
     if (!burger || !menu) return;
 
+    const closeMenu = () => {
+      burger.setAttribute('aria-expanded', 'false');
+      burger.setAttribute('aria-label', 'Ouvrir le menu');
+      menu.setAttribute('aria-hidden', 'true');
+      menu.classList.add('hidden');
+      menu.classList.remove('flex');
+      document.body.style.overflow = '';
+    };
+
+    const openMenu = () => {
+      burger.setAttribute('aria-expanded', 'true');
+      burger.setAttribute('aria-label', 'Fermer le menu');
+      menu.setAttribute('aria-hidden', 'false');
+      menu.classList.remove('hidden');
+      menu.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    };
+
     burger.addEventListener('click', () => {
       const isOpen = burger.getAttribute('aria-expanded') === 'true';
-      burger.setAttribute('aria-expanded', String(!isOpen));
-      burger.setAttribute('aria-label', !isOpen ? 'Fermer le menu' : 'Ouvrir le menu');
-      menu.setAttribute('aria-hidden', String(isOpen));
-      menu.classList.toggle('hidden');
-      menu.classList.toggle('flex');
-      // Bloque le scroll quand le menu est ouvert
-      document.body.style.overflow = !isOpen ? 'hidden' : '';
+      if (isOpen) closeMenu();
+      else openMenu();
     });
 
     // Ferme le menu en cliquant sur un lien
     menu.querySelectorAll('a').forEach((link) => {
-      link.addEventListener('click', () => {
-        burger.setAttribute('aria-expanded', 'false');
-        burger.setAttribute('aria-label', 'Ouvrir le menu');
-        menu.setAttribute('aria-hidden', 'true');
-        menu.classList.add('hidden');
-        menu.classList.remove('flex');
-        document.body.style.overflow = '';
-      });
+      link.addEventListener('click', closeMenu);
+    });
+
+    // Ferme le menu avec la touche Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && burger.getAttribute('aria-expanded') === 'true') {
+        closeMenu();
+      }
     });
   })();
 </script>

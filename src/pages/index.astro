@@ -1,15 +1,10 @@
 ---
-// Page Accueil — v1.4 (2026-05-25)
-// Modifications session :
-//   - Hero : nouveau titre "Le site qui ramène vos prochains clients." (sans 30 jours)
-//   - Hero : nouveau sous-titre orienté bénéfice / local
-//   - "30 jours" gardé uniquement dans la colonne droite (DÉLAI)
-//   - Suppression bloc EditorialQuote ("Une conviction")
-//   - Suppression filet éditorial #1 (devenu orphelin)
-//   - Resserrement vertical -50% sur toutes les sections (py-20→py-10, py-16→py-8…)
-//
-// Note : la section RÉALISATIONS contient encore des noms de projets en dur
-// (Atlas Box · Franck Attieh, etc.) à revoir lors d'une prochaine session.
+// Page Accueil — v1.5 (2026-05-25)
+// Nouveautés v1.5 :
+//   - Section 07 RÉALISATIONS → titre & description repensés ("Créations & maquettes")
+//   - Carrousel mobile/tablette (< 1024px) sur Automatisations (5) et Réalisations (7)
+//   - Import du nouveau composant Carousel
+//   - Nom projet Franck corrigé : "Atlas Box" → "Transform 360"
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Eyebrow from '../components/Eyebrow.astro';
 import CTABand from '../components/CTABand.astro';
@@ -20,50 +15,37 @@ import SpecialtyCard from '../components/SpecialtyCard.astro';
 import KeyFigure from '../components/KeyFigure.astro';
 import SectionMarker from '../components/SectionMarker.astro';
 import AutomationIcon from '../components/icons/AutomationIcon.astro';
+import Carousel from '../components/Carousel.astro';
 
 const title = 'Développeur web Lorient (56) — Sites PME | Axel Plaisance';
 const description = 'Création et refonte de sites web sur-mesure pour les PME du Morbihan. Devis et audit offerts, livraison en 2 à 4 semaines, un seul interlocuteur. Sans engagement.';
 ---
 
 <BaseLayout title={title} description={description}>
-  <!-- =============================================== -->
-  <!-- SECTION 1 — HERO ASYMETRIQUE (fond ivoire)      -->
-  <!-- =============================================== -->
+  <!-- SECTION 1 — HERO -->
   <section class="bg-ivoire container-editorial py-10 md:py-14 lg:py-16">
     <div class="grid lg:grid-cols-[1.4fr_1fr] gap-12 lg:gap-16 items-start">
-      <!-- Colonne gauche -->
       <div>
         <Eyebrow number="01" label="ACCUEIL" />
-
         <h1 class="font-serif text-h1 lg:text-display tracking-tighter text-ink mt-4 max-w-[18ch]">
           Le site qui ramène vos prochains clients.
         </h1>
-
         <p class="text-lede text-ink-soft mt-6 max-w-[56ch]">
           Création sur-mesure pour artisans, commerçants et indépendants du pays de Lorient. Un seul interlocuteur, de la première idée à la mise en ligne.
         </p>
-
         <div class="mt-8 flex flex-col sm:flex-row gap-4">
-          <a
-            href="/services"
-            class="inline-flex items-center justify-center px-6 py-3.5 bg-ink text-ivoire text-body font-medium rounded hover:bg-[#1F1B17] transition-all duration-200 hover:-translate-y-0.5"
-          >
+          <a href="/services" class="inline-flex items-center justify-center px-6 py-3.5 bg-ink text-ivoire text-body font-medium rounded hover:bg-[#1F1B17] transition-all duration-200 hover:-translate-y-0.5">
             Voir mon approche
           </a>
-          <a
-            href="/contact"
-            class="inline-flex items-center justify-center px-6 py-3.5 border border-border text-ink text-body font-medium rounded hover:border-ink transition-all duration-200"
-          >
+          <a href="/contact" class="inline-flex items-center justify-center px-6 py-3.5 border border-border text-ink text-body font-medium rounded hover:border-ink transition-all duration-200">
             Demander mon audit gratuit
           </a>
         </div>
-
         <p class="text-micro font-mono text-mono mt-6">
           Réponse sous 24h ouvrées · Lorient &amp; Morbihan
         </p>
       </div>
 
-      <!-- Colonne droite — 3 stats (30 jours conservé ici) -->
       <aside class="flex flex-col mt-12 lg:mt-0">
         <div class="fade-in" data-delay="100">
           <p class="font-mono text-eyebrow tracking-eyebrow uppercase text-mono">DÉLAI</p>
@@ -84,15 +66,9 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
     </div>
   </section>
 
-  <!-- =============================================== -->
-  <!-- SECTION 2 — POUR QUI ? (fond surface elevee)    -->
-  <!-- =============================================== -->
+  <!-- SECTION 2 — POUR QUI ? -->
   <section class="bg-surface relative overflow-x-clip">
-    <span
-      class="hidden md:block absolute top-6 -right-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-ivoire z-0 pointer-events-none select-none"
-      aria-hidden="true"
-    >02</span>
-
+    <span class="hidden md:block absolute top-6 -right-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-ivoire z-0 pointer-events-none select-none" aria-hidden="true">02</span>
     <div class="container-editorial py-8 md:py-10 lg:py-12 relative z-10">
       <div class="fade-in">
         <Eyebrow number="02" label="POUR QUI ?" />
@@ -103,416 +79,214 @@ const description = 'Création et refonte de sites web sur-mesure pour les PME d
           Je travaille avec les PME locales qui ont besoin d'un site qui ramène des clients, pas d'une vitrine décorative.
         </p>
       </div>
-
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 items-stretch mt-8">
         <div class="fade-in h-full" data-delay="0">
-          <SpecialtyCard
-            eyebrow="01 — BTP"
-            icon="hammer"
-            title="Couvreurs, plombiers, maçons"
-            description="Un site qui sonne le téléphone. Vos chantiers parlent pour vous, vos clients vous trouvent sur Google avant le voisin."
-            linkHref="/realisations#btp"
-            linkLabel="Voir un exemple en cours →"
-          />
+          <SpecialtyCard eyebrow="01 — BTP" icon="hammer" title="Couvreurs, plombiers, maçons" description="Un site qui sonne le téléphone. Vos chantiers parlent pour vous, vos clients vous trouvent sur Google avant le voisin." linkHref="/realisations#btp" linkLabel="Voir un exemple en cours →" />
         </div>
         <div class="fade-in h-full" data-delay="100">
-          <SpecialtyCard
-            eyebrow="02 — SPORT"
-            icon="dumbbell"
-            title="Coachs, salles, CrossFit"
-            description="Un site qui convertit vos visiteurs en séances d'essai. Plannings, tarifs, réservation : tout est lisible en 10 secondes."
-            linkHref="/realisations#sport"
-            linkLabel="Voir un exemple en cours →"
-          />
+          <SpecialtyCard eyebrow="02 — SPORT" icon="dumbbell" title="Coachs, salles, CrossFit" description="Un site qui convertit vos visiteurs en séances d'essai. Plannings, tarifs, réservation : tout est lisible en 10 secondes." linkHref="/realisations#sport" linkLabel="Voir un exemple en cours →" />
         </div>
         <div class="fade-in h-full" data-delay="200">
-          <SpecialtyCard
-            eyebrow="03 — COMMERCE"
-            icon="store"
-            title="Boutiques, fleuristes, coiffeurs"
-            description="Vos clients vous cherchent sur Google. Si vous n'y êtes pas, ils trouvent le commerce d'à côté. Réparons ça."
-            linkHref="/realisations#commerce"
-            linkLabel="Voir un exemple en cours →"
-          />
+          <SpecialtyCard eyebrow="03 — COMMERCE" icon="store" title="Boutiques, fleuristes, coiffeurs" description="Vos clients vous cherchent sur Google. Si vous n'y êtes pas, ils trouvent le commerce d'à côté. Réparons ça." linkHref="/realisations#commerce" linkLabel="Voir un exemple en cours →" />
         </div>
         <div class="fade-in h-full" data-delay="300">
-          <SpecialtyCard
-            eyebrow="04 — RESTAURATION"
-            icon="chef-hat"
-            title="Brasseries, gastros, traiteurs"
-            description="Un site à l'image de votre cuisine. Carte, photos, réservation. Pas un modèle vu dix fois dans le centre-ville."
-            linkHref="/realisations#commerce"
-            linkLabel="Voir un exemple en cours →"
-          />
+          <SpecialtyCard eyebrow="04 — RESTAURATION" icon="chef-hat" title="Brasseries, gastros, traiteurs" description="Un site à l'image de votre cuisine. Carte, photos, réservation. Pas un modèle vu dix fois dans le centre-ville." linkHref="/realisations#commerce" linkLabel="Voir un exemple en cours →" />
         </div>
       </div>
     </div>
   </section>
 
-  <!-- =============================================== -->
-  <!-- SECTION 3 — METHODE (fond ivoire)               -->
-  <!-- =============================================== -->
+  <!-- SECTION 3 — MÉTHODE -->
   <section class="bg-ivoire relative overflow-x-clip">
     <SectionMarker label="MÉTHODE — 03" />
-
-    <span
-      class="hidden md:block absolute top-6 -right-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-surface z-0 pointer-events-none select-none"
-      aria-hidden="true"
-    >03</span>
-
+    <span class="hidden md:block absolute top-6 -right-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-surface z-0 pointer-events-none select-none" aria-hidden="true">03</span>
     <div class="container-editorial py-8 md:py-10 lg:py-12 relative z-10">
       <div class="fade-in">
         <Eyebrow number="03" label="MÉTHODE" />
-        <h2 class="font-serif text-h2 lg:text-h1 tracking-tighter text-ink mt-4">
-          Cinq étapes. Aucune zone d'ombre.
-        </h2>
+        <h2 class="font-serif text-h2 lg:text-h1 tracking-tighter text-ink mt-4">Cinq étapes. Aucune zone d'ombre.</h2>
         <p class="text-lede text-ink-soft mt-6 max-w-prose">
           Je vous dis à l'avance ce qui va se passer, quand, et ce que vous aurez à faire. C'est tout.
         </p>
       </div>
-
       <div class="mt-8 space-y-5">
         <div class="fade-in">
-          <MethodStep
-            number="01"
-            title="Échange — 30 minutes, gratuit"
-            description="On se parle en visio ou par téléphone. Vous me dites où vous en êtes, ce qui bloque, ce que vous voulez. Je vous dis ce qui est faisable et combien ça coûte."
-          />
+          <MethodStep number="01" title="Échange — 30 minutes, gratuit" description="On se parle en visio ou par téléphone. Vous me dites où vous en êtes, ce qui bloque, ce que vous voulez. Je vous dis ce qui est faisable et combien ça coûte." />
         </div>
         <div class="fade-in border-t border-border-light pt-5">
-          <MethodStep
-            number="02"
-            title="Conception — maquettes sous 5 jours"
-            description="Je vous envoie une maquette de chaque page importante. Vous validez, vous me dites ce qui cloche. Aller-retours libres jusqu'à ce que ça vous plaise."
-          />
+          <MethodStep number="02" title="Conception — maquettes sous 5 jours" description="Je vous envoie une maquette de chaque page importante. Vous validez, vous me dites ce qui cloche. Aller-retours libres jusqu'à ce que ça vous plaise." />
         </div>
         <div class="fade-in border-t border-border-light pt-5">
-          <MethodStep
-            number="03"
-            title="Développement — code propre, site rapide"
-            description="Je code votre site. Mobile-first, accessible, optimisé pour Google. Je vous montre les pages au fur et à mesure pour que rien ne vous surprenne à la fin."
-          />
+          <MethodStep number="03" title="Développement — code propre, site rapide" description="Je code votre site. Mobile-first, accessible, optimisé pour Google. Je vous montre les pages au fur et à mesure pour que rien ne vous surprenne à la fin." />
         </div>
         <div class="fade-in border-t border-border-light pt-5">
-          <MethodStep
-            number="04"
-            title="Mise en ligne — vous n'avez rien à faire"
-            description="Je configure le domaine, l'hébergement et les emails pour vous : DNS, SSL, paramétrage. Le jour J, vous me donnez le feu vert, je mets en ligne. Les frais récurrents (domaine, emails) sont réglés directement aux fournisseurs — détails dans la FAQ."
-          />
+          <MethodStep number="04" title="Mise en ligne — vous n'avez rien à faire" description="Je configure le domaine, l'hébergement et les emails pour vous : DNS, SSL, paramétrage. Le jour J, vous me donnez le feu vert, je mets en ligne. Les frais récurrents (domaine, emails) sont réglés directement aux fournisseurs — détails dans la FAQ." />
         </div>
         <div class="fade-in border-t border-border-light pt-5">
-          <MethodStep
-            number="05"
-            title="Suivi — formation 1h offerte"
-            description="Je vous forme 1 heure pour que vous soyez autonome. Et le numéro que vous avez, c'est le mien. Pas un standard, pas une hotline."
-          />
+          <MethodStep number="05" title="Suivi — formation 1h offerte" description="Je vous forme 1 heure pour que vous soyez autonome. Et le numéro que vous avez, c'est le mien. Pas un standard, pas une hotline." />
         </div>
       </div>
     </div>
   </section>
 
-  <!-- =============================================== -->
-  <!-- SECTION 4 — SERVICES (fond surface elevee)      -->
-  <!-- =============================================== -->
+  <!-- SECTION 4 — SERVICES -->
   <section class="bg-surface relative overflow-x-clip">
     <SectionMarker label="SERVICES — 04" />
-
-    <span
-      class="hidden md:block absolute top-6 -right-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-ivoire z-0 pointer-events-none select-none"
-      aria-hidden="true"
-    >04</span>
-
+    <span class="hidden md:block absolute top-6 -right-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-ivoire z-0 pointer-events-none select-none" aria-hidden="true">04</span>
     <div class="container-editorial py-8 md:py-10 lg:py-12 relative z-10">
       <div class="fade-in">
         <Eyebrow number="04" label="SERVICES" />
-        <h2 class="font-serif text-h2 lg:text-h1 tracking-tighter text-ink mt-4">
-          Tout ce qu'il faut pour exister en ligne.
-        </h2>
+        <h2 class="font-serif text-h2 lg:text-h1 tracking-tighter text-ink mt-4">Tout ce qu'il faut pour exister en ligne.</h2>
         <p class="text-lede text-ink-soft mt-6 max-w-prose">
           Création, refonte, référencement local, optimisation pour les moteurs IA. Une compétence, un seul devis.
         </p>
       </div>
-
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch mt-8">
         <div class="fade-in h-full" data-delay="0">
-          <SpecialtyCard
-            eyebrow="01 — CRÉATION"
-            icon="pen-tool"
-            title="Création de site"
-            description="Un site neuf, conçu pour votre métier et votre clientèle locale. Texte, design, code, mise en ligne : tout est inclus."
-          />
+          <SpecialtyCard eyebrow="01 — CRÉATION" icon="pen-tool" title="Création de site" description="Un site neuf, conçu pour votre métier et votre clientèle locale. Texte, design, code, mise en ligne : tout est inclus." />
         </div>
         <div class="fade-in h-full" data-delay="100">
-          <SpecialtyCard
-            eyebrow="02 — REFONTE"
-            icon="refresh-cw"
-            title="Refonte"
-            description="Votre site actuel est lent, démodé ou invisible sur Google. On garde ce qui marche, on remplace le reste."
-          />
+          <SpecialtyCard eyebrow="02 — REFONTE" icon="refresh-cw" title="Refonte" description="Votre site actuel est lent, démodé ou invisible sur Google. On garde ce qui marche, on remplace le reste." />
         </div>
         <div class="fade-in h-full" data-delay="200">
-          <SpecialtyCard
-            eyebrow="03 — SEO LOCAL"
-            icon="search"
-            title="SEO local"
-            description="Votre PME visible sur 'plombier Lorient', 'fleuriste Lanester', 'coach Hennebont'. Fiche Google Business optimisée incluse."
-          />
+          <SpecialtyCard eyebrow="03 — SEO LOCAL" icon="search" title="SEO local" description="Votre PME visible sur 'plombier Lorient', 'fleuriste Lanester', 'coach Hennebont'. Fiche Google Business optimisée incluse." />
         </div>
         <div class="fade-in h-full" data-delay="0">
-          <SpecialtyCard
-            eyebrow="04 — GEO"
-            icon="sparkles"
-            title="GEO — référencement IA"
-            description="Vos clients commencent à chercher sur ChatGPT, Perplexity, Google AI. J'optimise votre site pour qu'il y soit cité, pas oublié."
-          />
+          <SpecialtyCard eyebrow="04 — GEO" icon="sparkles" title="GEO — référencement IA" description="Vos clients commencent à chercher sur ChatGPT, Perplexity, Google AI. J'optimise votre site pour qu'il y soit cité, pas oublié." />
         </div>
         <div class="fade-in h-full" data-delay="100">
-          <SpecialtyCard
-            eyebrow="05 — IA"
-            icon="bot"
-            title="Intégration IA"
-            description="Un assistant qui répond à vos clients la nuit, qualifie les demandes, et vous fait gagner du temps sur les tâches répétitives."
-            tag="AVANCÉ"
-          />
+          <SpecialtyCard eyebrow="05 — IA" icon="bot" title="Intégration IA" description="Un assistant qui répond à vos clients la nuit, qualifie les demandes, et vous fait gagner du temps sur les tâches répétitives." tag="AVANCÉ" />
         </div>
         <div class="fade-in h-full" data-delay="200">
-          <SpecialtyCard
-            eyebrow="06 — MAINTENANCE"
-            icon="wrench"
-            title="Maintenance &amp; suivi"
-            description="Mises à jour, sauvegardes, petites évolutions, dépannage. Inclus le premier mois, en option ensuite."
-          />
+          <SpecialtyCard eyebrow="06 — MAINTENANCE" icon="wrench" title="Maintenance &amp; suivi" description="Mises à jour, sauvegardes, petites évolutions, dépannage. Inclus le premier mois, en option ensuite." />
         </div>
       </div>
     </div>
   </section>
 
-  <!-- =============================================== -->
-  <!-- SECTION 5 — TEASER AUTOMATISATIONS (sombre)     -->
-  <!-- =============================================== -->
+  <!-- SECTION 5 — TEASER AUTOMATISATIONS (sombre, CARROUSEL < lg) -->
   <section class="bg-dark py-12 lg:py-16">
     <div class="container-editorial">
       <div class="max-w-3xl fade-in">
         <Eyebrow number="05" label="DIFFÉRENCIATEUR" tone="dark" />
-        <h2 class="font-serif text-h2 lg:text-[3rem] tracking-tighter text-ivoire mt-4">
-          L'IA au service de votre activité.
-        </h2>
+        <h2 class="font-serif text-h2 lg:text-[3rem] tracking-tighter text-ivoire mt-4">L'IA au service de votre activité.</h2>
         <p class="text-lede text-[rgba(242,237,227,0.85)] mt-6 max-w-prose">
           Un assistant qui répond la nuit. Un formulaire qui qualifie vos demandes. Des notifications qui partent toutes seules. Trois exemples de ce que l'automatisation peut faire pendant que vous travaillez ailleurs.
         </p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch mt-8">
-        <article
-          class="fade-in h-full flex flex-col border border-[rgba(242,237,227,0.30)] rounded-lg p-6 transition-all duration-300 ease-editorial hover:border-[rgba(242,237,227,0.50)] hover:-translate-y-0.5"
-          data-delay="0"
-        >
-          <div class="text-ivoire h-8">
-            <AutomationIcon name="chatbot" size={32} />
-          </div>
-          <h3 class="text-h5 font-serif text-ivoire mt-4 min-h-[28px]">Chatbot site</h3>
-          <p class="text-small text-[rgba(242,237,227,0.80)] mt-3 min-h-[84px] lg:min-h-[63px]">
-            Un assistant qui répond aux questions de vos clients à toute heure, avec vos vraies informations.
-          </p>
-        </article>
-
-        <article
-          class="fade-in h-full flex flex-col border border-[rgba(242,237,227,0.30)] rounded-lg p-6 transition-all duration-300 ease-editorial hover:border-[rgba(242,237,227,0.50)] hover:-translate-y-0.5"
-          data-delay="100"
-        >
-          <div class="text-ivoire h-8">
-            <AutomationIcon name="form" size={32} />
-          </div>
-          <h3 class="text-h5 font-serif text-ivoire mt-4 min-h-[28px]">Devis intelligent</h3>
-          <p class="text-small text-[rgba(242,237,227,0.80)] mt-3 min-h-[84px] lg:min-h-[63px]">
-            Un formulaire qui pose les bonnes questions et vous livre une demande déjà triée.
-          </p>
-        </article>
-
-        <article
-          class="fade-in h-full flex flex-col border border-[rgba(242,237,227,0.30)] rounded-lg p-6 transition-all duration-300 ease-editorial hover:border-[rgba(242,237,227,0.50)] hover:-translate-y-0.5"
-          data-delay="200"
-        >
-          <div class="text-ivoire h-8">
-            <AutomationIcon name="notifications" size={32} />
-          </div>
-          <h3 class="text-h5 font-serif text-ivoire mt-4 min-h-[28px]">Notifications auto</h3>
-          <p class="text-small text-[rgba(242,237,227,0.80)] mt-3 min-h-[84px] lg:min-h-[63px]">
-            Confirmations, rappels, relances — envoyés tout seuls par email, WhatsApp ou SMS.
-          </p>
-        </article>
+      <div class="mt-8 lg:grid lg:grid-cols-3 lg:gap-8 lg:items-stretch">
+        <Carousel id="automatisations-carousel" ariaLabel="Trois exemples d'automatisations">
+          <article class="fade-in h-full flex flex-col border border-[rgba(242,237,227,0.30)] rounded-lg p-6 transition-all duration-300 ease-editorial hover:border-[rgba(242,237,227,0.50)] hover:-translate-y-0.5" data-delay="0">
+            <div class="text-ivoire h-8"><AutomationIcon name="chatbot" size={32} /></div>
+            <h3 class="text-h5 font-serif text-ivoire mt-4 min-h-[28px]">Chatbot site</h3>
+            <p class="text-small text-[rgba(242,237,227,0.80)] mt-3 min-h-[84px] lg:min-h-[63px]">
+              Un assistant qui répond aux questions de vos clients à toute heure, avec vos vraies informations.
+            </p>
+          </article>
+          <article class="fade-in h-full flex flex-col border border-[rgba(242,237,227,0.30)] rounded-lg p-6 transition-all duration-300 ease-editorial hover:border-[rgba(242,237,227,0.50)] hover:-translate-y-0.5" data-delay="100">
+            <div class="text-ivoire h-8"><AutomationIcon name="form" size={32} /></div>
+            <h3 class="text-h5 font-serif text-ivoire mt-4 min-h-[28px]">Devis intelligent</h3>
+            <p class="text-small text-[rgba(242,237,227,0.80)] mt-3 min-h-[84px] lg:min-h-[63px]">
+              Un formulaire qui pose les bonnes questions et vous livre une demande déjà triée.
+            </p>
+          </article>
+          <article class="fade-in h-full flex flex-col border border-[rgba(242,237,227,0.30)] rounded-lg p-6 transition-all duration-300 ease-editorial hover:border-[rgba(242,237,227,0.50)] hover:-translate-y-0.5" data-delay="200">
+            <div class="text-ivoire h-8"><AutomationIcon name="notifications" size={32} /></div>
+            <h3 class="text-h5 font-serif text-ivoire mt-4 min-h-[28px]">Notifications auto</h3>
+            <p class="text-small text-[rgba(242,237,227,0.80)] mt-3 min-h-[84px] lg:min-h-[63px]">
+              Confirmations, rappels, relances — envoyés tout seuls par email, WhatsApp ou SMS.
+            </p>
+          </article>
+        </Carousel>
       </div>
 
       <div class="mt-8 fade-in" data-delay="300">
-        <a
-          href="/automatisations"
-          class="inline-flex items-center justify-center px-6 py-3.5 bg-ivoire text-ink text-body font-medium rounded hover:bg-[#E8E2D6] transition-all duration-200 hover:-translate-y-0.5"
-          aria-label="Voir tous les services d'automatisations intelligentes"
-        >
+        <a href="/automatisations" class="inline-flex items-center justify-center px-6 py-3.5 bg-ivoire text-ink text-body font-medium rounded hover:bg-[#E8E2D6] transition-all duration-200 hover:-translate-y-0.5" aria-label="Voir tous les services d'automatisations intelligentes">
           Voir tous les services →
         </a>
       </div>
     </div>
   </section>
 
-  <!-- =============================================== -->
-  <!-- SECTION 6 — APPROCHE (fond ivoire)              -->
-  <!-- =============================================== -->
+  <!-- SECTION 6 — APPROCHE -->
   <section class="bg-ivoire relative overflow-x-clip">
     <SectionMarker label="APPROCHE — 06" />
-
-    <span
-      class="hidden md:block absolute top-6 -left-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-surface z-0 pointer-events-none select-none"
-      aria-hidden="true"
-    >06</span>
-
+    <span class="hidden md:block absolute top-6 -left-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-surface z-0 pointer-events-none select-none" aria-hidden="true">06</span>
     <div class="container-editorial py-8 md:py-10 lg:py-12 relative z-10">
       <div class="fade-in">
         <Eyebrow number="06" label="APPROCHE" />
-        <h2 class="font-serif text-h2 lg:text-h1 tracking-tighter text-ink mt-4 max-w-[20ch]">
-          Pas de packages. Du sur-mesure pour votre métier.
-        </h2>
+        <h2 class="font-serif text-h2 lg:text-h1 tracking-tighter text-ink mt-4 max-w-[20ch]">Pas de packages. Du sur-mesure pour votre métier.</h2>
         <p class="text-lede text-ink-soft mt-6 max-w-prose">
           Que vous démarriez de zéro ou que votre site actuel ne vous corresponde plus, je conçois une solution adaptée à votre activité et votre budget.
         </p>
       </div>
-
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-stretch mt-8 max-w-4xl">
         <div class="fade-in h-full" data-delay="0">
-          <ApproachCard
-            size="compact"
-            eyebrow="CRÉATION"
-            title="Vous n'avez pas encore de site"
-            description="Je le conçois sur-mesure pour votre activité."
-            linkLabel="En savoir plus →"
-            linkHref="/services#creation"
-          />
+          <ApproachCard size="compact" eyebrow="CRÉATION" title="Vous n'avez pas encore de site" description="Je le conçois sur-mesure pour votre activité." linkLabel="En savoir plus →" linkHref="/services#creation" />
         </div>
         <div class="fade-in h-full" data-delay="100">
-          <ApproachCard
-            size="compact"
-            eyebrow="REFONTE"
-            title="Vous avez un site à moderniser"
-            description="J'audite, je repense, je reconstruis."
-            linkLabel="En savoir plus →"
-            linkHref="/services#refonte"
-          />
+          <ApproachCard size="compact" eyebrow="REFONTE" title="Vous avez un site à moderniser" description="J'audite, je repense, je reconstruis." linkLabel="En savoir plus →" linkHref="/services#refonte" />
         </div>
       </div>
-
       <div class="fade-in mt-6 max-w-4xl" data-delay="300">
-        <a
-          href="/services"
-          class="inline-flex items-center justify-center px-6 py-3.5 bg-ink text-ivoire text-body font-medium rounded hover:bg-[#1F1B17] transition-all duration-200 hover:-translate-y-0.5"
-        >
+        <a href="/services" class="inline-flex items-center justify-center px-6 py-3.5 bg-ink text-ivoire text-body font-medium rounded hover:bg-[#1F1B17] transition-all duration-200 hover:-translate-y-0.5">
           Voir tous mes services →
         </a>
-        <p class="font-mono text-micro text-mono mt-4">
-          Devis offert après un échange de 15 minutes. Sans engagement.
-        </p>
+        <p class="font-mono text-micro text-mono mt-4">Devis offert après un échange de 15 minutes. Sans engagement.</p>
       </div>
     </div>
   </section>
 
-  <!-- =============================================== -->
-  <!-- FILET EDITORIAL — entre Approche et KeyFigure   -->
-  <!-- =============================================== -->
+  <!-- FILET ÉDITORIAL -->
   <div class="bg-ivoire">
     <div class="relative max-w-5xl mx-auto px-6">
       <div class="border-t border-border-light absolute inset-x-6 top-1/2"></div>
       <div class="relative flex justify-center py-6">
-        <span class="px-4 bg-ivoire font-mono text-eyebrow tracking-eyebrow uppercase text-mono">
-          · · ·
-        </span>
+        <span class="px-4 bg-ivoire font-mono text-eyebrow tracking-eyebrow uppercase text-mono">· · ·</span>
       </div>
     </div>
   </div>
 
-  <!-- =============================================== -->
-  <!-- SECTION 6-bis — KEY FIGURE (fond ivoire)        -->
-  <!-- =============================================== -->
+  <!-- KEY FIGURE -->
   <div class="bg-ivoire">
-    <KeyFigure
-      eyebrow="UN ENGAGEMENT CLAIR"
-      figure="30 jours max."
-      caption="pour livrer votre site, brief inclus."
-      subline="Pas un de plus, contractuel."
-    />
+    <KeyFigure eyebrow="UN ENGAGEMENT CLAIR" figure="30 jours max." caption="pour livrer votre site, brief inclus." subline="Pas un de plus, contractuel." />
   </div>
 
-  <!-- =============================================== -->
-  <!-- SECTION 7 — REALISATIONS (fond surface elevee)  -->
-  <!-- =============================================== -->
+  <!-- SECTION 7 — CRÉATIONS & MAQUETTES (CARROUSEL < lg) -->
   <section class="bg-surface relative overflow-x-clip">
-    <SectionMarker label="RÉALISATIONS — 07" />
-
-    <span
-      class="hidden md:block absolute top-6 -right-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-ivoire z-0 pointer-events-none select-none"
-      aria-hidden="true"
-    >07</span>
-
+    <SectionMarker label="CRÉATIONS — 07" />
+    <span class="hidden md:block absolute top-6 -right-8 font-serif text-[18rem] lg:text-[22rem] leading-none text-ivoire z-0 pointer-events-none select-none" aria-hidden="true">07</span>
     <div class="container-editorial py-8 md:py-10 lg:py-12 relative z-10">
       <div class="fade-in">
-        <Eyebrow number="07" label="RÉALISATIONS" />
-        <h2 class="font-serif text-h2 lg:text-h1 tracking-tighter text-ink mt-4 max-w-[24ch]">
-          Trois projets en cours. Le quatrième peut être le vôtre.
-        </h2>
+        <Eyebrow number="07" label="CRÉATIONS &amp; MAQUETTES" />
+        <h2 class="font-serif text-h2 lg:text-h1 tracking-tighter text-ink mt-4 max-w-[24ch]">Créations &amp; maquettes en cours.</h2>
         <p class="text-lede text-ink-soft mt-6 max-w-prose">
-          J'ai lancé l'activité récemment. Plutôt que d'inventer des projets, je vous montre ceux que je livre dans les semaines qui viennent. C'est plus honnête, et vous savez à quoi vous attendre.
+          Aperçu des projets sur lesquels je travaille actuellement. Les études de cas détaillées seront publiées après la livraison de chaque site.
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch mt-8">
-        <div class="fade-in h-full" data-delay="0">
-          <ProjectCard
-            sector="BTP — COUVREUR"
-            name="Couvreur · Caudan"
-            description="Refonte complète d'un site vieillissant. Objectif : remonter dans les résultats Google et arrêter de perdre des appels."
-            meta="Livraison juin 2026"
-            visual="btp"
-          />
-        </div>
-        <div class="fade-in h-full" data-delay="100">
-          <ProjectCard
-            sector="SPORT — COACHING"
-            name="Atlas Box · Franck Attieh"
-            description="Site neuf pour une box CrossFit qui ouvre. Conversion vers les séances d'essai, planning intégré."
-            meta="Livraison mai 2026"
-            visual="sport"
-          />
-        </div>
-        <div class="fade-in h-full" data-delay="200">
-          <ProjectCard
-            sector="COMMERCE — BOUTIQUE"
-            name="Boutique locale · Pays de Lorient"
-            description="Première mise en ligne pour un commerce de centre-ville. Vitrine claire, fiche Google optimisée, horaires à jour."
-            meta="Brief en cours"
-            visual="commerce"
-          />
-        </div>
+      <div class="mt-8 lg:grid lg:grid-cols-3 lg:gap-8 lg:items-stretch">
+        <Carousel id="realisations-carousel" ariaLabel="Créations et maquettes en cours">
+          <div class="fade-in h-full" data-delay="0">
+            <ProjectCard sector="BTP — COUVREUR" name="Couvreur · Caudan" description="Refonte complète d'un site vieillissant. Objectif : remonter dans les résultats Google et arrêter de perdre des appels." meta="Maquette en cours" visual="btp" />
+          </div>
+          <div class="fade-in h-full" data-delay="100">
+            <ProjectCard sector="SPORT — COACHING" name="Transform 360 · Franck Attieh" description="Site neuf pour un coach sportif à Ploemeur. Conversion vers les séances d'essai, présentation des programmes." meta="Production en cours" visual="sport" />
+          </div>
+          <div class="fade-in h-full" data-delay="200">
+            <ProjectCard sector="COMMERCE — BOUTIQUE" name="Boutique locale · Pays de Lorient" description="Première mise en ligne pour un commerce de centre-ville. Vitrine claire, fiche Google optimisée, horaires à jour." meta="Brief en cours" visual="commerce" />
+          </div>
+        </Carousel>
       </div>
 
       <div class="mt-8 text-center">
-        <a
-          href="/realisations"
-          class="text-body text-ink underline underline-offset-4 decoration-border hover:decoration-ink transition-all"
-          aria-label="Voir tous les projets en cours sur la page Réalisations"
-        >
-          Voir les 3 projets en cours en détail →
+        <a href="/realisations" class="text-body text-ink underline underline-offset-4 decoration-border hover:decoration-ink transition-all" aria-label="Voir le détail des créations et maquettes en cours">
+          Voir le détail des créations en cours →
         </a>
       </div>
     </div>
   </section>
 
-  <!-- =============================================== -->
-  <!-- SECTION 8 — CTABand final (sombre)              -->
-  <!-- =============================================== -->
-  <CTABand
-    title="Votre site peut être en ligne avant la fin du mois."
-    description="Devis offert. Réponse sous 24h ouvrées. Pas d'engagement, pas de relance commerciale."
-    ctaText="Demander mon devis"
-    ctaHref="/contact"
-    secondaryText="Voir tous les services"
-    secondaryHref="/services"
-  />
+  <!-- SECTION 8 — CTABand final -->
+  <CTABand title="Votre site peut être en ligne avant la fin du mois." description="Devis offert. Réponse sous 24h ouvrées. Pas d'engagement, pas de relance commerciale." ctaText="Demander mon devis" ctaHref="/contact" secondaryText="Voir tous les services" secondaryHref="/services" />
 </BaseLayout>

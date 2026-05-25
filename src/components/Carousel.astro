@@ -1,0 +1,161 @@
+---
+// Carousel.astro — Carrousel mobile/tablette avec "peek" effect.
+//
+// Actif sur < 1024px. Au-dessus : affichage grille normale (slot fallback via classes Tailwind).
+//
+// USAGE :
+//   <Carousel id="realisations-carousel" ariaLabel="Créations et maquettes en cours">
+//     <CardA />
+//     <CardB />
+//     <CardC />
+//   </Carousel>
+//
+// Le parent doit gérer l'affichage desktop (grid) en passant les enfants directement.
+// Ce composant n'active le mode carrousel qu'en < lg (1024px).
+//
+// Spécifications visuelles :
+//   - Chaque carte prend ~85% de la largeur de l'écran sur mobile
+//   - On voit ~15% de la carte suivante ("peek")
+//   - Scroll-snap mandatory : la carte s'aligne au bord gauche
+//   - Indicateurs (dots) sous le carrousel
+//   - Gestes : swipe natif tactile (pas de JS lourd)
+
+interface Props {
+  id: string;
+  ariaLabel: string;
+}
+
+const { id, ariaLabel } = Astro.props;
+---
+
+<div
+  class="carousel-wrapper relative lg:contents"
+  data-carousel-id={id}
+>
+  <!-- Track : scrollable horizontalement sur < lg, contents (= passe-plat) sur >= lg -->
+  <div
+    class="carousel-track lg:contents"
+    role="region"
+    aria-label={ariaLabel}
+    aria-roledescription="carousel"
+  >
+    <slot />
+  </div>
+
+  <!-- Indicateurs (dots) — visibles uniquement < lg -->
+  <div
+    class="carousel-dots lg:hidden flex justify-center gap-2 mt-6"
+    aria-hidden="true"
+  >
+    <!-- Les dots sont générés dynamiquement par le script en fonction du nombre d'enfants -->
+  </div>
+</div>
+
+<style>
+  /* Mode carrousel : actif uniquement < lg (1024px) */
+  @media (max-width: 1023px) {
+    .carousel-track {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-left: 1.5rem;
+      padding: 0.5rem 1.5rem 1rem;
+      margin: 0 -1.5rem;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .carousel-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Chaque enfant direct devient une "slide" */
+    .carousel-track > * {
+      flex: 0 0 85%;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+    }
+  }
+
+  /* Indicateurs (dots) */
+  .carousel-dots button {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(42, 38, 37, 0.2);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .carousel-dots button[data-active="true"] {
+    background: rgba(42, 38, 37, 0.8);
+    width: 24px;
+    border-radius: 4px;
+  }
+</style>
+
+<script is:inline>
+  // Génération des dots + sync avec la position de scroll
+  (function () {
+    document.querySelectorAll('.carousel-wrapper').forEach((wrapper) => {
+      const track = wrapper.querySelector('.carousel-track');
+      const dotsContainer = wrapper.querySelector('.carousel-dots');
+      if (!track || !dotsContainer) return;
+
+      const slides = Array.from(track.children);
+      if (slides.length === 0) return;
+
+      // Génère un dot par slide
+      slides.forEach((_, index) => {
+        const dot = document.createElement('button');
+        dot.setAttribute('aria-label', `Aller à la carte ${index + 1} sur ${slides.length}`);
+        dot.setAttribute('data-active', index === 0 ? 'true' : 'false');
+        dot.addEventListener('click', () => {
+          slides[index].scrollIntoView({
+            behavior: 'smooth',
+            inline: 'start',
+            block: 'nearest',
+          });
+        });
+        dotsContainer.appendChild(dot);
+      });
+
+      const dots = Array.from(dotsContainer.children);
+
+      // Met à jour le dot actif selon la position de scroll
+      const updateActiveDot = () => {
+        const trackRect = track.getBoundingClientRect();
+        const centerX = trackRect.left + trackRect.width / 2;
+
+        let closestIndex = 0;
+        let closestDistance = Infinity;
+
+        slides.forEach((slide, index) => {
+          const slideRect = slide.getBoundingClientRect();
+          const slideCenterX = slideRect.left + slideRect.width / 2;
+          const distance = Math.abs(slideCenterX - centerX);
+
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestIndex = index;
+          }
+        });
+
+        dots.forEach((dot, index) => {
+          dot.setAttribute('data-active', index === closestIndex ? 'true' : 'false');
+        });
+      };
+
+      track.addEventListener('scroll', () => {
+        window.requestAnimationFrame(updateActiveDot);
+      });
+
+      // Recalcule au redimensionnement (passage portrait/paysage)
+      window.addEventListener('resize', updateActiveDot);
+    });
+  })();
+</script>
